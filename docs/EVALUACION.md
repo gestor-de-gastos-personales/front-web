@@ -2,13 +2,13 @@
 # Evaluación — gestor-de-gastos-personales/front-web
 
 > Documento **generado automáticamente** por la cátedra de Programación III. **No editar a mano**: se regenera en cada evaluación.
-> Generado: 2026-11-03.
+> Generado: 2026-11-05.
 
 ## 1. Veredicto
 
 | Aspecto | Resultado |
 |---|---|
-| Tipo de proyecto | app |
+| Tipo de proyecto | frontend |
 | Código en `main` | **0 archivos** (no evaluable) |
 | Aprobado (semáforo) | **NO** (sin código) |
 
@@ -28,7 +28,7 @@
 
 | Alumno | Sesiones | Cumplimiento | Pausa | Recencia | IC | Nivel | Para subir de nivel |
 |---|--:|--:|--:|--:|--:|--|--|
-| blevatino | 15 | 68% | 19 d | 100% | **58** | No aprueba | Pausa 19 d (máx. 10 d) |
+| blevatino | 15 | 62% | 19 d | 50% | **48** | Aprueba | Cumplimiento 62% (mín. 100%); Pausa 19 d (máx. 5 d); Recencia 50% (mín. 75%) |
 
 > Para aprobar el IC: **2 sesiones por semana** sostenidas, sin pausas mayores a **10 días** y con actividad en las **últimas 2 semanas**. Se excluyen merges, bots y al docente. Zona horaria UTC-3.
 
