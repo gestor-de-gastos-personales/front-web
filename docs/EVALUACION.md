@@ -2,7 +2,7 @@
 # Evaluación — gestor-de-gastos-personales/front-web
 
 > Documento **generado automáticamente** por la cátedra de Programación III. **No editar a mano**: se regenera en cada evaluación.
-> Generado: 2026-11-05.
+> Generado: 2026-11-06.
 
 ## 1. Veredicto
 
