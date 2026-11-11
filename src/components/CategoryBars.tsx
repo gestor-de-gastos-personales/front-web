@@ -1,0 +1,39 @@
+import type { GrupoResumen } from '../services/resumen.service.js';
+import { formatearMonto, formatearPorcentaje } from '../utils/format.js';
+import { EmptyState } from './EmptyState.js';
+import { Widget } from './Widget.js';
+
+interface CategoryBarsProps {
+  grupos: GrupoResumen[];
+}
+
+export function CategoryBars({ grupos }: CategoryBarsProps) {
+  return (
+    <Widget titulo="Gasto por categoría" tag={`${grupos.length} categorías`} className="span-8">
+      {grupos.length === 0 ? (
+        <EmptyState titulo="Todavía no hay gastos en este período" />
+      ) : (
+        <div className="barras">
+          {grupos.map((grupo) => (
+            <div className="barra__fila" key={grupo.categoriaId}>
+              <span className="mono">{grupo.categoriaNombre}</span>
+              <div
+                className="barra__pista"
+                role="img"
+                aria-label={`${grupo.categoriaNombre}: ${formatearMonto(grupo.total)} (${formatearPorcentaje(grupo.porcentaje)})`}
+              >
+                <div
+                  className="barra__relleno"
+                  style={{ width: `${Math.min(100, grupo.porcentaje)}%` }}
+                />
+              </div>
+              <span className="mono" style={{ textAlign: 'right' }}>
+                {formatearMonto(grupo.total)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </Widget>
+  );
+}

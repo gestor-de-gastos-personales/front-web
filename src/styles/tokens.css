@@ -1,0 +1,26 @@
+:root {
+  /* Paleta Mangos */
+  --mangos-blue: #00a3e8;
+  --mangos-blue-dark: #0079ad;
+  --mango: #ffa726;
+  --mango-light: #ffd18a;
+  --coral: #ff4d4d;
+  --leaf: #2fbf71;
+  --leaf-dark: #00a651;
+  --stem: #8b4513;
+
+  /* Brutalist tokens */
+  --ink: #000000;
+  --paper: #ffffff;
+  --surface: var(--mangos-blue);
+  --muted: #e9f6fc;
+  --hairline: 1px solid var(--ink);
+  --border: 2px solid var(--ink);
+  --shadow: 8px 8px 0 var(--ink);
+  --shadow-sm: 4px 4px 0 var(--ink);
+
+  /* Tipografía: sistema, tres registros deliberados */
+  --font-ui: Helvetica, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+  --font-serif: "Times New Roman", Times, serif;
+}

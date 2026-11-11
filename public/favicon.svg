@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Mangos">
+  <rect width="64" height="64" rx="12" fill="#00A3E8"/>
+  <path d="M20 20c12-8 27-1 26 14-1 13-16 19-25 12-8-6-10-19-1-26Z" fill="#FFA726"/>
+  <path d="M17 39c3 8 15 12 23 6 4-3 6-8 6-11-3 8-12 12-20 10-4-1-7-3-9-5Z" fill="#FF4D4D"/>
+  <path d="M38 16c6-7 16-7 19-2-4 8-13 10-19 7Z" fill="#2FBF71"/>
+  <path d="M38 17c-2 2-3 5-2 8" stroke="#8B4513" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M24 26c2-5 7-7 11-6" stroke="#FFD18A" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
