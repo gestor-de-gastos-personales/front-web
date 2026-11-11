@@ -28,7 +28,7 @@
 
 | Alumno | Sesiones | Cumplimiento | Pausa | Recencia | IC | Nivel | Para subir de nivel |
 |---|--:|--:|--:|--:|--:|--|--|
-| blevatino | 16 | 62% | 19 d | 71% | **50** | Aprueba | Cumplimiento 62% (mín. 100%); Pausa 19 d (máx. 5 d); Recencia 71% (mín. 75%) |
+| blevatino | 17 | 66% | 19 d | 100% | **57** | Aprueba | Cumplimiento 66% (mín. 100%); Pausa 19 d (máx. 5 d) |
 
 > Para aprobar el IC: **2 sesiones por semana** sostenidas, sin pausas mayores a **10 días** y con actividad en las **últimas 2 semanas**. Se excluyen merges, bots y al docente. Zona horaria UTC-3.
 
@@ -38,11 +38,11 @@ Tener el servicio en `main`, con código propio y separado en capas. El semáfor
 
 ## 5. Actividad en clase (miércoles y viernes)
 
-> Se consideran las **23 clases** del período (miércoles y viernes, según `config/constancia.json`; feriados y semanas sin clase descontados). `Commits` = commits de trabajo (no-merge); `Merges` = merges de PR (también son push). Los días sin actividad dicen **sin actividad**.
+> Se consideran las **26 clases** del período (miércoles y viernes, según `config/constancia.json`; feriados y semanas sin clase descontados). `Commits` = commits de trabajo (no-merge); `Merges` = merges de PR (también son push). Los días sin actividad dicen **sin actividad**.
 
 ### blevatino
 
-**14/23 clases con actividad** · 34 commits · 16 merges
+**15/26 clases con actividad** · 37 commits · 22 merges
 
 | Fecha | Actividad | Repositorios | Commits / merges |
 |---|:--:|---|--:|
@@ -69,6 +69,9 @@ Tener el servicio en `main`, con código propio y separado en capas. El semáfor
 | 2026-10-23 | No | sin actividad | 0 / 0 |
 | 2026-10-28 | **Sí** | api-gastos, bot-telegram, servicio-ia | 3 / 3 |
 | 2026-10-30 | **Sí** | front-web | 1 / 0 |
+| 2026-11-04 | No | sin actividad | 0 / 0 |
+| 2026-11-06 | No | sin actividad | 0 / 0 |
+| 2026-11-11 | **Sí** | api-gastos, bot-telegram, servicio-ia | 3 / 6 |
 
 ---
 _Informe generado por la cátedra. Los umbrales corresponden al perfil `exigente`._
