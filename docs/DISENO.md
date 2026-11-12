@@ -89,7 +89,10 @@ esquina inferior derecha; GridStack resuelve colisiones, compacta hacia arriba
 hueco libre. El layout completo (`x`, `y`, `w`, `h`) se persiste por usuario en
 `localStorage` y se migra automáticamente del formato anterior basado en `span`.
 Cada tipo define un mínimo de ancho/alto para que el contenido siga siendo
-legible al achicarlo.
+legible al achicarlo. El picker de widgets muestra una confirmación visual
+(“Agregado correctamente” y el botón en verde) al sumar una instancia, y
+“Restablecer” abre un diálogo de confirmación antes de descartar el layout
+personalizado.
 
 **Modo edición:** fuera de él, los widgets son de solo lectura (no se arrastran
 ni redimensionan y no muestran controles). El botón “Editar” habilita el arrastre,

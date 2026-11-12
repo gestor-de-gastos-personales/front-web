@@ -400,6 +400,17 @@ p {
   background: var(--danger-soft);
 }
 
+.boton--exito {
+  background: var(--success-soft);
+  border-color: #abefc6;
+  color: var(--success);
+}
+
+.boton--exito:hover {
+  background: #d1fadf;
+  border-color: #75e0a7;
+}
+
 .boton--fantasma {
   background: transparent;
   border-color: transparent;
@@ -609,9 +620,22 @@ p {
   overflow: auto;
 }
 
+.modal__mensaje {
+  margin-bottom: 18px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.modal__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 /* ---------- Tablero ajustable ---------- */
 .dashboard-tools {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
@@ -706,6 +730,17 @@ p {
   border: 1px dashed var(--accent);
   border-radius: var(--radius);
   opacity: 0.55;
+}
+
+.widget-picker__ok {
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border: 1px solid #abefc6;
+  border-radius: 8px;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .widget-picker {

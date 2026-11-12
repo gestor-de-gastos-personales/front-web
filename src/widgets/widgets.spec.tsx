@@ -70,6 +70,10 @@ describe('tablero de widgets', () => {
 
     expect(onAgregar).toHaveBeenCalledTimes(2);
     expect(onAgregar).toHaveBeenNthCalledWith(1, 'total');
+    expect(agregar).toHaveTextContent('¡Agregado!');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Total del período agregado correctamente.',
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Cerrar' }));
     expect(onCerrar).toHaveBeenCalled();

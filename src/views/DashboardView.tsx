@@ -10,6 +10,7 @@ import { useDashboardLayout } from '../widgets/useDashboardLayout.js';
 import { WidgetAcciones } from '../widgets/WidgetAcciones.js';
 import { WidgetGrid } from '../widgets/WidgetGrid.js';
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
+import { ConfirmModal } from '../components/ConfirmModal.js';
 import { PeriodSelector } from '../components/PeriodSelector.js';
 import { TotalWidget } from '../components/TotalWidget.js';
 import { CategoryBars } from '../components/CategoryBars.js';
@@ -32,6 +33,7 @@ export function DashboardView() {
 
   const [pagina, setPagina] = useState(1);
   const [picker, setPicker] = useState(false);
+  const [confirmarReset, setConfirmarReset] = useState(false);
   const [editando, setEditando] = useState(false);
 
   const resumen = useResumen(periodo);
@@ -146,8 +148,15 @@ export function DashboardView() {
         <div className="dashboard-tools span-12">
           {editando ? (
             <>
+              <button
+                type="button"
+                className="boton boton--fantasma boton--chico"
+                onClick={() => setConfirmarReset(true)}
+              >
+                Restablecer
+              </button>
               <span className="dashboard-tools__hint">
-                Arrastrá desde el agarre para mover; redimensioná desde la esquina.
+                Arrastrá desde el encabezado para mover; redimensioná desde la esquina.
               </span>
               <button
                 type="button"
@@ -155,13 +164,6 @@ export function DashboardView() {
                 onClick={() => setPicker(true)}
               >
                 Agregar widget
-              </button>
-              <button
-                type="button"
-                className="boton boton--fantasma boton--chico"
-                onClick={layout.resetear}
-              >
-                Restablecer
               </button>
               <button
                 type="button"
@@ -218,6 +220,19 @@ export function DashboardView() {
           catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
           onAgregar={layout.agregar}
           onCerrar={() => setPicker(false)}
+        />
+      ) : null}
+
+      {confirmarReset ? (
+        <ConfirmModal
+          titulo="Restablecer tablero"
+          mensaje="¿Seguro que querés volver al layout por defecto? Se perderán las posiciones y tamaños personalizados."
+          textoConfirmar="Restablecer"
+          onConfirmar={() => {
+            layout.resetear();
+            setConfirmarReset(false);
+          }}
+          onCancelar={() => setConfirmarReset(false)}
         />
       ) : null}
     </div>

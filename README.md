@@ -42,8 +42,10 @@ npm run test:cov          # tests + cobertura
   tarjetas se reacomodan y compactan con animación) o con los botones ←/→,
   redimensionar desde la esquina inferior derecha y quitar. Cada tipo de widget
   tiene un tamaño mínimo legible (4–6 columnas y 4–6 filas) para que el
-  contenido no quede cortado. El layout (posición y tamaño) se guarda por
-  usuario en el navegador y se migra desde el formato anterior.
+  contenido no quede cortado. Al agregar, el picker confirma “Agregado
+  correctamente”; “Restablecer” pide confirmación antes de volver al layout
+  inicial. El layout (posición y tamaño) se guarda por usuario en el navegador
+  y se migra desde el formato anterior.
   Widgets: total, gasto por categoría, evolución, últimos gastos, historial y
   presupuestos.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y
@@ -81,7 +83,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-106 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
+107 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño
