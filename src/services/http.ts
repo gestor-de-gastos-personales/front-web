@@ -52,8 +52,12 @@ export async function pedir<T>(
     }
   }
 
+  const esFormData =
+    typeof FormData !== 'undefined' && opciones.body instanceof FormData;
   const headers: Record<string, string> = {};
-  if (opciones.body !== undefined) headers['Content-Type'] = 'application/json';
+  if (opciones.body !== undefined && !esFormData) {
+    headers['Content-Type'] = 'application/json';
+  }
   if (opciones.auth !== false && tokenActual) {
     headers.Authorization = `Bearer ${tokenActual}`;
   }
@@ -61,7 +65,12 @@ export async function pedir<T>(
   const res = await fetch(url, {
     method: opciones.method ?? 'GET',
     headers,
-    body: opciones.body === undefined ? undefined : JSON.stringify(opciones.body),
+    body:
+      opciones.body === undefined
+        ? undefined
+        : esFormData
+          ? (opciones.body as FormData)
+          : JSON.stringify(opciones.body),
   });
 
   if (!res.ok) throw new ApiError(await leerMensaje(res), res.status);

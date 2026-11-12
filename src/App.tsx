@@ -11,6 +11,7 @@ import { CategoriasView } from './views/CategoriasView.js';
 import { PresupuestosView } from './views/PresupuestosView.js';
 import { PerfilView } from './views/PerfilView.js';
 import { NotFoundView } from './views/NotFoundView.js';
+import { AsistenteView } from './views/AsistenteView.js';
 
 export function App() {
   const cargarPerfil = useAuth((estado) => estado.cargarPerfil);
@@ -31,6 +32,7 @@ export function App() {
             <Route path="gastos" element={<GastosView />} />
             <Route path="categorias" element={<CategoriasView />} />
             <Route path="presupuestos" element={<PresupuestosView />} />
+            <Route path="asistente" element={<AsistenteView />} />
             <Route path="perfil" element={<PerfilView />} />
             <Route path="*" element={<NotFoundView />} />
           </Route>

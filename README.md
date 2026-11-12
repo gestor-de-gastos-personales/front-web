@@ -34,6 +34,11 @@ npm run test:cov          # tests + cobertura
 
 - **Sesión**: registro y login con JWT; el token se restaura al recargar y se
   valida contra `GET /auth/me`.
+- **Asistente web**: chat con las mismas funciones del bot de Telegram, sin
+  Telegram: alta de gastos por texto o foto, borrador editable, resumen,
+  gráfico, historial, edición, eliminación, categorías y gastos recurrentes.
+  Se abre con el botón flotante o en `/asistente`; conserva el historial por
+  usuario en el navegador.
 - **Dashboard**: tablero **GridStack** (12 columnas en escritorio, 1 en mobile)
   sin selector global de período y con **modo edición**: “Editar” habilita el
   arrastre, el resize nativo, agregar/restablecer y quitar; “Listo” vuelve a la
@@ -69,6 +74,7 @@ src/
   components/   piezas de UI (widgets, tablas, formularios, estados)
   services/     acceso HTTP a api-gastos (sin fetch en componentes)
   state/        stores de sesión y período (zustand)
+  chat/         asistente web (panel, tarjetas, estado y API)
   hooks/        carga de datos y estado async
   widgets/      grilla GridStack, catálogo y layout persistente
   utils/        formato y cálculo de períodos
@@ -80,7 +86,9 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 ## Contratos que consume
 
 - `POST /auth/register`, `POST /auth/login`, `GET /auth/me`
+- `POST /chat/analizar`, `POST /chat/analizar-imagen` (proxy JWT hacia `servicio-ia`)
 - `GET /gastos?page&limit&fechaInicio&fechaFin&categoriaId&montoMin&montoMax` (fechas `DD-MM-YYYY`)
+- `GET|POST /gastos/recurrentes/mios`
 - `POST /gastos`, `PATCH /gastos/:id`, `DELETE /gastos/:id`
 - `GET /gastos/resumen?desde&hasta`
 - `GET /gastos/serie?desde&hasta&agrupacion=dia|semana|mes`
@@ -89,7 +97,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-121 tests con Vitest + Testing Library. Cobertura de líneas ~96% (se genera
+158 tests con Vitest + Testing Library. Cobertura de líneas ~94% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño

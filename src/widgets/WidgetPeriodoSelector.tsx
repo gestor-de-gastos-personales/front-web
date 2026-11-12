@@ -3,6 +3,7 @@ import type { ModoPeriodoWidget } from './tipos.js';
 interface WidgetPeriodoSelectorProps {
   valor: ModoPeriodoWidget;
   onCambiar: (modo: ModoPeriodoWidget) => void;
+  etiqueta?: string;
 }
 
 const OPCIONES: Array<{ valor: ModoPeriodoWidget; texto: string }> = [
@@ -19,13 +20,14 @@ const OPCIONES: Array<{ valor: ModoPeriodoWidget; texto: string }> = [
 export function WidgetPeriodoSelector({
   valor,
   onCambiar,
+  etiqueta = 'Período del widget',
 }: WidgetPeriodoSelectorProps) {
   return (
     <label className="widget__periodo">
-      <span className="sr-only">Período del widget</span>
+      <span className="sr-only">{etiqueta}</span>
       <select
         value={valor}
-        aria-label="Período del widget"
+        aria-label={etiqueta}
         onChange={(evento) =>
           onCambiar(evento.target.value as ModoPeriodoWidget)
         }
