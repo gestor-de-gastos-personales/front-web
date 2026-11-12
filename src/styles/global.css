@@ -648,7 +648,8 @@ p {
   outline-color: var(--accent);
 }
 
-/* El agarre de la tarjeta es el único handle de arrastre. */
+/* El encabezado completo es el handle de arrastre; el agarre es la pista visual. */
+.widget-grid--editable .widget__head,
 .widget__drag {
   cursor: grab;
 }

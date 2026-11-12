@@ -41,6 +41,9 @@ export interface WidgetMeta {
   descripcion: string;
   wPorDefecto: number;
   hPorDefecto: number;
+  /** Tamaño mínimo legible al que se puede reducir el widget. */
+  minW: number;
+  minH: number;
 }
 
 /** Catálogo de widgets disponibles para el tablero. */
@@ -50,36 +53,48 @@ export const WIDGETS: Record<TipoWidget, WidgetMeta> = {
     descripcion: 'Total, cantidad de gastos y mayor gasto del período.',
     wPorDefecto: 4,
     hPorDefecto: 5,
+    minW: 4,
+    minH: 4,
   },
   categorias: {
     titulo: 'Gasto por categoría',
     descripcion: 'Barras comparativas por categoría.',
     wPorDefecto: 8,
     hPorDefecto: 5,
+    minW: 6,
+    minH: 4,
   },
   evolucion: {
     titulo: 'Evolución del gasto',
     descripcion: 'Serie temporal según el período elegido.',
     wPorDefecto: 8,
     hPorDefecto: 7,
+    minW: 6,
+    minH: 6,
   },
   presupuestos: {
     titulo: 'Presupuestos',
     descripcion: 'Tope mensual contra el gasto real por categoría.',
     wPorDefecto: 4,
     hPorDefecto: 5,
+    minW: 4,
+    minH: 4,
   },
   ultimos: {
     titulo: 'Últimos gastos',
     descripcion: 'Los últimos movimientos cargados.',
     wPorDefecto: 4,
     hPorDefecto: 7,
+    minW: 4,
+    minH: 5,
   },
   historial: {
     titulo: 'Historial',
     descripcion: 'Listado paginado del período con acciones.',
     wPorDefecto: 8,
     hPorDefecto: 7,
+    minW: 6,
+    minH: 6,
   },
 };
 

@@ -6,8 +6,7 @@ import type { WidgetLayoutItem } from './tipos.js';
 
 const gridStub = vi.hoisted(() => ({
   getColumn: vi.fn(() => 12),
-  save: vi.fn((): Array<Record<string, unknown>> => []),
-  engine: { nodes: [] as Array<{ el?: HTMLElement }> },
+  engine: { nodes: [] as Array<Record<string, unknown>> },
   refreshDragHandles: vi.fn(),
   el: null as unknown as HTMLElement,
 }));
@@ -85,7 +84,6 @@ describe('WidgetGrid', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     gridStub.getColumn.mockReturnValue(12);
-    gridStub.save.mockReturnValue([]);
     gridStub.engine.nodes = [];
     gridStub.el = document.createElement('div');
     capturado.props = null;
@@ -102,8 +100,8 @@ describe('WidgetGrid', () => {
       y: 0,
       w: 4,
       h: 5,
-      minW: 3,
-      minH: 3,
+      minW: 4,
+      minH: 4,
     });
     expect(screen.getByText('a')).toBeInTheDocument();
   });
@@ -144,10 +142,10 @@ describe('WidgetGrid', () => {
 
   it('sincroniza la geometría al agregar, cambiar o quitar items', () => {
     const onCambio = vi.fn();
-    gridStub.save.mockReturnValue([
+    gridStub.engine.nodes = [
       { id: 'a', x: 0, y: 0, w: 4, h: 5 },
       { id: 'b', x: 4, y: 0, w: 8, h: 5 },
-    ]);
+    ];
 
     renderGrid({ onCambio });
 
@@ -165,13 +163,13 @@ describe('WidgetGrid', () => {
     ]);
   });
 
-  it('descarta nodos incompletos y no persiste en mobile', () => {
+  it('descarta nodos sin id y no persiste en mobile', () => {
     const onCambio = vi.fn();
-    gridStub.save.mockReturnValue([
+    gridStub.engine.nodes = [
       { id: 'a', x: 0, y: 0, w: 4, h: 5 },
       { id: '', x: 0, y: 0, w: 4, h: 5 },
-      { id: 'b', x: '0', y: 0, w: 8, h: 5 },
-    ]);
+      { id: null, x: 0, y: 0, w: 8, h: 5 },
+    ];
 
     renderGrid({ onCambio });
     act(() => (capturado.props!.onChange as () => void)());

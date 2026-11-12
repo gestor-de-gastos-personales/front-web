@@ -38,10 +38,12 @@ npm run test:cov          # tests + cobertura
   con selector global de período y **modo edición**: “Editar” habilita el
   arrastre, el resize nativo, agregar/restablecer y quitar; “Listo” vuelve a la
   vista de solo lectura. Los widgets se pueden repetir (por ejemplo, dos
-  gráficos), reordenar arrastrando desde su agarre (las tarjetas se reacomodan y
-  compactan con animación) o con los botones ←/→, redimensionar desde la esquina
-  inferior derecha (3–12 columnas) y quitar. El layout (posición y tamaño) se
-  guarda por usuario en el navegador y se migra desde el formato anterior.
+  gráficos), reordenar arrastrando desde el encabezado de la tarjeta (las
+  tarjetas se reacomodan y compactan con animación) o con los botones ←/→,
+  redimensionar desde la esquina inferior derecha y quitar. Cada tipo de widget
+  tiene un tamaño mínimo legible (4–6 columnas y 4–6 filas) para que el
+  contenido no quede cortado. El layout (posición y tamaño) se guarda por
+  usuario en el navegador y se migra desde el formato anterior.
   Widgets: total, gasto por categoría, evolución, últimos gastos, historial y
   presupuestos.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y

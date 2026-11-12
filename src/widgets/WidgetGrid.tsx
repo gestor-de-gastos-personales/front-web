@@ -2,12 +2,9 @@ import { useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 're
 import type { ForwardedRef, ReactNode } from 'react';
 import { forwardRef } from 'react';
 import { GridStack, GridStackItem } from 'gridstack/dist/react';
-import type {
-  GridStackHandle,
-  GridStackOptions,
-  GridStackWidget,
-} from 'gridstack/dist/react';
+import type { GridStackHandle, GridStackOptions } from 'gridstack/dist/react';
 import type { GridStack as GridStackCore } from 'gridstack';
+import { WIDGETS } from './tipos.js';
 import type { NodoGrilla, WidgetLayoutItem } from './tipos.js';
 
 export interface WidgetGridHandle {
@@ -25,8 +22,8 @@ interface WidgetGridProps {
  * Opciones comunes del tablero:
  * - 12 columnas en escritorio y 1 en mobile (`columnOpts`).
  * - Animación y empaquetado superior nativos de GridStack.
- * - El único handle de arrastre es el agarre de la tarjeta; los controles
- *   y enlaces no disparan un drag.
+ * - Se arrastra desde el encabezado de la tarjeta; los botones, inputs y
+ *   enlaces no disparan un drag.
  * - El resize usa la esquina inferior derecha nativa.
  */
 const OPCIONES_BASE: GridStackOptions = {
@@ -36,7 +33,7 @@ const OPCIONES_BASE: GridStackOptions = {
   animate: true,
   alwaysShowResizeHandle: true,
   mode: 'top',
-  draggable: { handle: '.widget__drag' },
+  draggable: { handle: '.widget__head' },
   resizable: { handles: 'se' },
   columnOpts: {
     breakpointForWindow: true,
@@ -45,25 +42,23 @@ const OPCIONES_BASE: GridStackOptions = {
   },
 };
 
-const MIN_W = 3;
-const MIN_H = 3;
-
+/**
+ * Lee la geometría real del motor de GridStack. No se usa `grid.save()`
+ * porque omite `w`/`h` cuando coinciden con el mínimo del widget, y esos
+ * valores son justamente los que hay que persistir.
+ */
 function leerNodos(grid: GridStackCore): NodoGrilla[] {
-  const guardados = grid.save(false) as GridStackWidget[];
   const nodos: NodoGrilla[] = [];
 
-  for (const widget of guardados) {
-    const { id, x, y, w, h } = widget;
-    if (typeof id !== 'string' || !id) continue;
-    if (
-      typeof x !== 'number' ||
-      typeof y !== 'number' ||
-      typeof w !== 'number' ||
-      typeof h !== 'number'
-    ) {
-      continue;
-    }
-    nodos.push({ id, x, y, w, h });
+  for (const node of grid.engine.nodes) {
+    if (typeof node.id !== 'string' || !node.id) continue;
+    nodos.push({
+      id: node.id,
+      x: node.x ?? 0,
+      y: node.y ?? 0,
+      w: node.w ?? 1,
+      h: node.h ?? 1,
+    });
   }
 
   return nodos;
@@ -104,7 +99,7 @@ function WidgetGridInterno(
     onCambio(leerNodos(grid));
   }, [onCambio]);
 
-  // Al entrar en edición aparece el agarre; GridStack debe re-escanearlo.
+  // Al entrar en edición, GridStack debe re-escanear el encabezado como handle.
   useEffect(() => {
     const grid = gridRef.current?.getGrid();
     if (!grid?.engine || !editable) return;
@@ -142,22 +137,25 @@ function WidgetGridInterno(
       onAdded={sincronizar}
       onRemoved={sincronizar}
     >
-      {items.map((item) => (
-        <GridStackItem
-          key={item.id}
-          id={item.id}
-          options={{
-            x: item.x,
-            y: item.y,
-            w: item.w,
-            h: item.h,
-            minW: MIN_W,
-            minH: MIN_H,
-          }}
-        >
-          {renderWidget(item)}
-        </GridStackItem>
-      ))}
+      {items.map((item) => {
+        const meta = WIDGETS[item.tipo];
+        return (
+          <GridStackItem
+            key={item.id}
+            id={item.id}
+            options={{
+              x: item.x,
+              y: item.y,
+              w: item.w,
+              h: item.h,
+              minW: meta.minW,
+              minH: meta.minH,
+            }}
+          >
+            {renderWidget(item)}
+          </GridStackItem>
+        );
+      })}
     </GridStack>
   );
 }

@@ -10,13 +10,17 @@ const CATALOGO = [
     descripcion: 'Total del período.',
     wPorDefecto: 4,
     hPorDefecto: 5,
+    minW: 4,
+    minH: 4,
   },
   {
     tipo: 'evolucion' as const,
     titulo: 'Evolución del gasto',
     descripcion: 'Serie temporal.',
     wPorDefecto: 8,
-    hPorDefecto: 6,
+    hPorDefecto: 7,
+    minW: 6,
+    minH: 6,
   },
 ];
 
@@ -39,7 +43,7 @@ describe('tablero de widgets', () => {
     expect(screen.getByRole('button', { name: 'Mover a la izquierda' })).toBeDisabled();
     expect(screen.getByLabelText('Arrastrar widget')).toHaveAttribute(
       'title',
-      'Arrastrá para mover',
+      'Arrastrá desde el encabezado para mover',
     );
 
     fireEvent.click(screen.getByRole('button', { name: 'Mover a la derecha' }));

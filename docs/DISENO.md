@@ -64,11 +64,12 @@ mezcla de serif/mono.
 - **Tablero GridStack**: `gridstack` v14 maneja drag & drop, resize, colisiones y
   compactación con `animate: true`; al mover o soltar, las tarjetas se reacomodan
   con una transición de ~300 ms.
-- **Arrastre**: solo el agarre de la tarjeta (`.widget__drag`) inicia el drag;
-  botones, inputs y enlaces no lo disparan. En touch GridStack usa su long-press
-  nativo y muestra el handle de resize.
-- **Resize**: handle nativo de la esquina inferior derecha; el ancho se ajusta
-  entre 3 y 12 columnas y la altura en filas de 54 px.
+- **Arrastre**: se toma desde el encabezado de la tarjeta, así el área para
+  agarrar es amplia; botones, inputs y enlaces no disparan el drag. En touch
+  GridStack usa su long-press nativo y muestra el handle de resize.
+- **Resize**: handle nativo de la esquina inferior derecha. Cada tipo de widget
+  define su mínimo legible (4–6 columnas y 4–6 filas) para evitar que el
+  contenido se corte; el máximo es 12 columnas. Las filas miden 54 px.
 - **Mobile**: por debajo de 980 px la grilla pasa a una columna; al volver a
   escritorio se restaura el layout guardado.
 - Barras de categoría y presupuestos crecen con `scaleX` (560 ms); las barras
@@ -82,11 +83,13 @@ mezcla de serif/mono.
 ## Tablero
 
 El tablero usa **GridStack** con 12 columnas en escritorio y 1 en mobile. Cada
-widget es una tarjeta arrastrable por su agarre y redimensionable desde la
+widget es una tarjeta arrastrable desde su encabezado y redimensionable desde la
 esquina inferior derecha; GridStack resuelve colisiones, compacta hacia arriba
 (`mode: 'top'`) y anima el reacomodo. Al agregar una instancia se busca el primer
 hueco libre. El layout completo (`x`, `y`, `w`, `h`) se persiste por usuario en
 `localStorage` y se migra automáticamente del formato anterior basado en `span`.
+Cada tipo define un mínimo de ancho/alto para que el contenido siga siendo
+legible al achicarlo.
 
 **Modo edición:** fuera de él, los widgets son de solo lectura (no se arrastran
 ni redimensionan y no muestran controles). El botón “Editar” habilita el arrastre,

@@ -42,7 +42,7 @@ export function WidgetAcciones({
     <div className="widget__actions">
       <span
         className="widget__drag"
-        title="Arrastrá para mover"
+        title="Arrastrá desde el encabezado para mover"
         aria-label="Arrastrar widget"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
