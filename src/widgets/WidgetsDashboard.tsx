@@ -77,7 +77,9 @@ function controles(
   return (
     <>
       <WidgetPeriodoSelector
-        valor={item.periodo ?? 'global'}
+        valor={
+          item.periodo && item.periodo !== 'global' ? item.periodo : 'mes'
+        }
         onCambiar={onCambiarPeriodo}
       />
       {acciones}

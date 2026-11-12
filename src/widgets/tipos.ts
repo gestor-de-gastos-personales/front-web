@@ -8,8 +8,11 @@ export type TipoWidget =
 /** Período que puede elegir cada widget de forma independiente. */
 export type ModoPeriodoWidget =
   | 'global'
+  | 'hoy'
+  | 'semana'
   | 'mes'
   | 'mes-anterior'
+  | '15-dias'
   | '3-meses'
   | 'anio';
 
@@ -127,8 +130,11 @@ export function esModoPeriodoWidget(
 ): valor is ModoPeriodoWidget {
   return (
     valor === 'global' ||
+    valor === 'hoy' ||
+    valor === 'semana' ||
     valor === 'mes' ||
     valor === 'mes-anterior' ||
+    valor === '15-dias' ||
     valor === '3-meses' ||
     valor === 'anio'
   );

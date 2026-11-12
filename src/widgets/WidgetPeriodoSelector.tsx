@@ -6,9 +6,11 @@ interface WidgetPeriodoSelectorProps {
 }
 
 const OPCIONES: Array<{ valor: ModoPeriodoWidget; texto: string }> = [
-  { valor: 'global', texto: 'Período global' },
+  { valor: 'hoy', texto: 'Hoy' },
+  { valor: 'semana', texto: 'Esta semana' },
   { valor: 'mes', texto: 'Este mes' },
   { valor: 'mes-anterior', texto: 'Mes anterior' },
+  { valor: '15-dias', texto: 'Últimos 15 días' },
   { valor: '3-meses', texto: 'Últimos 3 meses' },
   { valor: 'anio', texto: 'Este año' },
 ];

@@ -42,13 +42,20 @@ export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartP
   const cadaEtiqueta = Math.max(1, Math.ceil(puntos.length / 8));
 
   return (
-    <Widget titulo="Evolución del gasto" tag={ETIQUETA_AGRUPACION[agrupacion]} acciones={acciones}>
-      <svg
-        className="grafico"
-        viewBox={`0 0 ${ancho} ${alto}`}
-        role="img"
-        aria-label={`Evolución de gastos en ${puntos.length} puntos`}
-      >
+    <Widget
+      titulo="Evolución del gasto"
+      tag={ETIQUETA_AGRUPACION[agrupacion]}
+      acciones={acciones}
+      className="widget--grafico"
+    >
+      <div className="grafico__lienzo">
+        <svg
+          className="grafico"
+          viewBox={`0 0 ${ancho} ${alto}`}
+          role="img"
+          aria-label={`Evolución de gastos en ${puntos.length} puntos`}
+          preserveAspectRatio="xMidYMid meet"
+        >
         {[0.25, 0.5, 0.75].map((fraccion) => (
           <line
             key={fraccion}
@@ -96,7 +103,8 @@ export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartP
             </g>
           );
         })}
-      </svg>
+        </svg>
+      </div>
       <p className="meta" style={{ marginTop: 8 }}>
         Total del período: {formatearMonto(total)}
       </p>

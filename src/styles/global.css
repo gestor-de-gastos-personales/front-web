@@ -592,6 +592,27 @@ p {
   display: block;
 }
 
+/* El gráfico de evolución ocupa el alto disponible y no crece al ensanchar. */
+.widget--grafico {
+  display: flex;
+  flex-direction: column;
+}
+
+.widget--grafico .widget__head {
+  flex: 0 0 auto;
+}
+
+.grafico__lienzo {
+  flex: 1 1 auto;
+  min-height: 120px;
+  min-width: 0;
+}
+
+.grafico__lienzo > .grafico {
+  width: 100%;
+  height: 100%;
+}
+
 /* ---------- Estados ---------- */
 .estado {
   background: #f9fafb;

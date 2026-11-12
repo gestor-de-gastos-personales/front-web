@@ -15,7 +15,6 @@ import {
 } from '../widgets/WidgetsDashboard.js';
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
 import { ConfirmModal } from '../components/ConfirmModal.js';
-import { PeriodSelector } from '../components/PeriodSelector.js';
 import { EmptyState } from '../components/EmptyState.js';
 
 export function DashboardView() {
@@ -87,47 +86,43 @@ export function DashboardView() {
 
   return (
     <div className="dashboard">
-      <div className="grid">
-        <PeriodSelector />
-
-        <div className="dashboard-tools span-12">
-          {editando ? (
-            <>
-              <button
-                type="button"
-                className="boton boton--fantasma boton--chico"
-                onClick={() => setConfirmarReset(true)}
-              >
-                Restablecer
-              </button>
-              <span className="dashboard-tools__hint">
-                Arrastrá desde el encabezado para mover; redimensioná desde la esquina.
-              </span>
-              <button
-                type="button"
-                className="boton boton--chico"
-                onClick={() => setPicker(true)}
-              >
-                Agregar widget
-              </button>
-              <button
-                type="button"
-                className="boton boton--primario boton--chico"
-                onClick={() => setEditando(false)}
-              >
-                Listo
-              </button>
-            </>
-          ) : (
+      <div className="dashboard-tools">
+        {editando ? (
+          <>
+            <button
+              type="button"
+              className="boton boton--fantasma boton--chico"
+              onClick={() => setConfirmarReset(true)}
+            >
+              Restablecer
+            </button>
+            <span className="dashboard-tools__hint">
+              Arrastrá desde el encabezado para mover; redimensioná desde la esquina.
+            </span>
             <button
               type="button"
               className="boton boton--chico"
-              onClick={() => setEditando(true)}
+              onClick={() => setPicker(true)}
             >
-              Editar
+              Agregar widget
             </button>
-          )}
-        </div>
+            <button
+              type="button"
+              className="boton boton--primario boton--chico"
+              onClick={() => setEditando(false)}
+            >
+              Listo
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            className="boton boton--chico"
+            onClick={() => setEditando(true)}
+          >
+            Editar
+          </button>
+        )}
       </div>
 
       <WidgetGrid

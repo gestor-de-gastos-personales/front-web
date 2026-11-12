@@ -23,6 +23,19 @@ describe('resolverPeriodo', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 10, 12, 12));
 
+    expect(resolverPeriodo('hoy', GLOBAL)).toMatchObject({
+      desde: '2026-11-12',
+      hasta: '2026-11-12',
+      agrupacion: 'dia',
+    });
+    expect(resolverPeriodo('semana', GLOBAL)).toMatchObject({
+      desde: '2026-11-09',
+      hasta: '2026-11-15',
+    });
+    expect(resolverPeriodo('15-dias', GLOBAL)).toMatchObject({
+      desde: '2026-10-29',
+      hasta: '2026-11-12',
+    });
     expect(resolverPeriodo('mes', GLOBAL)).toMatchObject({
       desde: '2026-11-01',
       hasta: '2026-11-30',

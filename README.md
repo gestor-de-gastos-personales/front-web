@@ -35,7 +35,7 @@ npm run test:cov          # tests + cobertura
 - **Sesión**: registro y login con JWT; el token se restaura al recargar y se
   valida contra `GET /auth/me`.
 - **Dashboard**: tablero **GridStack** (12 columnas en escritorio, 1 en mobile)
-  con selector global de período y **modo edición**: “Editar” habilita el
+  sin selector global de período y con **modo edición**: “Editar” habilita el
   arrastre, el resize nativo, agregar/restablecer y quitar; “Listo” vuelve a la
   vista de solo lectura. Los widgets se pueden repetir (por ejemplo, dos
   gráficos), reordenar arrastrando desde el encabezado de la tarjeta (las
@@ -45,12 +45,13 @@ npm run test:cov          # tests + cobertura
   contenido no quede cortado. Al agregar, el picker confirma “Agregado
   correctamente”; “Restablecer” pide confirmación antes de volver al layout
   inicial. Total, gasto por categoría y evolución tienen **período propio**
-  (global, este mes, mes anterior, últimos 3 meses o este año); presupuestos e
-  historial siguen el período global. Los gráficos usan una **paleta de colores**
-  por categoría y por punto de la serie. El layout (posición, tamaño y período
-  por widget) se guarda por usuario en el navegador y se migra desde el formato
-  anterior. Widgets: total, gasto por categoría, evolución, presupuestos e
-  historial.
+  (hoy, esta semana, este mes, mes anterior, últimos 15 días, últimos 3 meses o
+  este año); presupuestos e historial usan el mes actual. Los gráficos usan una
+  **paleta de colores** por categoría y por punto de la serie, y el gráfico de
+  evolución se adapta al alto del widget sin desbordarse al ensancharlo. El
+  layout (posición, tamaño y período por widget) se guarda por usuario en el
+  navegador y se migra desde el formato anterior. Widgets: total, gasto por
+  categoría, evolución, presupuestos e historial.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y
   categoría, con paginación.
 - **Categorías**: alta, renombrado y baja.
@@ -86,7 +87,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-117 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
+118 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño
