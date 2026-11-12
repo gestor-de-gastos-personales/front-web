@@ -79,4 +79,4 @@ La dirección visual, la paleta y las reglas de contenido están documentadas en
 [`docs/DISENO.md`](docs/DISENO.md).
 
 El logo es la vectorización del logo de Mangos provista por el proyecto,
-recortada al área del mango y enmarcada en un cuadrado con esquinas redondeadas.
+recortada al área del mango y sin fondo.
