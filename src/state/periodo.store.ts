@@ -7,7 +7,7 @@ interface PeriodoState {
   setPeriodo: (periodo: Periodo) => void;
 }
 
-/** Período global que alimenta todos los widgets del dashboard. */
+/** Período global por defecto; total, categorías y evolución pueden tener uno propio. */
 export const usePeriodo = create<PeriodoState>((set) => ({
   periodo: mesActual(),
   setPeriodo: (periodo) => set({ periodo }),

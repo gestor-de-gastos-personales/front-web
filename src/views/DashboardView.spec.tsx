@@ -34,7 +34,7 @@ vi.mock('../widgets/WidgetGrid.js', () => ({
 
 import { DashboardView } from './DashboardView.js';
 import { usePeriodo } from '../state/periodo.store.js';
-import { mesActual } from '../utils/periodo.js';
+import { mesActual, mesAnterior } from '../utils/periodo.js';
 
 const GASTO = {
   id: 1,
@@ -104,9 +104,50 @@ describe('DashboardView', () => {
     expect(screen.getAllByText(/1\.500/).length).toBeGreaterThan(0);
     expect(screen.getByText('Gasto por categoría')).toBeInTheDocument();
     expect(screen.getByText('Evolución del gasto')).toBeInTheDocument();
-    expect(screen.getByText('Últimos gastos')).toBeInTheDocument();
     expect(screen.getByText('Historial')).toBeInTheDocument();
     expect(screen.getByText('Presupuestos')).toBeInTheDocument();
+  });
+
+  it('permite elegir el período de total, categorías y evolución', () => {
+    datos.useResumen.mockReturnValue(ok(RESUMEN));
+    datos.useSerie.mockReturnValue(
+      ok({
+        desde: '2026-11-01',
+        hasta: '2026-11-30',
+        agrupacion: 'dia',
+        puntos: [{ clave: '2026-11-01', etiqueta: '01/11', total: 1500 }],
+        totalGeneral: 1500,
+      }),
+    );
+    datos.useGastos.mockReturnValue(
+      ok({ data: [GASTO], meta: { total: 1, page: 1, limit: 5, totalPages: 1 } }),
+    );
+    datos.usePresupuestos.mockReturnValue(ok({ data: [], total: 0 }));
+
+    render(
+      <MemoryRouter>
+        <DashboardView />
+      </MemoryRouter>,
+    );
+
+    const selectores = screen.getAllByRole('combobox', {
+      name: 'Período del widget',
+    });
+    expect(selectores).toHaveLength(3);
+
+    const esperado = mesAnterior();
+    fireEvent.change(selectores[0]!, {
+      target: { value: 'mes-anterior' },
+    });
+
+    expect(selectores[0]).toHaveValue('mes-anterior');
+    expect(
+      datos.useResumen.mock.calls.some(
+        ([periodo]) =>
+          periodo.desde === esperado.desde &&
+          periodo.hasta === esperado.hasta,
+      ),
+    ).toBe(true);
   });
 
   it('solo permite editar los widgets en modo edición', () => {
@@ -144,8 +185,8 @@ describe('DashboardView', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Editar' }));
 
-    expect(screen.getAllByRole('button', { name: 'Quitar widget' })).toHaveLength(6);
-    expect(screen.getAllByLabelText('Arrastrar widget')).toHaveLength(6);
+    expect(screen.getAllByRole('button', { name: 'Quitar widget' })).toHaveLength(5);
+    expect(screen.getAllByLabelText('Arrastrar widget')).toHaveLength(5);
     expect(screen.getByRole('button', { name: 'Agregar widget' })).toBeInTheDocument();
     expect(screen.getByTestId('widget-grid')).toHaveAttribute(
       'data-editable',

@@ -44,10 +44,13 @@ npm run test:cov          # tests + cobertura
   tiene un tamaño mínimo legible (4–6 columnas y 4–6 filas) para que el
   contenido no quede cortado. Al agregar, el picker confirma “Agregado
   correctamente”; “Restablecer” pide confirmación antes de volver al layout
-  inicial. El layout (posición y tamaño) se guarda por usuario en el navegador
-  y se migra desde el formato anterior.
-  Widgets: total, gasto por categoría, evolución, últimos gastos, historial y
-  presupuestos.
+  inicial. Total, gasto por categoría y evolución tienen **período propio**
+  (global, este mes, mes anterior, últimos 3 meses o este año); presupuestos e
+  historial siguen el período global. Los gráficos usan una **paleta de colores**
+  por categoría y por punto de la serie. El layout (posición, tamaño y período
+  por widget) se guarda por usuario en el navegador y se migra desde el formato
+  anterior. Widgets: total, gasto por categoría, evolución, presupuestos e
+  historial.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y
   categoría, con paginación.
 - **Categorías**: alta, renombrado y baja.
@@ -83,7 +86,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-109 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
+117 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño

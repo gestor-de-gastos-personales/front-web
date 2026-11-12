@@ -105,10 +105,14 @@ describe('componentes base', () => {
     expect(screen.getByText(/Sin gastos en el período/)).toBeInTheDocument();
   });
 
-  it('CategoryBars dibuja una barra por categoría', () => {
-    render(<CategoryBars grupos={RESUMEN.porCategoria} />);
+  it('CategoryBars dibuja una barra por categoría con colores distintos', () => {
+    const { container } = render(<CategoryBars grupos={RESUMEN.porCategoria} />);
     expect(screen.getByText('Alimentación')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /Alimentación/ })).toBeInTheDocument();
+
+    const barras = container.querySelectorAll<HTMLElement>('.barra__relleno');
+    expect(barras).toHaveLength(2);
+    expect(barras[0]!.style.background).not.toBe(barras[1]!.style.background);
   });
 
   it('CategoryBars sin datos muestra vacío', () => {

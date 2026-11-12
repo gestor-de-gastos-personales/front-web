@@ -139,6 +139,58 @@ describe('useDashboardLayout', () => {
     expect(result.current.items).toBe(anterior);
   });
 
+  it('cambia el período de un widget sin afectar al resto', () => {
+    const { result } = renderHook(() => useDashboardLayout(1));
+    const id = result.current.items[0]!.id;
+
+    act(() => result.current.cambiarPeriodo(id, 'mes-anterior'));
+    expect(result.current.items[0]!.periodo).toBe('mes-anterior');
+    expect(result.current.items[1]!.periodo).toBeUndefined();
+
+    act(() => result.current.cambiarPeriodo(id, 'global'));
+    expect(result.current.items[0]!.periodo).toBeUndefined();
+  });
+
+  it('persiste el período elegido por widget', () => {
+    const primera = renderHook(() => useDashboardLayout(4));
+    const id = primera.result.current.items[0]!.id;
+    act(() => primera.result.current.cambiarPeriodo(id, 'anio'));
+    primera.unmount();
+
+    const misma = renderHook(() => useDashboardLayout(4));
+    expect(misma.result.current.items[0]!.periodo).toBe('anio');
+  });
+
+  it('descarta widgets eliminados sin perder el resto del layout', () => {
+    localStorage.setItem(
+      'mangos.dashboard.10',
+      JSON.stringify([
+        { id: 'total-1', tipo: 'total', x: 0, y: 0, w: 4, h: 5 },
+        { id: 'ultimos-1', tipo: 'ultimos', x: 0, y: 5, w: 4, h: 7 },
+        { id: 'historial-1', tipo: 'historial', x: 0, y: 12, w: 12, h: 7 },
+      ]),
+    );
+
+    const { result } = renderHook(() => useDashboardLayout(10));
+
+    expect(result.current.items.map((widget) => widget.tipo)).toEqual([
+      'total',
+      'historial',
+    ]);
+  });
+
+  it('ignora un modo de período desconocido', () => {
+    localStorage.setItem(
+      'mangos.dashboard.11',
+      JSON.stringify([
+        { id: 'total-1', tipo: 'total', x: 0, y: 0, w: 4, h: 5, periodo: 'raro' },
+      ]),
+    );
+
+    const { result } = renderHook(() => useDashboardLayout(11));
+    expect(result.current.items[0]!.periodo).toBeUndefined();
+  });
+
   it('persiste las instancias por usuario', () => {
     const primera = renderHook(() => useDashboardLayout(7));
     const id = primera.result.current.items[0]!.id;

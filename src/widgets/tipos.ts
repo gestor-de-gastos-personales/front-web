@@ -3,8 +3,15 @@ export type TipoWidget =
   | 'categorias'
   | 'evolucion'
   | 'presupuestos'
-  | 'ultimos'
   | 'historial';
+
+/** Período que puede elegir cada widget de forma independiente. */
+export type ModoPeriodoWidget =
+  | 'global'
+  | 'mes'
+  | 'mes-anterior'
+  | '3-meses'
+  | 'anio';
 
 /** Columnas del tablero en escritorio (GridStack). */
 export const COLUMNAS = 12;
@@ -25,6 +32,8 @@ export interface WidgetLayoutItem {
   y: number;
   w: number;
   h: number;
+  /** Si se omite, el widget sigue el período global del dashboard. */
+  periodo?: ModoPeriodoWidget;
 }
 
 /** Geometría que llega desde GridStack al sincronizar el tablero. */
@@ -80,18 +89,10 @@ export const WIDGETS: Record<TipoWidget, WidgetMeta> = {
     minW: 4,
     minH: 4,
   },
-  ultimos: {
-    titulo: 'Últimos gastos',
-    descripcion: 'Los últimos movimientos cargados.',
-    wPorDefecto: 4,
-    hPorDefecto: 7,
-    minW: 4,
-    minH: 5,
-  },
   historial: {
     titulo: 'Historial',
     descripcion: 'Listado paginado del período con acciones.',
-    wPorDefecto: 8,
+    wPorDefecto: 12,
     hPorDefecto: 7,
     minW: 6,
     minH: 6,
@@ -103,7 +104,6 @@ export const ORDEN_WIDGETS: TipoWidget[] = [
   'categorias',
   'evolucion',
   'presupuestos',
-  'ultimos',
   'historial',
 ];
 
@@ -112,12 +112,26 @@ export const LAYOUT_POR_DEFECTO: WidgetLayoutItem[] = [
   { id: 'categorias-1', tipo: 'categorias', x: 4, y: 0, w: 8, h: 5 },
   { id: 'evolucion-1', tipo: 'evolucion', x: 0, y: 5, w: 8, h: 7 },
   { id: 'presupuestos-1', tipo: 'presupuestos', x: 8, y: 5, w: 4, h: 5 },
-  { id: 'ultimos-1', tipo: 'ultimos', x: 0, y: 12, w: 4, h: 7 },
-  { id: 'historial-1', tipo: 'historial', x: 4, y: 12, w: 8, h: 7 },
+  { id: 'historial-1', tipo: 'historial', x: 0, y: 12, w: 12, h: 7 },
 ];
 
 export function esTipoWidget(valor: unknown): valor is TipoWidget {
-  return typeof valor === 'string' && valor in WIDGETS;
+  return (
+    typeof valor === 'string' &&
+    Object.prototype.hasOwnProperty.call(WIDGETS, valor)
+  );
+}
+
+export function esModoPeriodoWidget(
+  valor: unknown,
+): valor is ModoPeriodoWidget {
+  return (
+    valor === 'global' ||
+    valor === 'mes' ||
+    valor === 'mes-anterior' ||
+    valor === '3-meses' ||
+    valor === 'anio'
+  );
 }
 
 /** Entero dentro de un rango inclusivo. */

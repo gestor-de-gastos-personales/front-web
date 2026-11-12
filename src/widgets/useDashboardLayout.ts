@@ -8,10 +8,16 @@ import {
   W_MAX,
   W_MIN,
   esEntero,
+  esModoPeriodoWidget,
   esTipoWidget,
   nuevoId,
 } from './tipos.js';
-import type { NodoGrilla, TipoWidget, WidgetLayoutItem } from './tipos.js';
+import type {
+  ModoPeriodoWidget,
+  NodoGrilla,
+  TipoWidget,
+  WidgetLayoutItem,
+} from './tipos.js';
 
 const CLAVE = (usuarioId?: number | null) =>
   `mangos.dashboard.${usuarioId ?? 'anon'}`;
@@ -123,11 +129,13 @@ function normalizar(valor: unknown): WidgetLayoutItem[] | null {
   const ids = new Set<string>();
   const items: WidgetLayoutItem[] = [];
   let faltanPosiciones = false;
+  let vistos = 0;
 
   for (const crudo of valor) {
     if (!crudo || typeof crudo !== 'object') return null;
+    vistos += 1;
 
-    const { id, tipo, span, x, y, w, h } = crudo as {
+    const { id, tipo, span, x, y, w, h, periodo } = crudo as {
       id?: unknown;
       tipo?: unknown;
       span?: unknown;
@@ -135,9 +143,12 @@ function normalizar(valor: unknown): WidgetLayoutItem[] | null {
       y?: unknown;
       w?: unknown;
       h?: unknown;
+      periodo?: unknown;
     };
 
-    if (!esTipoWidget(tipo)) return null;
+    // Tipos eliminados (por ejemplo "ultimos") se descartan sin invalidar
+    // el resto del layout guardado.
+    if (!esTipoWidget(tipo)) continue;
 
     const ancho = w ?? span;
     if (!esEntero(ancho, W_MIN, W_MAX)) return null;
@@ -154,15 +165,25 @@ function normalizar(valor: unknown): WidgetLayoutItem[] | null {
       typeof id === 'string' && id && !ids.has(id) ? id : nuevoId(tipo);
     ids.add(idFinal);
 
-    items.push({
+    const item: WidgetLayoutItem = {
       id: idFinal,
       tipo,
       x: xValida ? x : 0,
       y: yValida ? y : 0,
       w: ancho,
       h: alto,
-    });
+    };
+
+    if (esModoPeriodoWidget(periodo) && periodo !== 'global') {
+      item.periodo = periodo;
+    }
+
+    items.push(item);
   }
+
+  // Un arreglo con solo tipos desconocidos se considera corrupto; un arreglo
+  // vacío guardado intencionalmente sigue siendo un tablero vacío.
+  if (vistos > 0 && items.length === 0) return null;
 
   return faltanPosiciones ? empaquetar(items) : items;
 }
@@ -253,6 +274,24 @@ export function useDashboardLayout(usuarioId?: number | null) {
     setItems((previo) => previo.filter((item) => item.id !== id));
   }, []);
 
+  /** Cambia el período de una instancia (sin afectar al resto). */
+  const cambiarPeriodo = useCallback(
+    (id: string, periodo: ModoPeriodoWidget) => {
+      setItems((previo) =>
+        previo.map((item) => {
+          if (item.id !== id) return item;
+          if (periodo === 'global') {
+            const resto = { ...item };
+            delete resto.periodo;
+            return resto;
+          }
+          return { ...item, periodo };
+        }),
+      );
+    },
+    [],
+  );
+
   /** Agrega una instancia nueva en el primer hueco libre; el tipo puede repetirse. */
   const agregar = useCallback((tipo: TipoWidget) => {
     setItems((previo) => {
@@ -282,6 +321,7 @@ export function useDashboardLayout(usuarioId?: number | null) {
     moverIzquierda,
     moverDerecha,
     quitar,
+    cambiarPeriodo,
     agregar,
     resetear,
   };

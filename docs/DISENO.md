@@ -89,7 +89,11 @@ esquina inferior derecha; GridStack resuelve colisiones, compacta hacia arriba
 hueco libre. El layout completo (`x`, `y`, `w`, `h`) se persiste por usuario en
 `localStorage` y se migra automáticamente del formato anterior basado en `span`.
 Cada tipo define un mínimo de ancho/alto para que el contenido siga siendo
-legible al achicarlo. El picker de widgets muestra una confirmación visual
+legible al achicarlo. Total, categorías y evolución tienen un selector compacto
+de período en su encabezado (global, este mes, mes anterior, últimos 3 meses o
+este año); presupuestos e historial siguen el período global de la cabecera. Los
+gráficos de categorías y evolución usan una paleta de colores por categoría y
+por punto de la serie. El picker de widgets muestra una confirmación visual
 (“Agregado correctamente” y el botón en verde) durante 5 segundos al sumar una
 instancia. “Restablecer” abre un diálogo con “Cancelar” y “Restablecer” (sin un
 segundo botón de cierre) antes de descartar el layout personalizado. Los modales
