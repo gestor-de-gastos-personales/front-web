@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { usePeriodo } from '../state/periodo.store.js';
 import { useCategorias, useGastos } from '../hooks/datos.js';
 import { gastosService } from '../services/gastos.service.js';
 import type { Gasto, GastoEntrada } from '../services/gastos.service.js';
@@ -16,11 +15,10 @@ import { PageHeader } from '../components/PageHeader.js';
 const LIMITE = 8;
 
 export function GastosView() {
-  const periodo = usePeriodo((estado) => estado.periodo);
   const [pagina, setPagina] = useState(1);
   const [categoriaId, setCategoriaId] = useState<number | undefined>(undefined);
-  const [desde, setDesde] = useState(periodo.desde);
-  const [hasta, setHasta] = useState(periodo.hasta);
+  const [desde, setDesde] = useState('');
+  const [hasta, setHasta] = useState('');
   const [montoMin, setMontoMin] = useState('');
   const [montoMax, setMontoMax] = useState('');
   const [formulario, setFormulario] = useState<Gasto | 'nuevo' | null>(null);

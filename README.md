@@ -53,7 +53,8 @@ npm run test:cov          # tests + cobertura
   navegador y se migra desde el formato anterior. Widgets: total, gasto por
   categoría, evolución, presupuestos e historial.
 - **Gastos**: alta, edición, borrado y listado con filtros por período,
-  categoría y rango de monto (`montoMin` / `montoMax`), con paginación.
+  categoría y rango de monto (`montoMin` / `montoMax`), con paginación. Por
+  defecto no aplica filtros y muestra todos los gastos.
 - **Categorías**: alta de categorías propias; las del sistema son de solo
   lectura y solo las propias se pueden renombrar o eliminar.
 - **Presupuestos**: tope mensual por categoría y comparación contra el gasto
@@ -88,7 +89,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-120 tests con Vitest + Testing Library. Cobertura de líneas ~96% (se genera
+121 tests con Vitest + Testing Library. Cobertura de líneas ~96% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño

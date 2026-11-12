@@ -77,6 +77,25 @@ describe('GastosView', () => {
     );
   });
 
+  it('por defecto muestra todos los gastos sin filtro de fecha', () => {
+    render(
+      <MemoryRouter>
+        <GastosView />
+      </MemoryRouter>,
+    );
+
+    expect(datos.useGastos).toHaveBeenCalledWith(
+      expect.objectContaining({
+        page: 1,
+        limit: 8,
+        fechaInicio: undefined,
+        fechaFin: undefined,
+        montoMin: undefined,
+        montoMax: undefined,
+      }),
+    );
+  });
+
   it('filtra por período, categoría y monto', () => {
     render(
       <MemoryRouter>
