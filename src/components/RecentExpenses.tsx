@@ -15,8 +15,8 @@ export function RecentExpenses({ gastos }: { gastos: Gasto[] }) {
             <li
               key={gasto.id}
               style={{
-                borderBottom: '1px solid var(--ink)',
-                padding: '8px 0',
+                borderBottom: '1px solid var(--line-soft)',
+                padding: '10px 0',
                 display: 'grid',
                 gridTemplateColumns: '1fr auto',
                 gap: 8,
@@ -25,11 +25,11 @@ export function RecentExpenses({ gastos }: { gastos: Gasto[] }) {
               <span>
                 <strong>{gasto.descripcion}</strong>
                 <br />
-                <span className="mono">
+                <span className="meta">
                   {formatearFecha(gasto.fecha)} · {gasto.categoria?.nombre ?? 'Sin categoría'}
                 </span>
               </span>
-              <span className="serif" style={{ fontSize: 18 }}>
+              <span className="num" style={{ fontSize: 18 }}>
                 {formatearMonto(gasto.monto)}
               </span>
             </li>
@@ -37,7 +37,7 @@ export function RecentExpenses({ gastos }: { gastos: Gasto[] }) {
         </ul>
       )}
       <p style={{ marginTop: 12 }}>
-        <Link to="/gastos" className="mono">
+        <Link to="/gastos" className="meta">
           Ver historial completo →
         </Link>
       </p>

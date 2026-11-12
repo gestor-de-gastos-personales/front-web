@@ -120,7 +120,7 @@ export function PresupuestosView() {
                       <td>{presupuesto.categoria?.nombre ?? 'Sin categoría'}</td>
                       <td className="num">{formatearMonto(tope)}</td>
                       <td className="num">{formatearMonto(gastado)}</td>
-                      <td className="mono">{excedido ? 'excedido' : 'en rango'}</td>
+                      <td className="meta">{excedido ? 'excedido' : 'en rango'}</td>
                     </tr>
                   );
                 })}

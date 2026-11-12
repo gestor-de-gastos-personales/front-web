@@ -35,7 +35,7 @@ export function RegisterView() {
           <span className="brand__name">mangos</span>
         </div>
         <h1 className="auth__titulo">Creá tu cuenta</h1>
-        <p className="mono">Un registro para todos tus gastos.</p>
+        <p className="meta">Un registro para todos tus gastos.</p>
 
         {error ? (
           <p className="alerta" role="alert">
@@ -82,7 +82,7 @@ export function RegisterView() {
           </button>
         </form>
 
-        <p style={{ marginTop: 16 }} className="mono">
+        <p style={{ marginTop: 16 }} className="meta">
           ¿Ya tenés cuenta? <Link to="/login">Entrar</Link>
         </p>
       </div>

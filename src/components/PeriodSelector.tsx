@@ -8,7 +8,6 @@ import {
   ultimosMeses,
 } from '../utils/periodo.js';
 import type { Periodo } from '../utils/periodo.js';
-import { Widget } from './Widget.js';
 
 type Modo = 'mes' | 'mes-anterior' | '3-meses' | 'anio' | 'custom';
 
@@ -20,6 +19,12 @@ const OPCIONES: Array<{ valor: Modo; texto: string }> = [
   { valor: 'custom', texto: 'Personalizado' },
 ];
 
+const ETIQUETA_AGRUPACION = {
+  dia: 'por día',
+  semana: 'por semana',
+  mes: 'por mes',
+} as const;
+
 function periodoDe(modo: Modo): Periodo | null {
   if (modo === 'mes') return mesActual();
   if (modo === 'mes-anterior') return mesAnterior();
@@ -28,7 +33,7 @@ function periodoDe(modo: Modo): Periodo | null {
   return null;
 }
 
-/** Selector global: define el período que alimenta todos los widgets. */
+/** Cabecera del dashboard: folio del período y selector global. */
 export function PeriodSelector() {
   const periodo = usePeriodo((estado) => estado.periodo);
   const setPeriodo = usePeriodo((estado) => estado.setPeriodo);
@@ -55,15 +60,19 @@ export function PeriodSelector() {
   };
 
   return (
-    <Widget
-      titulo="Período"
-      tag={periodo.agrupacion === 'dia' ? 'por día' : periodo.agrupacion === 'semana' ? 'por semana' : 'por mes'}
-      acento="blue"
-      className="span-12"
-    >
-      <div className="periodo">
-        <p className="periodo__folio">{periodo.etiqueta}</p>
-        <div style={{ marginLeft: 'auto' }} className="fila">
+    <>
+      <header className="page-head span-12">
+        <div>
+          <h1 className="page-title">Resumen</h1>
+          <div className="fila" style={{ alignItems: 'baseline', marginTop: 6 }}>
+            <p className="periodo__folio">{periodo.etiqueta}</p>
+            <span className="widget__tag widget__tag--blue">
+              {ETIQUETA_AGRUPACION[periodo.agrupacion]}
+            </span>
+          </div>
+        </div>
+
+        <div className="fila">
           <label className="campo">
             <span className="campo__label">Rango</span>
             <select
@@ -102,12 +111,13 @@ export function PeriodSelector() {
             </>
           ) : null}
         </div>
-      </div>
+      </header>
+
       {error ? (
-        <p className="alerta" role="alert">
+        <p className="alerta span-12" role="alert">
           {error}
         </p>
       ) : null}
-    </Widget>
+    </>
   );
 }

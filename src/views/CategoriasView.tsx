@@ -93,7 +93,7 @@ export function CategoriasView() {
                 {(categorias.data ?? []).map((categoria) => (
                   <tr key={categoria.id}>
                     <td>{categoria.nombre}</td>
-                    <td className="mono">{categoria.default ? 'del sistema' : 'propia'}</td>
+                    <td className="meta">{categoria.default ? 'del sistema' : 'propia'}</td>
                     <td>
                       <button
                         type="button"

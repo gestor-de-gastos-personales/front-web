@@ -38,8 +38,8 @@ export function BudgetWidget({ presupuestos, resumen }: BudgetWidgetProps) {
             return (
               <div key={presupuesto.id}>
                 <div className="fila" style={{ justifyContent: 'space-between' }}>
-                  <span className="mono">{presupuesto.categoria?.nombre ?? 'Sin categoría'}</span>
-                  <span className="mono">
+                  <span className="meta">{presupuesto.categoria?.nombre ?? 'Sin categoría'}</span>
+                  <span className="meta">
                     {formatearMonto(gastado)} / {formatearMonto(tope)}
                   </span>
                 </div>

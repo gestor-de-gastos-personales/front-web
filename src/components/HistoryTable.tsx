@@ -31,9 +31,9 @@ export function HistoryTable({ pagina, onEditar, onEliminar, onPagina }: History
           <tbody>
             {data.map((gasto) => (
               <tr key={gasto.id}>
-                <td className="mono">{formatearFecha(gasto.fecha)}</td>
+                <td className="meta">{formatearFecha(gasto.fecha)}</td>
                 <td>{gasto.descripcion}</td>
-                <td className="mono">{gasto.categoria?.nombre ?? '—'}</td>
+                <td className="meta">{gasto.categoria?.nombre ?? '—'}</td>
                 <td className="num">{formatearMonto(gasto.monto)}</td>
                 <td>
                   <button
@@ -60,7 +60,7 @@ export function HistoryTable({ pagina, onEditar, onEliminar, onPagina }: History
       )}
 
       <div className="fila" style={{ marginTop: 14, justifyContent: 'space-between' }}>
-        <span className="mono">
+        <span className="meta">
           Página {meta.page} de {Math.max(1, meta.totalPages)}
         </span>
         <span className="fila">

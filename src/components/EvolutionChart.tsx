@@ -46,7 +46,18 @@ export function EvolutionChart({ puntos, agrupacion }: EvolutionChartProps) {
         role="img"
         aria-label={`Evolución de gastos en ${puntos.length} puntos`}
       >
-        <line x1={margen} y1={base} x2={ancho - margen} y2={base} stroke="var(--ink)" strokeWidth="2" />
+        {[0.25, 0.5, 0.75].map((fraccion) => (
+          <line
+            key={fraccion}
+            x1={margen}
+            y1={base - fraccion * (base - 24)}
+            x2={ancho - margen}
+            y2={base - fraccion * (base - 24)}
+            stroke="var(--line)"
+            strokeWidth="1"
+          />
+        ))}
+        <line x1={margen} y1={base} x2={ancho - margen} y2={base} stroke="var(--line)" strokeWidth="1" />
         {puntos.map((punto, indice) => {
           const barraAlto = (punto.total / maximo) * (base - 24);
           const x = margen + indice * pasoAncho + pasoAncho * 0.15;
@@ -59,9 +70,8 @@ export function EvolutionChart({ puntos, agrupacion }: EvolutionChartProps) {
                 y={base - barraAlto}
                 width={anchoBarra}
                 height={Math.max(barraAlto, punto.total > 0 ? 2 : 0)}
-                fill="var(--mango)"
-                stroke="var(--ink)"
-                strokeWidth="1.5"
+                fill="var(--accent)"
+                rx="2"
               >
                 <title>{`${punto.etiqueta}: ${formatearMonto(punto.total)}`}</title>
               </rect>
@@ -70,9 +80,9 @@ export function EvolutionChart({ puntos, agrupacion }: EvolutionChartProps) {
                   x={x + anchoBarra / 2}
                   y={alto - 14}
                   textAnchor="middle"
-                  fontFamily="var(--font-mono)"
-                  fontSize="10"
-                  fill="var(--ink)"
+                  fontFamily="var(--font-ui)"
+                  fontSize="10.5"
+                  fill="var(--muted)"
                 >
                   {punto.etiqueta}
                 </text>
@@ -81,7 +91,7 @@ export function EvolutionChart({ puntos, agrupacion }: EvolutionChartProps) {
           );
         })}
       </svg>
-      <p className="mono" style={{ marginTop: 8 }}>
+      <p className="meta" style={{ marginTop: 8 }}>
         Total del período: {formatearMonto(total)}
       </p>
     </Widget>

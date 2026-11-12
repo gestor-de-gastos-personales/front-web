@@ -15,7 +15,7 @@ export function PerfilView() {
   return (
     <div className="grid">
       <Widget titulo="Perfil" tag={`#${usuario?.id ?? '—'}`} acento="blue" className="span-6">
-        <dl className="mono" style={{ display: 'grid', gap: 10, margin: 0 }}>
+        <dl className="meta" style={{ display: 'grid', gap: 10, margin: 0 }}>
           <div>
             <dt>Nombre</dt>
             <dd style={{ margin: 0, fontSize: 18 }}>{usuario?.nombre ?? '—'}</dd>

@@ -15,13 +15,13 @@ export function TotalWidget({ resumen }: TotalWidgetProps) {
       </p>
 
       {resumen.mayorGasto ? (
-        <p className="mono" style={{ marginTop: 16 }}>
+        <p className="meta" style={{ marginTop: 16 }}>
           Mayor: {resumen.mayorGasto.descripcion} ·{' '}
           {formatearMonto(resumen.mayorGasto.monto)} ·{' '}
           {formatearFecha(resumen.mayorGasto.fecha)}
         </p>
       ) : (
-        <p className="mono" style={{ marginTop: 16 }}>
+        <p className="meta" style={{ marginTop: 16 }}>
           Sin gastos en el período.
         </p>
       )}

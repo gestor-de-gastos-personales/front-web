@@ -34,7 +34,7 @@ export function LoginView() {
           <span className="brand__name">mangos</span>
         </div>
         <h1 className="auth__titulo">Entrá a tus gastos</h1>
-        <p className="mono">Tu registro personal, sin vueltas.</p>
+        <p className="meta">Tu registro personal, sin vueltas.</p>
 
         {error ? (
           <p className="alerta" role="alert">
@@ -70,7 +70,7 @@ export function LoginView() {
           </button>
         </form>
 
-        <p style={{ marginTop: 16 }} className="mono">
+        <p style={{ marginTop: 16 }} className="meta">
           ¿No tenés cuenta? <Link to="/register">Crear una</Link>
         </p>
       </div>

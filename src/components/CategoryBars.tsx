@@ -16,7 +16,7 @@ export function CategoryBars({ grupos }: CategoryBarsProps) {
         <div className="barras">
           {grupos.map((grupo) => (
             <div className="barra__fila" key={grupo.categoriaId}>
-              <span className="mono">{grupo.categoriaNombre}</span>
+              <span className="meta">{grupo.categoriaNombre}</span>
               <div
                 className="barra__pista"
                 role="img"
@@ -27,7 +27,7 @@ export function CategoryBars({ grupos }: CategoryBarsProps) {
                   style={{ width: `${Math.min(100, grupo.porcentaje)}%` }}
                 />
               </div>
-              <span className="mono" style={{ textAlign: 'right' }}>
+              <span className="meta" style={{ textAlign: 'right' }}>
                 {formatearMonto(grupo.total)}
               </span>
             </div>

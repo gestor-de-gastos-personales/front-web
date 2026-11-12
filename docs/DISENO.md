@@ -2,59 +2,58 @@
 
 ## Dirección
 
-**Brutalist**, anclado en la paleta plana del logo de Mangos. La tensión es la
-deliberada: una herramienta de finanzas personales, normalmente prolija y
-neutra, se resuelve con primarios planos, bordes duros y tipografía de sistema.
-El logo ya es vectorial, brillante y sin gradientes; la interfaz lo continúa en
-lugar de suavizarlo.
+**Swiss**, en su lectura contemporánea: lienzo neutro, una sola familia
+tipográfica, grilla de hairlines, jerarquía por tamaño y peso, y **un único
+acento** (el azul Mangos). La tensión está en el contenido: una marca de fruta,
+juguetona y brillante, resuelta con rigor editorial en lugar de con el dashboard
+SaaS genérico de tarjetas flotantes y gradientes.
 
-Se descartaron las opciones "seguras" (Swiss neutro, dashboard SaaS con tarjetas
-redondeadas) porque diluían la marca y producían una pantalla genérica.
+El objetivo del brief era "simple, funcional y moderno": Swiss es exactamente
+eso, sin decoración que compita con los datos.
 
 ## Diferencial
 
-**Widgets como recibos**: cada bloque del dashboard es un ticket con el borde
-superior perforado (`border-top: 8px dotted`), borde negro de 2 px y sombra
-offset de 8 px. El período se muestra como un folio en serif grande, y los
-totales usan cifras tabulares en Times. La metáfora viene del dominio: la app
-procesa comprobantes de gastos.
+**El folio del período.** El dashboard abre con una banda de hairlines donde el
+período aparece como un folio grande en cifras tabulares (`noviembre de 2026`,
+`11/2026`), separado del selector por una regla fina. Es el gesto que ordena la
+pantalla y recuerda el origen editorial de la escuela suiza, sin dejar de ser
+información real.
 
 ## Tokens
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--mangos-blue` | `#00A3E8` | superficie de la app |
-| `--mango` | `#FFA726` | acento primario, botones, barras |
-| `--mango-light` | `#FFD18A` | brillo del logo |
-| `--coral` | `#FF4D4D` | errores, acciones destructivas, excedidos |
-| `--leaf` | `#2FBF71` | presupuestos en rango, hoja del logo |
-| `--stem` | `#8B4513` | tallo del logo |
-| `--ink` | `#000000` | texto, bordes, sombras |
-| `--paper` | `#FFFFFF` | tarjetas |
+| `--bg` | `#F7F7F8` | fondo de la app |
+| `--surface` | `#FFFFFF` | tarjetas, sidebar, inputs |
+| `--ink` | `#111318` | texto principal |
+| `--ink-2` | `#374151` | texto secundario |
+| `--muted` | `#6B7280` | etiquetas y metadatos |
+| `--line` | `#E5E7EB` | hairlines de estructura |
+| `--accent` | `#00A3E8` | acento único: acciones, foco, gráfico |
+| `--accent-dark` | `#0079AD` | hover y texto de acento |
+| `--danger` / `--success` | `#D92D20` / `#067647` | semántica de error / éxito |
 
-Tipografía: **tres registros de sistema**, mezclados a propósito.
-
-- UI: `Helvetica, Arial, sans-serif`
-- Etiquetas y metadatos: `"Courier New", monospace`, mayúsculas y tracking
-- Cifras grandes y folio: `"Times New Roman", serif`, con `tabular-nums`
-
-Estructura: grilla de 12 columnas, bordes de 2 px, sombras duras sin blur,
-radios de 0 px, controles nativos (`select`, `input type=date`, `button`).
+Tipografía: **una sola familia**, `"Helvetica Neue", Helvetica, Arial,
+system-ui, sans-serif`, con `font-variant-numeric: tabular-nums` en cifras.
+Radios 12/8 px, bordes de 1 px, sombra de tarjeta apenas perceptible
+(`0 1px 2px rgb(16 24 40 / 4%)`). Nada de sombras duras, bordes punteados ni
+mezcla de serif/mono.
 
 ## Contenido
 
-- Todos los strings nombran información real: período, total, cantidad de
-  gastos, categorías, topes.
-- No hay datos inventados, telemetría falsa, kickers `//` ni íconos Unicode
-  usados como reemplazo.
+- Cada string nombra información real: período, total, cantidad de gastos,
+  categorías, topes, estado del presupuesto.
+- Sin datos inventados ni telemetría decorativa.
+- Copy estándar para acciones estándar: "Entrar", "Crear cuenta", "Guardar
+  cambios", "Eliminar", "Salir".
 - Los estados vacíos explican qué falta y ofrecen la acción siguiente.
-- El copy de acciones estándar es estándar: "Entrar", "Crear cuenta",
-  "Guardar cambios", "Eliminar", "Salir".
+- Los íconos del sidebar son SVG reales; no se usan glifos Unicode como íconos.
 
 ## Accesibilidad y respuesta
 
-- Foco visible por defecto del navegador; labels asociados en todos los campos.
-- Contraste alto (negro sobre blanco/azul; texto blanco solo sobre azul oscuro).
-- `role="alert"` en errores, `role="status"` en cargas, `aria-label` en botones
-  de acción de tabla y en el gráfico.
-- Grilla que colapsa a una columna por debajo de 900 px.
+- Foco visible (`outline` azul) en todos los controles.
+- Labels asociados en formularios; `role="alert"` en errores y `role="status"`
+  en cargas.
+- Contraste alto: texto `#111318` sobre blanco y `#FFFFFF` sobre azul.
+- Sidebar que colapsa a barra superior por debajo de 980 px; grilla de widgets a
+  una columna por debajo de 900 px.
