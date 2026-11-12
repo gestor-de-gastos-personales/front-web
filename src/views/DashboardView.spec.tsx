@@ -100,6 +100,9 @@ describe('DashboardView', () => {
       </MemoryRouter>,
     );
 
+    expect(
+      screen.getByRole('heading', { name: 'Dashboard' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('Total del período')).toBeInTheDocument();
     expect(screen.getAllByText(/1\.500/).length).toBeGreaterThan(0);
     expect(screen.getByText('Gasto por categoría')).toBeInTheDocument();

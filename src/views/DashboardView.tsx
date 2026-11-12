@@ -86,9 +86,10 @@ export function DashboardView() {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-tools">
-        {editando ? (
-          <>
+      <header className="page-head">
+        <div className="dashboard-head__left">
+          <h1 className="page-title">Dashboard</h1>
+          {editando ? (
             <button
               type="button"
               className="boton boton--fantasma boton--chico"
@@ -96,34 +97,41 @@ export function DashboardView() {
             >
               Restablecer
             </button>
-            <span className="dashboard-tools__hint">
-              Arrastrá desde el encabezado para mover; redimensioná desde la esquina.
-            </span>
+          ) : null}
+        </div>
+
+        <div className="dashboard-tools">
+          {editando ? (
+            <>
+              <span className="dashboard-tools__hint">
+                Arrastrá desde el encabezado para mover; redimensioná desde la esquina.
+              </span>
+              <button
+                type="button"
+                className="boton boton--chico"
+                onClick={() => setPicker(true)}
+              >
+                Agregar widget
+              </button>
+              <button
+                type="button"
+                className="boton boton--primario boton--chico"
+                onClick={() => setEditando(false)}
+              >
+                Listo
+              </button>
+            </>
+          ) : (
             <button
               type="button"
               className="boton boton--chico"
-              onClick={() => setPicker(true)}
+              onClick={() => setEditando(true)}
             >
-              Agregar widget
+              Editar
             </button>
-            <button
-              type="button"
-              className="boton boton--primario boton--chico"
-              onClick={() => setEditando(false)}
-            >
-              Listo
-            </button>
-          </>
-        ) : (
-          <button
-            type="button"
-            className="boton boton--chico"
-            onClick={() => setEditando(true)}
-          >
-            Editar
-          </button>
-        )}
-      </div>
+          )}
+        </div>
+      </header>
 
       <WidgetGrid
         items={layout.items}

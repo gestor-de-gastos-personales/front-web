@@ -711,6 +711,13 @@ p {
 }
 
 /* ---------- Tablero ajustable ---------- */
+.dashboard-head__left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .dashboard-tools {
   display: flex;
   flex-wrap: wrap;
