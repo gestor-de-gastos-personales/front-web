@@ -49,6 +49,7 @@ export function WidgetSlot({
     <div
       ref={setNodeRef}
       className={`widget-slot${isDragging ? ' widget-slot--arrastrando' : ''}`}
+      data-widget-id={item.id}
       style={{
         gridColumn: `span ${item.span}`,
         transform: isDragging ? undefined : CSS.Transform.toString(transform),

@@ -47,8 +47,8 @@ export function DashboardView() {
   const [activo, setActivo] = useState<{ id: string; ancho: number } | null>(null);
 
   const sensores = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 10 } }),
   );
 
   const resumen = useResumen(periodo);
@@ -73,9 +73,16 @@ export function DashboardView() {
   };
 
   const alEmpezarArrastre = (evento: DragStartEvent) => {
+    const id = String(evento.active.id);
+    const nodo = document.querySelector<HTMLElement>(
+      `[data-widget-id="${id}"]`,
+    );
     setActivo({
-      id: String(evento.active.id),
-      ancho: evento.active.rect.current.initial?.width ?? 0,
+      id,
+      ancho:
+        nodo?.getBoundingClientRect().width ||
+        evento.active.rect.current.initial?.width ||
+        0,
     });
   };
 

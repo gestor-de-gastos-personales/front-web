@@ -837,7 +837,7 @@ p {
     border-color 180ms ease;
 }
 
-.widget-slot:hover > .widget {
+.widget-slot:hover > .widget-slot__inner > .widget {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgb(16 24 40 / 8%);
 }
