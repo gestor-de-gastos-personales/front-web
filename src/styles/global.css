@@ -198,6 +198,13 @@ p {
   line-height: 1.1;
 }
 
+.page-head__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .page-sub {
   margin-top: 4px;
   font-size: 13px;

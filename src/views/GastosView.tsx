@@ -11,6 +11,7 @@ import { ExpenseForm } from '../components/ExpenseForm.js';
 import { Loading } from '../components/Loading.js';
 import { ErrorState } from '../components/ErrorState.js';
 import { Widget } from '../components/Widget.js';
+import { PageHeader } from '../components/PageHeader.js';
 
 const LIMITE = 8;
 
@@ -65,26 +66,9 @@ export function GastosView() {
   return (
     <>
       <div className="grid">
-        <Widget titulo="Gastos" tag={periodo.etiqueta} className="span-12">
-          <div className="fila" style={{ justifyContent: 'space-between' }}>
-            <label className="campo">
-              <span className="campo__label">Categoría</span>
-              <select
-                value={categoriaId ?? ''}
-                onChange={(evento) => {
-                  setPagina(1);
-                  setCategoriaId(evento.target.value ? Number(evento.target.value) : undefined);
-                }}
-              >
-                <option value="">Todas</option>
-                {(categorias.data ?? []).map((categoria) => (
-                  <option key={categoria.id} value={categoria.id}>
-                    {categoria.nombre}
-                  </option>
-                ))}
-              </select>
-            </label>
-
+        <PageHeader
+          titulo="Gastos"
+          acciones={
             <button
               type="button"
               className="boton boton--primario"
@@ -95,7 +79,27 @@ export function GastosView() {
             >
               Nuevo gasto
             </button>
-          </div>
+          }
+        />
+
+        <Widget titulo="Filtros" tag={periodo.etiqueta} className="span-12">
+          <label className="campo">
+            <span className="campo__label">Categoría</span>
+            <select
+              value={categoriaId ?? ''}
+              onChange={(evento) => {
+                setPagina(1);
+                setCategoriaId(evento.target.value ? Number(evento.target.value) : undefined);
+              }}
+            >
+              <option value="">Todas</option>
+              {(categorias.data ?? []).map((categoria) => (
+                <option key={categoria.id} value={categoria.id}>
+                  {categoria.nombre}
+                </option>
+              ))}
+            </select>
+          </label>
 
           {errorAccion ? (
             <p className="alerta" role="alert">

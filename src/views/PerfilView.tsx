@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../state/auth.store.js';
 import { Widget } from '../components/Widget.js';
+import { PageHeader } from '../components/PageHeader.js';
 
 export function PerfilView() {
   const usuario = useAuth((estado) => estado.usuario);
@@ -14,7 +15,8 @@ export function PerfilView() {
 
   return (
     <div className="grid">
-      <Widget titulo="Perfil" tag={`#${usuario?.id ?? '—'}`} acento="blue" className="span-6">
+      <PageHeader titulo="Perfil" />
+      <Widget titulo="Datos de la cuenta" tag={`#${usuario?.id ?? '—'}`} acento="blue" className="span-6">
         <dl className="meta" style={{ display: 'grid', gap: 10, margin: 0 }}>
           <div>
             <dt>Nombre</dt>

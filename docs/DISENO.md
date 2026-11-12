@@ -13,11 +13,12 @@ eso, sin decoración que compita con los datos.
 
 ## Diferencial
 
-**El folio del período.** El dashboard abre con una banda de hairlines donde el
-período aparece como un folio grande en cifras tabulares (`noviembre de 2026`,
-`11/2026`), separado del selector por una regla fina. Es el gesto que ordena la
-pantalla y recuerda el origen editorial de la escuela suiza, sin dejar de ser
-información real.
+**El tablero por widget.** Cada tarjeta de total, categorías y evolución tiene
+su propio selector de período (Hoy, esta semana, este mes, mes anterior,
+últimos 15 días, últimos 3 meses o este año). El dashboard abre con una cabecera
+simple —título “Dashboard” y acciones— y deja que los datos manden. Las pantallas
+de Gastos, Categorías, Presupuestos y Perfil comparten la misma cabecera con
+título y acción principal a la derecha.
 
 ## Tokens
 
@@ -29,7 +30,7 @@ información real.
 | `--ink-2` | `#374151` | texto secundario |
 | `--muted` | `#6B7280` | etiquetas y metadatos |
 | `--line` | `#E5E7EB` | hairlines de estructura |
-| `--accent` | `#00A3E8` | acento único: acciones, foco, gráfico |
+| `--accent` | `#00A3E8` | acento principal: acciones y foco; los gráficos suman una paleta de apoyo |
 | `--accent-dark` | `#0079AD` | hover y texto de acento |
 | `--danger` / `--success` | `#D92D20` / `#067647` | semántica de error / éxito |
 
@@ -79,6 +80,13 @@ mezcla de serif/mono.
 - Botones, tarjetas, navegación e inputs con transiciones de 120–180 ms.
 - Respeto de `prefers-reduced-motion`: todas las animaciones y transiciones se
   reducen a ~0 cuando el sistema lo pide.
+
+## Cabeceras
+
+Todas las pantallas de la app (Dashboard, Gastos, Categorías, Presupuestos,
+Perfil y 404) abren con la misma cabecera: título grande a la izquierda, acción
+principal a la derecha y una hairline inferior. En el dashboard, “Restablecer”
+queda junto al título y las acciones de edición se alinean a la derecha.
 
 ## Tablero
 

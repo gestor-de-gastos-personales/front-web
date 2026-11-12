@@ -6,6 +6,7 @@ import { EmptyState } from './EmptyState.js';
 import { ErrorState } from './ErrorState.js';
 import { Loading } from './Loading.js';
 import { Modal } from './Modal.js';
+import { PageHeader } from './PageHeader.js';
 import { TotalWidget } from './TotalWidget.js';
 import { CategoryBars } from './CategoryBars.js';
 import { BudgetWidget } from './BudgetWidget.js';
@@ -78,6 +79,20 @@ describe('componentes base', () => {
 
     fireEvent.mouseDown(screen.getByRole('presentation'));
     expect(cerrar).toHaveBeenCalledTimes(2);
+  });
+
+  it('PageHeader muestra el título y las acciones', () => {
+    render(
+      <PageHeader
+        titulo="Gastos"
+        acciones={<button type="button">Nuevo gasto</button>}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Gastos' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Nuevo gasto' }),
+    ).toBeInTheDocument();
   });
 
   it('Modal puede ocultar el botón Cerrar', () => {
