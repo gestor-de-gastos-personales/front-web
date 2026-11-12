@@ -14,6 +14,27 @@ const CLAVE = (usuarioId?: number | null) =>
 
 const copiaPorDefecto = () => LAYOUT_POR_DEFECTO.map((item) => ({ ...item }));
 
+function reordenar(
+  items: WidgetLayoutItem[],
+  desde: number,
+  hasta: number,
+): WidgetLayoutItem[] {
+  if (
+    desde === hasta ||
+    desde < 0 ||
+    hasta < 0 ||
+    desde >= items.length ||
+    hasta >= items.length
+  ) {
+    return items;
+  }
+
+  const copia = [...items];
+  const [item] = copia.splice(desde, 1);
+  copia.splice(hasta, 0, item!);
+  return copia;
+}
+
 function normalizar(valor: unknown): WidgetLayoutItem[] | null {
   if (!Array.isArray(valor)) return null;
 
@@ -70,22 +91,18 @@ export function useDashboardLayout(usuarioId?: number | null) {
   }, [items, usuarioId]);
 
   const mover = (desde: number, hasta: number) => {
-    setItems((previo) => {
-      if (
-        desde === hasta ||
-        desde < 0 ||
-        hasta < 0 ||
-        desde >= previo.length ||
-        hasta >= previo.length
-      ) {
-        return previo;
-      }
+    setItems((previo) => reordenar(previo, desde, hasta));
+  };
 
-      const copia = [...previo];
-      const [item] = copia.splice(desde, 1);
-      copia.splice(hasta, 0, item!);
-      return copia;
-    });
+  /** Reordena por id (lo usa el sortable durante el arrastre). */
+  const moverPorId = (activo: string, destino: string) => {
+    setItems((previo) =>
+      reordenar(
+        previo,
+        previo.findIndex((item) => item.id === activo),
+        previo.findIndex((item) => item.id === destino),
+      ),
+    );
   };
 
   const moverIzquierda = (indice: number) => mover(indice, indice - 1);
@@ -119,6 +136,7 @@ export function useDashboardLayout(usuarioId?: number | null) {
   return {
     items,
     mover,
+    moverPorId,
     moverIzquierda,
     moverDerecha,
     redimensionar,

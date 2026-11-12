@@ -60,6 +60,10 @@ mezcla de serif/mono.
 
 ## Movimiento
 
+- **Reordenamiento sortable**: `dnd-kit` con `rectSortingStrategy`. Al sostener
+  y arrastrar un widget, el resto se desplaza en vivo con transiciones; mouse
+  con umbral de 6 px y touch con long-press de 180 ms. Los botones ←/→ quedan
+  como alternativa accesible.
 - Entrada de widgets con `aparecer` (300 ms, 8 px de desplazamiento) y retardo
   escalonado de 40 ms por posición.
 - Barras de categoría y presupuestos crecen con `scaleX` (560 ms); las barras

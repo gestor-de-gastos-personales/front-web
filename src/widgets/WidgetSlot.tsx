@@ -1,63 +1,42 @@
 import type { ReactNode } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { WidgetLayoutItem } from './tipos.js';
 
 interface WidgetSlotProps {
   item: WidgetLayoutItem;
   indice: number;
-  arrastrando: number | null;
-  destino: number | null;
-  onDragStart: (indice: number) => void;
-  onDragOver: (indice: number) => void;
-  onDrop: (indice: number) => void;
-  onDragEnd: () => void;
   children: ReactNode;
 }
 
-/** Celda de la grilla: define el ancho y permite arrastrar para reordenar. */
-export function WidgetSlot({
-  item,
-  indice,
-  arrastrando,
-  destino,
-  onDragStart,
-  onDragOver,
-  onDrop,
-  onDragEnd,
-  children,
-}: WidgetSlotProps) {
-  const clases = [
-    'widget-slot',
-    arrastrando === indice ? 'widget-slot--arrastrando' : '',
-    destino === indice && arrastrando !== indice ? 'widget-slot--destino' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+/**
+ * Celda sortable: dnd-kit mueve la tarjeta y desplaza las demás en vivo.
+ * Los listeners van en la tarjeta (mantener y arrastrar, estilo Android);
+ * los botones de mover siguen disponibles para teclado y accesibilidad.
+ */
+export function WidgetSlot({ item, indice, children }: WidgetSlotProps) {
+  const { listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+  });
 
   return (
     <div
-      className={clases}
+      ref={setNodeRef}
+      className={`widget-slot${isDragging ? ' widget-slot--arrastrando' : ''}`}
       style={{
         gridColumn: `span ${item.span}`,
-        animationDelay: `${Math.min(indice, 10) * 40}ms`,
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 3 : undefined,
       }}
-      draggable
-      onDragStart={(evento) => {
-        evento.dataTransfer?.setData('text/plain', item.id);
-        if (evento.dataTransfer) evento.dataTransfer.effectAllowed = 'move';
-        onDragStart(indice);
-      }}
-      onDragOver={(evento) => {
-        evento.preventDefault();
-        if (evento.dataTransfer) evento.dataTransfer.dropEffect = 'move';
-        onDragOver(indice);
-      }}
-      onDrop={(evento) => {
-        evento.preventDefault();
-        onDrop(indice);
-      }}
-      onDragEnd={onDragEnd}
+      {...listeners}
     >
-      {children}
+      <div
+        className="widget-slot__inner"
+        style={{ animationDelay: `${Math.min(indice, 10) * 40}ms` }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

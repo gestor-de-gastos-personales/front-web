@@ -1,5 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import type { DragOverEvent } from '@dnd-kit/core';
+import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useAuth } from '../state/auth.store.js';
 import { usePeriodo } from '../state/periodo.store.js';
 import { useGastos, usePresupuestos, useResumen, useSerie } from '../hooks/datos.js';
@@ -32,8 +42,11 @@ export function DashboardView() {
 
   const [pagina, setPagina] = useState(1);
   const [picker, setPicker] = useState(false);
-  const [arrastrando, setArrastrando] = useState<number | null>(null);
-  const [destino, setDestino] = useState<number | null>(null);
+
+  const sensores = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+  );
 
   const resumen = useResumen(periodo);
   const serie = useSerie(periodo);
@@ -48,13 +61,21 @@ export function DashboardView() {
 
   const irAGastos = () => navigate('/gastos');
 
+  /** Al pasar sobre otro widget, se reordena en vivo (el resto se desplaza). */
+  const alArrastrar = (evento: DragOverEvent) => {
+    const { active, over } = evento;
+    if (over && active.id !== over.id) {
+      layout.moverPorId(String(active.id), String(over.id));
+    }
+  };
+
   const contenido = (item: WidgetLayoutItem, indice: number) => {
     const meta = WIDGETS[item.tipo];
     const acciones = (
       <WidgetAcciones
         indice={indice}
         total={layout.items.length}
-        span={layout.items[indice]!.span}
+        span={item.span}
         onIzquierda={() => layout.moverIzquierda(indice)}
         onDerecha={() => layout.moverDerecha(indice)}
         onRedimensionar={() => layout.redimensionar(indice)}
@@ -118,10 +139,7 @@ export function DashboardView() {
         if (ultimos.cargando) return cargando;
         if (ultimos.error) return error(ultimos.error, ultimos.recargar);
         return (
-          <RecentExpenses
-            gastos={ultimos.data?.data ?? []}
-            acciones={acciones}
-          />
+          <RecentExpenses gastos={ultimos.data?.data ?? []} acciones={acciones} />
         );
 
       case 'historial':
@@ -142,79 +160,69 @@ export function DashboardView() {
     }
   };
 
-  const soltar = (indiceDestino: number) => {
-    if (arrastrando !== null && arrastrando !== indiceDestino) {
-      layout.mover(arrastrando, indiceDestino);
-    }
-    setArrastrando(null);
-    setDestino(null);
-  };
-
   return (
-    <div className="grid">
-      <PeriodSelector />
+    <DndContext
+      sensors={sensores}
+      collisionDetection={closestCenter}
+      onDragOver={alArrastrar}
+    >
+      <div className="grid">
+        <PeriodSelector />
 
-      <div className="dashboard-tools span-12">
-        <button
-          type="button"
-          className="boton boton--chico"
-          onClick={() => setPicker(true)}
-        >
-          Agregar widget
-        </button>
-        <button
-          type="button"
-          className="boton boton--fantasma boton--chico"
-          onClick={layout.resetear}
-        >
-          Restablecer
-        </button>
-      </div>
-
-      {layout.items.map((item, indice) => (
-        <WidgetSlot
-          key={item.id}
-          item={item}
-          indice={indice}
-          arrastrando={arrastrando}
-          destino={destino}
-          onDragStart={setArrastrando}
-          onDragOver={setDestino}
-          onDrop={soltar}
-          onDragEnd={() => {
-            setArrastrando(null);
-            setDestino(null);
-          }}
-        >
-          {contenido(item, indice)}
-        </WidgetSlot>
-      ))}
-
-      {layout.items.length === 0 ? (
-        <div className="span-12">
-          <EmptyState
-            titulo="Tu tablero está vacío"
-            detalle="Agregá los widgets que quieras ver."
-            accion={
-              <button
-                type="button"
-                className="boton boton--primario"
-                onClick={() => setPicker(true)}
-              >
-                Agregar widget
-              </button>
-            }
-          />
+        <div className="dashboard-tools span-12">
+          <button
+            type="button"
+            className="boton boton--chico"
+            onClick={() => setPicker(true)}
+          >
+            Agregar widget
+          </button>
+          <button
+            type="button"
+            className="boton boton--fantasma boton--chico"
+            onClick={layout.resetear}
+          >
+            Restablecer
+          </button>
         </div>
-      ) : null}
 
-      {picker ? (
-        <AddWidgetModal
-          catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
-          onAgregar={layout.agregar}
-          onCerrar={() => setPicker(false)}
-        />
-      ) : null}
-    </div>
+        <SortableContext
+          items={layout.items.map((item) => item.id)}
+          strategy={rectSortingStrategy}
+        >
+          {layout.items.map((item, indice) => (
+            <WidgetSlot key={item.id} item={item} indice={indice}>
+              {contenido(item, indice)}
+            </WidgetSlot>
+          ))}
+        </SortableContext>
+
+        {layout.items.length === 0 ? (
+          <div className="span-12">
+            <EmptyState
+              titulo="Tu tablero está vacío"
+              detalle="Agregá los widgets que quieras ver."
+              accion={
+                <button
+                  type="button"
+                  className="boton boton--primario"
+                  onClick={() => setPicker(true)}
+                >
+                  Agregar widget
+                </button>
+              }
+            />
+          </div>
+        ) : null}
+
+        {picker ? (
+          <AddWidgetModal
+            catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
+            onAgregar={layout.agregar}
+            onCerrar={() => setPicker(false)}
+          />
+        ) : null}
+      </div>
+    </DndContext>
   );
 }

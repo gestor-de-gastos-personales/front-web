@@ -50,6 +50,17 @@ describe('useDashboardLayout', () => {
     expect(result.current.items[0]!.span).not.toBe(spanInicial);
   });
 
+  it('reordena por id (drag & drop sortable)', () => {
+    const { result } = renderHook(() => useDashboardLayout(1));
+    const ids = result.current.items.map((item) => item.id);
+
+    act(() => result.current.moverPorId(ids[0]!, ids[3]!));
+    expect(result.current.items[3]!.id).toBe(ids[0]);
+
+    act(() => result.current.moverPorId('no-existe', ids[0]!));
+    expect(result.current.items).toHaveLength(ids.length);
+  });
+
   it('persiste las instancias por usuario', () => {
     const primera = renderHook(() => useDashboardLayout(7));
     const id = primera.result.current.items[0]!.id;

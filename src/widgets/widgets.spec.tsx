@@ -1,4 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { DndContext } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
 import { describe, expect, it, vi } from 'vitest';
 import { WidgetSlot } from './WidgetSlot.js';
 import { WidgetAcciones } from './WidgetAcciones.js';
@@ -23,41 +25,22 @@ const CATALOGO = [
 ];
 
 describe('tablero de widgets', () => {
-  it('WidgetSlot aplica el ancho y dispara los eventos de arrastre', () => {
-    const onDragStart = vi.fn();
-    const onDragOver = vi.fn();
-    const onDrop = vi.fn();
-    const onDragEnd = vi.fn();
-
+  it('WidgetSlot aplica el ancho dentro del contexto sortable', () => {
     render(
-      <WidgetSlot
-        item={ITEM}
-        indice={0}
-        arrastrando={null}
-        destino={null}
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        onDragEnd={onDragEnd}
-      >
-        <p>contenido</p>
-      </WidgetSlot>,
+      <DndContext>
+        <SortableContext items={[ITEM.id]}>
+          <WidgetSlot item={ITEM} indice={0}>
+            <p>contenido</p>
+          </WidgetSlot>
+        </SortableContext>
+      </DndContext>,
     );
 
-    const slot = screen.getByText('contenido').parentElement!;
+    const slot = screen.getByText('contenido').closest('.widget-slot');
+    const inner = screen.getByText('contenido').closest('.widget-slot__inner');
+
     expect(slot).toHaveStyle({ gridColumn: 'span 4' });
-
-    fireEvent.dragStart(slot);
-    expect(onDragStart).toHaveBeenCalledWith(0);
-
-    fireEvent.dragOver(slot);
-    expect(onDragOver).toHaveBeenCalledWith(0);
-
-    fireEvent.drop(slot);
-    expect(onDrop).toHaveBeenCalledWith(0);
-
-    fireEvent.dragEnd(slot);
-    expect(onDragEnd).toHaveBeenCalled();
+    expect(inner).toBeInTheDocument();
   });
 
   it('WidgetAcciones llama a los handlers y deshabilita los extremos', () => {
