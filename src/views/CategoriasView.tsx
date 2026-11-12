@@ -5,6 +5,7 @@ import { mensajeDeError } from '../utils/format.js';
 import { Widget } from '../components/Widget.js';
 import { Loading } from '../components/Loading.js';
 import { ErrorState } from '../components/ErrorState.js';
+import { PageHeader } from '../components/PageHeader.js';
 
 export function CategoriasView() {
   const categorias = useCategorias();
@@ -54,7 +55,8 @@ export function CategoriasView() {
 
   return (
     <div className="grid">
-      <Widget titulo="Categorías" tag={`${categorias.data?.length ?? 0}`} className="span-12">
+      <PageHeader titulo="Categorías" />
+      <Widget titulo="Tus categorías" tag={`${categorias.data?.length ?? 0}`} className="span-12">
         {error ? (
           <p className="alerta" role="alert">
             {error}
@@ -85,7 +87,6 @@ export function CategoriasView() {
               <thead>
                 <tr>
                   <th>Nombre</th>
-                  <th>Tipo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -93,22 +94,29 @@ export function CategoriasView() {
                 {(categorias.data ?? []).map((categoria) => (
                   <tr key={categoria.id}>
                     <td>{categoria.nombre}</td>
-                    <td className="meta">{categoria.default ? 'del sistema' : 'propia'}</td>
                     <td>
-                      <button
-                        type="button"
-                        className="boton boton--chico"
-                        onClick={() => renombrar(categoria.id, categoria.nombre)}
-                      >
-                        Renombrar
-                      </button>{' '}
-                      <button
-                        type="button"
-                        className="boton boton--chico boton--peligro"
-                        onClick={() => eliminar(categoria.id, categoria.nombre)}
-                      >
-                        Eliminar
-                      </button>
+                      {categoria.default ? (
+                        <span className="meta" aria-label="Categoría del sistema">
+                          —
+                        </span>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            className="boton boton--chico"
+                            onClick={() => renombrar(categoria.id, categoria.nombre)}
+                          >
+                            Renombrar
+                          </button>{' '}
+                          <button
+                            type="button"
+                            className="boton boton--chico boton--peligro"
+                            onClick={() => eliminar(categoria.id, categoria.nombre)}
+                          >
+                            Eliminar
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}

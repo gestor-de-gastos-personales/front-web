@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { PuntoSerie } from '../services/serie.service.js';
 import type { Agrupacion } from '../utils/periodo.js';
 import { formatearMonto } from '../utils/format.js';
+import { colorGrafico } from '../utils/colores.js';
 import { EmptyState } from './EmptyState.js';
 import { Widget } from './Widget.js';
 
@@ -41,13 +42,20 @@ export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartP
   const cadaEtiqueta = Math.max(1, Math.ceil(puntos.length / 8));
 
   return (
-    <Widget titulo="Evolución del gasto" tag={ETIQUETA_AGRUPACION[agrupacion]} acciones={acciones}>
-      <svg
-        className="grafico"
-        viewBox={`0 0 ${ancho} ${alto}`}
-        role="img"
-        aria-label={`Evolución de gastos en ${puntos.length} puntos`}
-      >
+    <Widget
+      titulo="Evolución del gasto"
+      tag={ETIQUETA_AGRUPACION[agrupacion]}
+      acciones={acciones}
+      className="widget--grafico"
+    >
+      <div className="grafico__lienzo">
+        <svg
+          className="grafico"
+          viewBox={`0 0 ${ancho} ${alto}`}
+          role="img"
+          aria-label={`Evolución de gastos en ${puntos.length} puntos`}
+          preserveAspectRatio="xMidYMid meet"
+        >
         {[0.25, 0.5, 0.75].map((fraccion) => (
           <line
             key={fraccion}
@@ -64,6 +72,7 @@ export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartP
           const barraAlto = (punto.total / maximo) * (base - 24);
           const x = margen + indice * pasoAncho + pasoAncho * 0.15;
           const anchoBarra = Math.max(2, pasoAncho * 0.7);
+          const color = colorGrafico(indice);
 
           return (
             <g key={punto.clave}>
@@ -73,7 +82,7 @@ export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartP
                 y={base - barraAlto}
                 width={anchoBarra}
                 height={Math.max(barraAlto, punto.total > 0 ? 2 : 0)}
-                fill="var(--accent)"
+                fill={color}
                 rx="2"
                 style={{ animationDelay: `${indice * 35}ms` }}
               >
@@ -94,7 +103,8 @@ export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartP
             </g>
           );
         })}
-      </svg>
+        </svg>
+      </div>
       <p className="meta" style={{ marginTop: 8 }}>
         Total del período: {formatearMonto(total)}
       </p>

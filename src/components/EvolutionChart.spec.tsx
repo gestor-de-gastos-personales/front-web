@@ -9,11 +9,15 @@ const PUNTOS = [
 ];
 
 describe('EvolutionChart', () => {
-  it('dibuja el SVG con una barra por punto', () => {
-    render(<EvolutionChart puntos={PUNTOS} agrupacion="dia" />);
+  it('dibuja el SVG con una barra por punto y colores distintos', () => {
+    const { container } = render(<EvolutionChart puntos={PUNTOS} agrupacion="dia" />);
     expect(screen.getByRole('img', { name: /Evolución de gastos/ })).toBeInTheDocument();
     expect(screen.getByText(/Total del período/)).toBeInTheDocument();
     expect(screen.getByText('por día')).toBeInTheDocument();
+
+    const barras = Array.from(container.querySelectorAll('.grafico__barra'));
+    expect(barras).toHaveLength(3);
+    expect(new Set(barras.map((barra) => barra.getAttribute('fill'))).size).toBe(3);
   });
 
   it('muestra vacío si no hay puntos', () => {

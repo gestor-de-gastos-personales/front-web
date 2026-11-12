@@ -17,6 +17,8 @@ export function useGastos(filtros: FiltrosGastos) {
       filtros.fechaInicio,
       filtros.fechaFin,
       filtros.categoriaId,
+      filtros.montoMin,
+      filtros.montoMax,
     ],
   );
 }

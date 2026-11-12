@@ -34,19 +34,29 @@ npm run test:cov          # tests + cobertura
 
 - **Sesión**: registro y login con JWT; el token se restaura al recargar y se
   valida contra `GET /auth/me`.
-- **Dashboard**: tablero ajustable con selector global de período y **modo
-  edición**: el botón “Editar” habilita arrastre, resize y las acciones de
-  agregar/restablecer; “Listo” vuelve a la vista de solo lectura. Los widgets se
-  pueden repetir (por ejemplo, dos gráficos), reordenar arrastrando (los demás se
-  desplazan en vivo, estilo Android) o con botones, redimensionar arrastrando la
-  esquina inferior derecha (3–12 columnas), quitar y volver a agregar; el layout
-  se guarda por usuario en el navegador. Al reordenar, el tablero empaqueta las
-  filas: si un widget no entra completo, se ajusta exactamente al hueco libre; si
-  entra, conserva su tamaño. Widgets: total, gasto por categoría, evolución,
-  últimos gastos, historial y presupuestos.
-- **Gastos**: alta, edición, borrado y listado con filtros por período y
-  categoría, con paginación.
-- **Categorías**: alta, renombrado y baja.
+- **Dashboard**: tablero **GridStack** (12 columnas en escritorio, 1 en mobile)
+  sin selector global de período y con **modo edición**: “Editar” habilita el
+  arrastre, el resize nativo, agregar/restablecer y quitar; “Listo” vuelve a la
+  vista de solo lectura. Los widgets se pueden repetir (por ejemplo, dos
+  gráficos), reordenar arrastrando desde el encabezado de la tarjeta (las
+  tarjetas se reacomodan y compactan con animación) o con los botones ←/→,
+  redimensionar desde la esquina inferior derecha y quitar. Cada tipo de widget
+  tiene un tamaño mínimo legible (4–8 columnas y 4–8 filas) para que el
+  contenido no quede cortado. Al agregar, el picker confirma “Agregado
+  correctamente”; “Restablecer” pide confirmación antes de volver al layout
+  inicial. Total, gasto por categoría y evolución tienen **período propio**
+  (hoy, esta semana, este mes, mes anterior, últimos 15 días, últimos 3 meses o
+  este año); presupuestos e historial usan el mes actual. Los gráficos usan una
+  **paleta de colores** por categoría y por punto de la serie, y el gráfico de
+  evolución se adapta al alto del widget sin desbordarse al ensancharlo. El
+  layout (posición, tamaño y período por widget) se guarda por usuario en el
+  navegador y se migra desde el formato anterior. Widgets: total, gasto por
+  categoría, evolución, presupuestos e historial.
+- **Gastos**: alta, edición, borrado y listado con filtros por período,
+  categoría y rango de monto (`montoMin` / `montoMax`), con paginación. Por
+  defecto no aplica filtros y muestra todos los gastos.
+- **Categorías**: alta de categorías propias; las del sistema son de solo
+  lectura y solo las propias se pueden renombrar o eliminar.
 - **Presupuestos**: tope mensual por categoría y comparación contra el gasto
   real.
 - **Perfil**: datos de la cuenta y cierre de sesión.
@@ -60,6 +70,7 @@ src/
   services/     acceso HTTP a api-gastos (sin fetch en componentes)
   state/        stores de sesión y período (zustand)
   hooks/        carga de datos y estado async
+  widgets/      grilla GridStack, catálogo y layout persistente
   utils/        formato y cálculo de períodos
 ```
 
@@ -69,7 +80,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 ## Contratos que consume
 
 - `POST /auth/register`, `POST /auth/login`, `GET /auth/me`
-- `GET /gastos?page&limit&fechaInicio&fechaFin&categoriaId` (fechas `DD-MM-YYYY`)
+- `GET /gastos?page&limit&fechaInicio&fechaFin&categoriaId&montoMin&montoMax` (fechas `DD-MM-YYYY`)
 - `POST /gastos`, `PATCH /gastos/:id`, `DELETE /gastos/:id`
 - `GET /gastos/resumen?desde&hasta`
 - `GET /gastos/serie?desde&hasta&agrupacion=dia|semana|mes`
@@ -78,7 +89,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-97 tests con Vitest + Testing Library. Cobertura de líneas ~89% (se genera
+121 tests con Vitest + Testing Library. Cobertura de líneas ~96% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño

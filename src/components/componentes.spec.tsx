@@ -6,6 +6,7 @@ import { EmptyState } from './EmptyState.js';
 import { ErrorState } from './ErrorState.js';
 import { Loading } from './Loading.js';
 import { Modal } from './Modal.js';
+import { PageHeader } from './PageHeader.js';
 import { TotalWidget } from './TotalWidget.js';
 import { CategoryBars } from './CategoryBars.js';
 import { BudgetWidget } from './BudgetWidget.js';
@@ -80,6 +81,33 @@ describe('componentes base', () => {
     expect(cerrar).toHaveBeenCalledTimes(2);
   });
 
+  it('PageHeader muestra el título y las acciones', () => {
+    render(
+      <PageHeader
+        titulo="Gastos"
+        acciones={<button type="button">Nuevo gasto</button>}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Gastos' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Nuevo gasto' }),
+    ).toBeInTheDocument();
+  });
+
+  it('Modal puede ocultar el botón Cerrar', () => {
+    render(
+      <Modal titulo="Confirmar" onCerrar={vi.fn()} mostrarCerrar={false}>
+        <p>mensaje</p>
+      </Modal>,
+    );
+
+    expect(screen.getByRole('dialog', { name: 'Confirmar' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Cerrar' }),
+    ).not.toBeInTheDocument();
+  });
+
   it('TotalWidget muestra total, cantidad y mayor gasto', () => {
     render(<TotalWidget resumen={RESUMEN} />);
     expect(screen.getByText(/2\.500/)).toBeInTheDocument();
@@ -92,10 +120,14 @@ describe('componentes base', () => {
     expect(screen.getByText(/Sin gastos en el período/)).toBeInTheDocument();
   });
 
-  it('CategoryBars dibuja una barra por categoría', () => {
-    render(<CategoryBars grupos={RESUMEN.porCategoria} />);
+  it('CategoryBars dibuja una barra por categoría con colores distintos', () => {
+    const { container } = render(<CategoryBars grupos={RESUMEN.porCategoria} />);
     expect(screen.getByText('Alimentación')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /Alimentación/ })).toBeInTheDocument();
+
+    const barras = container.querySelectorAll<HTMLElement>('.barra__relleno');
+    expect(barras).toHaveLength(2);
+    expect(barras[0]!.style.background).not.toBe(barras[1]!.style.background);
   });
 
   it('CategoryBars sin datos muestra vacío', () => {

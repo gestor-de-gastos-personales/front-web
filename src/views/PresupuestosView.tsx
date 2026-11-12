@@ -7,6 +7,7 @@ import { formatearMonto, mensajeDeError } from '../utils/format.js';
 import { Widget } from '../components/Widget.js';
 import { Loading } from '../components/Loading.js';
 import { ErrorState } from '../components/ErrorState.js';
+import { PageHeader } from '../components/PageHeader.js';
 
 export function PresupuestosView() {
   const periodo = usePeriodo((estado) => estado.periodo);
@@ -52,7 +53,8 @@ export function PresupuestosView() {
 
   return (
     <div className="grid">
-      <Widget titulo="Presupuestos" tag={`${mes}/${anio}`} acento="leaf" className="span-12">
+      <PageHeader titulo="Presupuestos" />
+      <Widget titulo="Topes mensuales" tag={`${mes}/${anio}`} acento="leaf" className="span-12">
         {error ? (
           <p className="alerta" role="alert">
             {error}

@@ -2,10 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   aDDMMYYYY,
   anioActual,
+  estaSemana,
+  hoyPeriodo,
   mesActual,
   mesAnterior,
   mesYAnio,
   periodoPersonalizado,
+  ultimosDias,
   ultimosMeses,
 } from './periodo.js';
 
@@ -30,6 +33,25 @@ describe('periodo', () => {
     expect(ultimosMeses(3, HOY).desde).toBe('2026-09-01');
     expect(ultimosMeses(3, HOY).agrupacion).toBe('semana');
     expect(ultimosMeses(6, HOY).agrupacion).toBe('mes');
+  });
+
+  it('calcula hoy, esta semana y los últimos 15 días', () => {
+    expect(hoyPeriodo(HOY)).toMatchObject({
+      desde: '2026-11-11',
+      hasta: '2026-11-11',
+      etiqueta: 'Hoy',
+      agrupacion: 'dia',
+    });
+    expect(estaSemana(HOY)).toMatchObject({
+      desde: '2026-11-09',
+      hasta: '2026-11-15',
+      etiqueta: 'Esta semana',
+    });
+    expect(ultimosDias(15, HOY)).toMatchObject({
+      desde: '2026-10-28',
+      hasta: '2026-11-11',
+      etiqueta: 'Últimos 15 días',
+    });
   });
 
   it('calcula el año calendario', () => {

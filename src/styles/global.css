@@ -32,6 +32,18 @@ a:hover {
   text-decoration: underline;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 button,
 input,
 select,
@@ -186,6 +198,13 @@ p {
   line-height: 1.1;
 }
 
+.page-head__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .page-sub {
   margin-top: 4px;
   font-size: 13px;
@@ -252,6 +271,30 @@ p {
   display: flex;
   align-items: center;
   gap: 1px;
+}
+
+.widget__periodo {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.widget__periodo select {
+  height: 26px;
+  max-width: 150px;
+  min-width: 0;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.widget__periodo select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .widget__drag {
@@ -400,6 +443,17 @@ p {
   background: var(--danger-soft);
 }
 
+.boton--exito {
+  background: var(--success-soft);
+  border-color: #abefc6;
+  color: var(--success);
+}
+
+.boton--exito:hover {
+  background: #d1fadf;
+  border-color: #75e0a7;
+}
+
 .boton--fantasma {
   background: transparent;
   border-color: transparent;
@@ -459,6 +513,13 @@ p {
   align-items: flex-end;
 }
 
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
 /* ---------- Tablas ---------- */
 .tabla {
   width: 100%;
@@ -498,6 +559,26 @@ p {
   gap: 13px;
 }
 
+.barra__nombre {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.barra__punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.barra__nombre-texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .barra__fila {
   display: grid;
   grid-template-columns: 120px 1fr 96px;
@@ -523,6 +604,27 @@ p {
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* El gráfico de evolución ocupa el alto disponible y no crece al ensanchar. */
+.widget--grafico {
+  display: flex;
+  flex-direction: column;
+}
+
+.widget--grafico .widget__head {
+  flex: 0 0 auto;
+}
+
+.grafico__lienzo {
+  flex: 1 1 auto;
+  min-height: 120px;
+  min-width: 0;
+}
+
+.grafico__lienzo > .grafico {
+  width: 100%;
+  height: 100%;
 }
 
 /* ---------- Estados ---------- */
@@ -596,7 +698,8 @@ p {
   display: grid;
   place-items: center;
   padding: 20px;
-  z-index: 50;
+  /* Por encima de los handles de resize de GridStack (z-index 101). */
+  z-index: 1000;
 }
 
 .modal {
@@ -609,9 +712,29 @@ p {
   overflow: auto;
 }
 
+.modal__mensaje {
+  margin-bottom: 18px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.modal__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 /* ---------- Tablero ajustable ---------- */
+.dashboard-head__left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .dashboard-tools {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
@@ -623,97 +746,98 @@ p {
   color: var(--muted);
 }
 
-.widget-slot {
-  min-width: 0;
-  position: relative;
+/* ---------- Tablero GridStack ---------- */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.widget-slot--editable {
-  cursor: grab;
+.widget-grid {
+  min-height: 80px;
 }
 
-.widget-slot--editable > .widget-slot__inner > .widget {
-  outline: 1px dashed var(--line);
+.widget-grid .widget {
+  height: 100%;
+  margin: 0;
+}
+
+.widget-grid--editable .widget {
+  outline: 1px solid var(--line);
   outline-offset: 3px;
 }
 
-.widget-slot--editable:hover > .widget-slot__inner > .widget {
+.widget-grid--editable .widget:hover {
   outline-color: var(--accent);
 }
 
-.widget-slot--editable .widget-resize {
-  opacity: 0.55;
+/* El encabezado completo es el handle de arrastre; el agarre es la pista visual. */
+.widget-grid--editable .widget__head,
+.widget__drag {
+  cursor: grab;
 }
 
-.widget-slot--editable:hover .widget-resize {
-  opacity: 1;
-}
-
-.widget-slot__inner {
-  height: 100%;
-  animation: aparecer 300ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.widget-slot__inner > .widget {
-  height: 100%;
-}
-
-.widget-slot--arrastrando {
-  z-index: 3;
-}
-
-.widget-slot--arrastrando .widget-slot__inner {
-  opacity: 0.18;
-}
-
-.widget-slot--arrastrando .widget-resize {
-  opacity: 0;
-}
-
-.widget-overlay {
-  pointer-events: none;
-}
-
-.widget-overlay .widget {
+.widget-grid .grid-stack-item.ui-draggable-dragging .widget {
   border-color: var(--accent);
   box-shadow: 0 16px 40px rgb(16 24 40 / 18%);
+  transform: none;
 }
 
-.widget-resize {
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  cursor: nwse-resize;
+.widget-grid .grid-stack-item.ui-draggable-dragging > .grid-stack-item-content {
+  opacity: 0.92;
+}
+
+/* Handle nativo de resize (esquina inferior derecha). */
+.widget-grid .grid-stack-item > .ui-resizable-se {
+  width: 22px;
+  height: 22px;
+  right: 4px;
+  bottom: 4px;
+  border-radius: 5px;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%236b7280' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M11 1 1 11M11 5 5 11M11 9 9 11'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: none;
   opacity: 0;
   transition:
     opacity 150ms ease,
-    color 150ms ease,
     background-color 150ms ease;
 }
 
-.widget-slot:hover .widget-resize,
-.widget-resize:focus-visible {
+.widget-grid--editable .grid-stack-item > .ui-resizable-se {
+  opacity: 0.55;
+}
+
+.widget-grid--editable .grid-stack-item:hover > .ui-resizable-se,
+.widget-grid .grid-stack-item > .ui-resizable-se:focus-visible {
   opacity: 1;
 }
 
-.widget-resize:hover {
-  color: var(--accent-dark);
-  background: var(--accent-soft);
+.widget-grid--editable .grid-stack-item > .ui-resizable-se:hover {
+  background-color: var(--accent-soft);
 }
 
 @media (hover: none) {
-  .widget-resize {
-    opacity: 0.75;
+  .widget-grid--editable .grid-stack-item > .ui-resizable-se {
+    opacity: 0.8;
   }
+}
+
+.widget-grid .grid-stack-placeholder > .placeholder-content {
+  /* Default de GridStack: solo un fondo tenue, sin borde punteado. */
+  border-radius: var(--radius);
+}
+
+.widget-picker__ok {
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border: 1px solid #abefc6;
+  border-radius: 8px;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .widget-picker {
@@ -799,10 +923,6 @@ p {
     grid-column: span 12;
   }
 
-  .widget-slot {
-    grid-column: span 12 !important;
-  }
-
   .barra__fila {
     grid-template-columns: 96px 1fr 82px;
   }
@@ -865,7 +985,7 @@ p {
     border-color 180ms ease;
 }
 
-.widget-slot:hover > .widget-slot__inner > .widget {
+.widget-grid .widget:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgb(16 24 40 / 8%);
 }

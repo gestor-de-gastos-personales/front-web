@@ -3,10 +3,17 @@ import type { ReactNode } from 'react';
 interface ModalProps {
   titulo: string;
   onCerrar: () => void;
+  /** Muestra el botón “Cerrar” del encabezado (por defecto sí). */
+  mostrarCerrar?: boolean;
   children: ReactNode;
 }
 
-export function Modal({ titulo, onCerrar, children }: ModalProps) {
+export function Modal({
+  titulo,
+  onCerrar,
+  mostrarCerrar = true,
+  children,
+}: ModalProps) {
   return (
     <div
       className="modal__fondo"
@@ -18,9 +25,11 @@ export function Modal({ titulo, onCerrar, children }: ModalProps) {
       <div className="modal" role="dialog" aria-modal="true" aria-label={titulo}>
         <div className="widget__head">
           <h2 className="widget__title">{titulo}</h2>
-          <button type="button" className="boton boton--chico" onClick={onCerrar}>
-            Cerrar
-          </button>
+          {mostrarCerrar ? (
+            <button type="button" className="boton boton--chico" onClick={onCerrar}>
+              Cerrar
+            </button>
+          ) : null}
         </div>
         {children}
       </div>

@@ -9,6 +9,13 @@ export interface Periodo {
 
 const iso = (fecha: Date) => fecha.toISOString().slice(0, 10);
 
+const isoLocal = (fecha: Date) => {
+  const anio = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  return `${anio}-${mes}-${dia}`;
+};
+
 const primerDia = (anio: number, mes: number) =>
   iso(new Date(Date.UTC(anio, mes, 1)));
 
@@ -27,6 +34,56 @@ export function mesActual(hoy = new Date()): Periodo {
     desde: primerDia(anio, mes),
     hasta: ultimoDia(anio, mes),
     etiqueta: nombreMes(anio, mes),
+    agrupacion: 'dia',
+  };
+}
+
+/** Período de un solo día: hoy. */
+export function hoyPeriodo(hoy = new Date()): Periodo {
+  const fecha = isoLocal(hoy);
+  return {
+    desde: fecha,
+    hasta: fecha,
+    etiqueta: 'Hoy',
+    agrupacion: 'dia',
+  };
+}
+
+/** Semana calendario actual, de lunes a domingo. */
+export function estaSemana(hoy = new Date()): Periodo {
+  const desplazamiento = (hoy.getDay() + 6) % 7; // lunes = 0
+  const inicio = new Date(
+    hoy.getFullYear(),
+    hoy.getMonth(),
+    hoy.getDate() - desplazamiento,
+  );
+  const fin = new Date(
+    inicio.getFullYear(),
+    inicio.getMonth(),
+    inicio.getDate() + 6,
+  );
+
+  return {
+    desde: isoLocal(inicio),
+    hasta: isoLocal(fin),
+    etiqueta: 'Esta semana',
+    agrupacion: 'dia',
+  };
+}
+
+/** Últimos N días incluyendo hoy. */
+export function ultimosDias(cantidad: number, hoy = new Date()): Periodo {
+  const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  const inicio = new Date(
+    fin.getFullYear(),
+    fin.getMonth(),
+    fin.getDate() - (cantidad - 1),
+  );
+
+  return {
+    desde: isoLocal(inicio),
+    hasta: isoLocal(fin),
+    etiqueta: `Últimos ${cantidad} días`,
     agrupacion: 'dia',
   };
 }

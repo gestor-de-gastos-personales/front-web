@@ -1,177 +1,83 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  DndContext,
-  DragOverlay,
-  MeasuringStrategy,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import type { DragOverEvent, DragStartEvent } from '@dnd-kit/core';
-import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useAuth } from '../state/auth.store.js';
 import { usePeriodo } from '../state/periodo.store.js';
-import { useGastos, usePresupuestos, useResumen, useSerie } from '../hooks/datos.js';
-import { aDDMMYYYY } from '../utils/periodo.js';
-import { ORDEN_WIDGETS, WIDGETS } from '../widgets/tipos.js';
-import type { WidgetLayoutItem } from '../widgets/tipos.js';
+import { COLUMNAS, ORDEN_WIDGETS, WIDGETS } from '../widgets/tipos.js';
+import type { ModoPeriodoWidget, WidgetLayoutItem } from '../widgets/tipos.js';
 import { useDashboardLayout } from '../widgets/useDashboardLayout.js';
 import { WidgetAcciones } from '../widgets/WidgetAcciones.js';
-import { WidgetSlot } from '../widgets/WidgetSlot.js';
+import { WidgetGrid } from '../widgets/WidgetGrid.js';
+import {
+  CategoriasWidgetPeriodo,
+  EvolucionWidgetPeriodo,
+  HistorialWidget,
+  PresupuestosWidget,
+  TotalWidgetPeriodo,
+} from '../widgets/WidgetsDashboard.js';
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
-import { PeriodSelector } from '../components/PeriodSelector.js';
-import { TotalWidget } from '../components/TotalWidget.js';
-import { CategoryBars } from '../components/CategoryBars.js';
-import { EvolutionChart } from '../components/EvolutionChart.js';
-import { BudgetWidget } from '../components/BudgetWidget.js';
-import { RecentExpenses } from '../components/RecentExpenses.js';
-import { HistoryTable } from '../components/HistoryTable.js';
-import { Widget } from '../components/Widget.js';
-import { Loading } from '../components/Loading.js';
-import { ErrorState } from '../components/ErrorState.js';
+import { ConfirmModal } from '../components/ConfirmModal.js';
 import { EmptyState } from '../components/EmptyState.js';
-
-const LIMITE_HISTORIAL = 5;
 
 export function DashboardView() {
   const periodo = usePeriodo((estado) => estado.periodo);
-  const navigate = useNavigate();
   const usuarioId = useAuth((estado) => estado.usuario?.id ?? null);
   const layout = useDashboardLayout(usuarioId);
 
-  const [pagina, setPagina] = useState(1);
   const [picker, setPicker] = useState(false);
+  const [confirmarReset, setConfirmarReset] = useState(false);
   const [editando, setEditando] = useState(false);
-  const [activo, setActivo] = useState<{ id: string; ancho: number } | null>(null);
 
-  const sensores = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 10 } }),
-  );
+  const contenido = (item: WidgetLayoutItem) => {
+    const indice = layout.items.findIndex((otro) => otro.id === item.id);
 
-  const resumen = useResumen(periodo);
-  const serie = useSerie(periodo);
-  const ultimos = useGastos({ limit: LIMITE_HISTORIAL });
-  const presupuestos = usePresupuestos(periodo);
-  const historial = useGastos({
-    page: pagina,
-    limit: LIMITE_HISTORIAL,
-    fechaInicio: aDDMMYYYY(periodo.desde),
-    fechaFin: aDDMMYYYY(periodo.hasta),
-  });
-
-  const irAGastos = () => navigate('/gastos');
-
-  /** Al pasar sobre otro widget, se reordena en vivo (el resto se desplaza). */
-  const alArrastrar = (evento: DragOverEvent) => {
-    const { active, over } = evento;
-    if (over && active.id !== over.id) {
-      layout.moverPorId(String(active.id), String(over.id));
-    }
-  };
-
-  const alEmpezarArrastre = (evento: DragStartEvent) => {
-    const id = String(evento.active.id);
-    const nodo = document.querySelector<HTMLElement>(
-      `[data-widget-id="${id}"]`,
-    );
-    setActivo({
-      id,
-      ancho:
-        nodo?.getBoundingClientRect().width ||
-        evento.active.rect.current.initial?.width ||
-        0,
-    });
-  };
-
-  const alTerminarArrastre = () => setActivo(null);
-
-  const contenido = (item: WidgetLayoutItem, indice: number) => {
-    const meta = WIDGETS[item.tipo];
     const acciones = editando ? (
       <WidgetAcciones
-        indice={indice}
-        total={layout.items.length}
+        puedeIzquierda={item.x > 0}
+        puedeDerecha={item.x + item.w < COLUMNAS}
         onIzquierda={() => layout.moverIzquierda(indice)}
         onDerecha={() => layout.moverDerecha(indice)}
         onQuitar={() => layout.quitar(item.id)}
       />
     ) : undefined;
 
-    const cargando = (
-      <Widget titulo={meta.titulo} acciones={acciones}>
-        <Loading />
-      </Widget>
-    );
-
-    const error = (mensaje: string, reintentar: () => void) => (
-      <Widget titulo={meta.titulo} acciones={acciones}>
-        <ErrorState mensaje={mensaje} onReintentar={reintentar} />
-      </Widget>
-    );
+    const onCambiarPeriodo = (modo: ModoPeriodoWidget) =>
+      layout.cambiarPeriodo(item.id, modo);
 
     switch (item.tipo) {
       case 'total':
-        if (resumen.cargando) return cargando;
-        if (resumen.error) return error(resumen.error, resumen.recargar);
-        return resumen.data ? (
-          <TotalWidget resumen={resumen.data} acciones={acciones} />
-        ) : null;
+        return (
+          <TotalWidgetPeriodo
+            item={item}
+            periodoGlobal={periodo}
+            onCambiarPeriodo={onCambiarPeriodo}
+            acciones={acciones}
+          />
+        );
 
       case 'categorias':
-        if (resumen.cargando) return cargando;
-        if (resumen.error) return error(resumen.error, resumen.recargar);
         return (
-          <CategoryBars
-            grupos={resumen.data?.porCategoria ?? []}
+          <CategoriasWidgetPeriodo
+            item={item}
+            periodoGlobal={periodo}
+            onCambiarPeriodo={onCambiarPeriodo}
             acciones={acciones}
           />
         );
 
       case 'evolucion':
-        if (serie.cargando) return cargando;
-        if (serie.error) return error(serie.error, serie.recargar);
-        return serie.data ? (
-          <EvolutionChart
-            puntos={serie.data.puntos}
-            agrupacion={serie.data.agrupacion}
+        return (
+          <EvolucionWidgetPeriodo
+            item={item}
+            periodoGlobal={periodo}
+            onCambiarPeriodo={onCambiarPeriodo}
             acciones={acciones}
           />
-        ) : null;
+        );
 
       case 'presupuestos':
-        if (presupuestos.cargando) return cargando;
-        if (presupuestos.error) return error(presupuestos.error, presupuestos.recargar);
-        return (
-          <BudgetWidget
-            presupuestos={presupuestos.data?.data ?? []}
-            resumen={resumen.data}
-            acciones={acciones}
-          />
-        );
-
-      case 'ultimos':
-        if (ultimos.cargando) return cargando;
-        if (ultimos.error) return error(ultimos.error, ultimos.recargar);
-        return (
-          <RecentExpenses gastos={ultimos.data?.data ?? []} acciones={acciones} />
-        );
+        return <PresupuestosWidget periodo={periodo} acciones={acciones} />;
 
       case 'historial':
-        if (historial.cargando) return cargando;
-        if (historial.error) return error(historial.error, historial.recargar);
-        return historial.data ? (
-          <HistoryTable
-            pagina={historial.data}
-            onEditar={irAGastos}
-            onEliminar={irAGastos}
-            onPagina={setPagina}
-            acciones={acciones}
-          />
-        ) : null;
+        return <HistorialWidget periodo={periodo} acciones={acciones} />;
 
       default:
         return null;
@@ -179,23 +85,26 @@ export function DashboardView() {
   };
 
   return (
-    <DndContext
-      sensors={sensores}
-      collisionDetection={closestCenter}
-      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-      onDragStart={alEmpezarArrastre}
-      onDragOver={alArrastrar}
-      onDragEnd={alTerminarArrastre}
-      onDragCancel={alTerminarArrastre}
-    >
-      <div className="grid">
-        <PeriodSelector />
+    <div className="dashboard">
+      <header className="page-head">
+        <div className="dashboard-head__left">
+          <h1 className="page-title">Dashboard</h1>
+          {editando ? (
+            <button
+              type="button"
+              className="boton boton--fantasma boton--chico"
+              onClick={() => setConfirmarReset(true)}
+            >
+              Restablecer
+            </button>
+          ) : null}
+        </div>
 
-        <div className="dashboard-tools span-12">
+        <div className="dashboard-tools">
           {editando ? (
             <>
               <span className="dashboard-tools__hint">
-                Arrastrá para mover; usá la esquina para redimensionar.
+                Arrastrá desde el encabezado para mover; redimensioná desde la esquina.
               </span>
               <button
                 type="button"
@@ -203,13 +112,6 @@ export function DashboardView() {
                 onClick={() => setPicker(true)}
               >
                 Agregar widget
-              </button>
-              <button
-                type="button"
-                className="boton boton--fantasma boton--chico"
-                onClick={layout.resetear}
-              >
-                Restablecer
               </button>
               <button
                 type="button"
@@ -229,29 +131,17 @@ export function DashboardView() {
             </button>
           )}
         </div>
+      </header>
 
-        <SortableContext
-          items={layout.items.map((item) => item.id)}
-          strategy={rectSortingStrategy}
-        >
-          {layout.items.map((item, indice) => (
-            <WidgetSlot
-              key={item.id}
-              item={item}
-              indice={indice}
-              editable={editando}
-              onRedimensionar={
-                editando
-                  ? (span) => layout.cambiarSpan(indice, span)
-                  : undefined
-              }
-            >
-              {contenido(item, indice)}
-            </WidgetSlot>
-          ))}
-        </SortableContext>
+      <WidgetGrid
+        items={layout.items}
+        editable={editando}
+        onCambio={layout.actualizarDesdeGrilla}
+        renderWidget={contenido}
+      />
 
-        {layout.items.length === 0 ? (
+      {layout.items.length === 0 ? (
+        <div className="grid">
           <div className="span-12">
             <EmptyState
               titulo="Tu tablero está vacío"
@@ -270,29 +160,29 @@ export function DashboardView() {
               }
             />
           </div>
-        ) : null}
+        </div>
+      ) : null}
 
-        {picker ? (
-          <AddWidgetModal
-            catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
-            onAgregar={layout.agregar}
-            onCerrar={() => setPicker(false)}
-          />
-        ) : null}
-      </div>
+      {picker ? (
+        <AddWidgetModal
+          catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
+          onAgregar={layout.agregar}
+          onCerrar={() => setPicker(false)}
+        />
+      ) : null}
 
-      <DragOverlay
-        dropAnimation={{ duration: 220, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' }}
-      >
-        {activo && layout.items.some((item) => item.id === activo.id) ? (
-          <div className="widget-overlay" style={{ width: activo.ancho }}>
-            {contenido(
-              layout.items.find((item) => item.id === activo.id)!,
-              layout.items.findIndex((item) => item.id === activo.id),
-            )}
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+      {confirmarReset ? (
+        <ConfirmModal
+          titulo="Restablecer tablero"
+          mensaje="¿Seguro que querés volver al layout por defecto? Se perderán las posiciones, tamaños y períodos personalizados."
+          textoConfirmar="Restablecer"
+          onConfirmar={() => {
+            layout.resetear();
+            setConfirmarReset(false);
+          }}
+          onCancelar={() => setConfirmarReset(false)}
+        />
+      ) : null}
+    </div>
   );
 }

@@ -17,13 +17,20 @@ describe('servicios', () => {
     const fetchMock = vi.fn().mockResolvedValue(respuesta({ data: [], meta: {} }));
     vi.stubGlobal('fetch', fetchMock);
 
-    await gastosService.listar({ page: 2, fechaInicio: '01-11-2026' });
+    await gastosService.listar({
+      page: 2,
+      fechaInicio: '01-11-2026',
+      montoMin: 100,
+      montoMax: 500,
+    });
     await gastosService.crear({ descripcion: 'Coto', valor: 10, fecha: '2026-11-01', categoria: 1 });
     await gastosService.actualizar(3, { valor: 20 });
     await gastosService.eliminar(3);
 
     const urls = fetchMock.mock.calls.map(([url]) => String(url));
-    expect(urls[0]).toContain('/gastos?page=2&fechaInicio=01-11-2026');
+    expect(urls[0]).toContain(
+      '/gastos?page=2&fechaInicio=01-11-2026&montoMin=100&montoMax=500',
+    );
     expect(urls[1]).toContain('/gastos');
     expect(urls[2]).toContain('/gastos/3');
     expect(urls[3]).toContain('/gastos/3');

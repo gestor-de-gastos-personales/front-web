@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { usePeriodo } from '../state/periodo.store.js';
 import { useCategorias, useGastos } from '../hooks/datos.js';
 import { gastosService } from '../services/gastos.service.js';
 import type { Gasto, GastoEntrada } from '../services/gastos.service.js';
@@ -11,24 +10,32 @@ import { ExpenseForm } from '../components/ExpenseForm.js';
 import { Loading } from '../components/Loading.js';
 import { ErrorState } from '../components/ErrorState.js';
 import { Widget } from '../components/Widget.js';
+import { PageHeader } from '../components/PageHeader.js';
 
 const LIMITE = 8;
 
 export function GastosView() {
-  const periodo = usePeriodo((estado) => estado.periodo);
   const [pagina, setPagina] = useState(1);
   const [categoriaId, setCategoriaId] = useState<number | undefined>(undefined);
+  const [desde, setDesde] = useState('');
+  const [hasta, setHasta] = useState('');
+  const [montoMin, setMontoMin] = useState('');
+  const [montoMax, setMontoMax] = useState('');
   const [formulario, setFormulario] = useState<Gasto | 'nuevo' | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [errorAccion, setErrorAccion] = useState<string | null>(null);
 
   const categorias = useCategorias();
+  const montoMinimo = montoMin.trim() === '' ? undefined : Number(montoMin);
+  const montoMaximo = montoMax.trim() === '' ? undefined : Number(montoMax);
   const gastos = useGastos({
     page: pagina,
     limit: LIMITE,
-    fechaInicio: aDDMMYYYY(periodo.desde),
-    fechaFin: aDDMMYYYY(periodo.hasta),
+    fechaInicio: desde ? aDDMMYYYY(desde) : undefined,
+    fechaFin: hasta ? aDDMMYYYY(hasta) : undefined,
     categoriaId,
+    montoMin: montoMinimo,
+    montoMax: montoMaximo,
   });
 
   const recargar = () => gastos.recargar();
@@ -65,15 +72,33 @@ export function GastosView() {
   return (
     <>
       <div className="grid">
-        <Widget titulo="Gastos" tag={periodo.etiqueta} className="span-12">
-          <div className="fila" style={{ justifyContent: 'space-between' }}>
+        <PageHeader
+          titulo="Gastos"
+          acciones={
+            <button
+              type="button"
+              className="boton boton--primario"
+              onClick={() => {
+                setErrorAccion(null);
+                setFormulario('nuevo');
+              }}
+            >
+              Nuevo gasto
+            </button>
+          }
+        />
+
+        <Widget titulo="Filtros" className="span-12">
+          <div className="filtros">
             <label className="campo">
               <span className="campo__label">Categoría</span>
               <select
                 value={categoriaId ?? ''}
                 onChange={(evento) => {
                   setPagina(1);
-                  setCategoriaId(evento.target.value ? Number(evento.target.value) : undefined);
+                  setCategoriaId(
+                    evento.target.value ? Number(evento.target.value) : undefined,
+                  );
                 }}
               >
                 <option value="">Todas</option>
@@ -85,16 +110,59 @@ export function GastosView() {
               </select>
             </label>
 
-            <button
-              type="button"
-              className="boton boton--primario"
-              onClick={() => {
-                setErrorAccion(null);
-                setFormulario('nuevo');
-              }}
-            >
-              Nuevo gasto
-            </button>
+            <label className="campo">
+              <span className="campo__label">Desde</span>
+              <input
+                type="date"
+                value={desde}
+                onChange={(evento) => {
+                  setPagina(1);
+                  setDesde(evento.target.value);
+                }}
+              />
+            </label>
+
+            <label className="campo">
+              <span className="campo__label">Hasta</span>
+              <input
+                type="date"
+                value={hasta}
+                onChange={(evento) => {
+                  setPagina(1);
+                  setHasta(evento.target.value);
+                }}
+              />
+            </label>
+
+            <label className="campo">
+              <span className="campo__label">Monto mínimo</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={montoMin}
+                placeholder="0"
+                onChange={(evento) => {
+                  setPagina(1);
+                  setMontoMin(evento.target.value);
+                }}
+              />
+            </label>
+
+            <label className="campo">
+              <span className="campo__label">Monto máximo</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={montoMax}
+                placeholder="Sin límite"
+                onChange={(evento) => {
+                  setPagina(1);
+                  setMontoMax(evento.target.value);
+                }}
+              />
+            </label>
           </div>
 
           {errorAccion ? (

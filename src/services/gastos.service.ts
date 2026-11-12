@@ -33,6 +33,8 @@ export interface FiltrosGastos {
   fechaInicio?: string;
   fechaFin?: string;
   categoriaId?: number;
+  montoMin?: number;
+  montoMax?: number;
 }
 
 export interface GastoEntrada {
@@ -51,6 +53,8 @@ export const gastosService = {
         fechaInicio: filtros.fechaInicio,
         fechaFin: filtros.fechaFin,
         categoriaId: filtros.categoriaId,
+        montoMin: filtros.montoMin,
+        montoMax: filtros.montoMax,
       },
     }),
 

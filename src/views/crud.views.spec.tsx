@@ -77,6 +77,59 @@ describe('GastosView', () => {
     );
   });
 
+  it('por defecto muestra todos los gastos sin filtro de fecha', () => {
+    render(
+      <MemoryRouter>
+        <GastosView />
+      </MemoryRouter>,
+    );
+
+    expect(datos.useGastos).toHaveBeenCalledWith(
+      expect.objectContaining({
+        page: 1,
+        limit: 8,
+        fechaInicio: undefined,
+        fechaFin: undefined,
+        montoMin: undefined,
+        montoMax: undefined,
+      }),
+    );
+  });
+
+  it('filtra por período, categoría y monto', () => {
+    render(
+      <MemoryRouter>
+        <GastosView />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByLabelText('Desde'), {
+      target: { value: '2026-11-05' },
+    });
+    fireEvent.change(screen.getByLabelText('Hasta'), {
+      target: { value: '2026-11-20' },
+    });
+    fireEvent.change(screen.getByLabelText('Monto mínimo'), {
+      target: { value: '100' },
+    });
+    fireEvent.change(screen.getByLabelText('Monto máximo'), {
+      target: { value: '2000' },
+    });
+    fireEvent.change(screen.getByLabelText('Categoría'), {
+      target: { value: '1' },
+    });
+
+    expect(datos.useGastos.mock.calls.at(-1)?.[0]).toMatchObject({
+      page: 1,
+      limit: 8,
+      fechaInicio: '05-11-2026',
+      fechaFin: '20-11-2026',
+      categoriaId: 1,
+      montoMin: 100,
+      montoMax: 2000,
+    });
+  });
+
   it('edita un gasto existente', async () => {
     render(
       <MemoryRouter>
@@ -116,7 +169,9 @@ describe('GastosView', () => {
 describe('CategoriasView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    datos.useCategorias.mockReturnValue(ok([CATEGORIA, { id: 2, nombre: 'Mascotas' }]));
+    datos.useCategorias.mockReturnValue(
+      ok([CATEGORIA, { id: 2, nombre: 'Mascotas' }, { id: 3, nombre: 'Viajes' }]),
+    );
     servicios.categorias.crear.mockResolvedValue({ id: 3 });
     servicios.categorias.actualizar.mockResolvedValue({ id: 1 });
     servicios.categorias.eliminar.mockResolvedValue(undefined);
@@ -129,6 +184,19 @@ describe('CategoriasView', () => {
       </MemoryRouter>,
     );
 
+    expect(
+      screen.queryByRole('columnheader', { name: 'Tipo' }),
+    ).not.toBeInTheDocument();
+    const filaSistema = screen.getByText('Alimentación').closest('tr')!;
+    expect(
+      within(filaSistema).queryByRole('button', { name: 'Renombrar' }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(filaSistema).queryByRole('button', { name: 'Eliminar' }),
+    ).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Renombrar' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Eliminar' })).toHaveLength(2);
+
     fireEvent.change(screen.getByLabelText('Nueva categoría'), {
       target: { value: 'Viajes' },
     });
@@ -138,12 +206,12 @@ describe('CategoriasView', () => {
     vi.spyOn(window, 'prompt').mockReturnValue('Pets');
     fireEvent.click(screen.getAllByRole('button', { name: 'Renombrar' })[0]!);
     await waitFor(() =>
-      expect(servicios.categorias.actualizar).toHaveBeenCalledWith(1, 'Pets'),
+      expect(servicios.categorias.actualizar).toHaveBeenCalledWith(2, 'Pets'),
     );
 
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     fireEvent.click(screen.getAllByRole('button', { name: 'Eliminar' })[1]!);
-    await waitFor(() => expect(servicios.categorias.eliminar).toHaveBeenCalledWith(2));
+    await waitFor(() => expect(servicios.categorias.eliminar).toHaveBeenCalledWith(3));
   });
 });
 
