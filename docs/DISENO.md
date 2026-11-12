@@ -84,3 +84,8 @@ La grilla de 12 columnas se empaqueta por filas al reordenar, agregar o quitar
 widgets: el que no entra completo se ajusta exactamente al hueco libre (mínimo 3
 columnas) y el que entra conserva su tamaño. Así no quedan espacios muertos al
 lado de un widget.
+
+**Modo edición:** fuera de él, los widgets son de solo lectura (no se arrastran
+ni redimensionan y no muestran controles). El botón “Editar” habilita el arrastre,
+el handle de resize y las acciones de agregar/restablecer; “Listo” vuelve a la
+vista limpia.

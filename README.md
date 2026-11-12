@@ -34,13 +34,15 @@ npm run test:cov          # tests + cobertura
 
 - **Sesión**: registro y login con JWT; el token se restaura al recargar y se
   valida contra `GET /auth/me`.
-- **Dashboard**: tablero ajustable con selector global de período. Los widgets
-  se pueden repetir (por ejemplo, dos gráficos), reordenar arrastrando (los demás
-  se desplazan en vivo, estilo Android) o con botones, redimensionar arrastrando
-  la esquina inferior derecha (3–12 columnas), quitar y volver a agregar; el
-  layout se guarda por usuario en el navegador. Al reordenar, el tablero empaqueta
-  las filas: si un widget no entra completo, se ajusta exactamente al hueco libre;
-  si entra, conserva su tamaño. Widgets: total, gasto por categoría, evolución,
+- **Dashboard**: tablero ajustable con selector global de período y **modo
+  edición**: el botón “Editar” habilita arrastre, resize y las acciones de
+  agregar/restablecer; “Listo” vuelve a la vista de solo lectura. Los widgets se
+  pueden repetir (por ejemplo, dos gráficos), reordenar arrastrando (los demás se
+  desplazan en vivo, estilo Android) o con botones, redimensionar arrastrando la
+  esquina inferior derecha (3–12 columnas), quitar y volver a agregar; el layout
+  se guarda por usuario en el navegador. Al reordenar, el tablero empaqueta las
+  filas: si un widget no entra completo, se ajusta exactamente al hueco libre; si
+  entra, conserva su tamaño. Widgets: total, gasto por categoría, evolución,
   últimos gastos, historial y presupuestos.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y
   categoría, con paginación.

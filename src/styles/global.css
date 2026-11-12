@@ -612,13 +612,41 @@ p {
 /* ---------- Tablero ajustable ---------- */
 .dashboard-tools {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
+}
+
+.dashboard-tools__hint {
+  margin-right: auto;
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .widget-slot {
   min-width: 0;
   position: relative;
+}
+
+.widget-slot--editable {
+  cursor: grab;
+}
+
+.widget-slot--editable > .widget-slot__inner > .widget {
+  outline: 1px dashed var(--line);
+  outline-offset: 3px;
+}
+
+.widget-slot--editable:hover > .widget-slot__inner > .widget {
+  outline-color: var(--accent);
+}
+
+.widget-slot--editable .widget-resize {
+  opacity: 0.55;
+}
+
+.widget-slot--editable:hover .widget-resize {
+  opacity: 1;
 }
 
 .widget-slot__inner {

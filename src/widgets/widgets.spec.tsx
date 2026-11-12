@@ -30,7 +30,7 @@ describe('tablero de widgets', () => {
     render(
       <DndContext>
         <SortableContext items={[ITEM.id]}>
-          <WidgetSlot item={ITEM} indice={0} onRedimensionar={vi.fn()}>
+          <WidgetSlot item={ITEM} indice={0} editable onRedimensionar={vi.fn()}>
             <p>contenido</p>
           </WidgetSlot>
         </SortableContext>

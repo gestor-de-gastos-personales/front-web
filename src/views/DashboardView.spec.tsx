@@ -88,6 +88,50 @@ describe('DashboardView', () => {
     expect(screen.getByText('Presupuestos')).toBeInTheDocument();
   });
 
+  it('solo permite editar los widgets en modo edición', () => {
+    datos.useResumen.mockReturnValue(ok(RESUMEN));
+    datos.useSerie.mockReturnValue(
+      ok({
+        desde: '2026-11-01',
+        hasta: '2026-11-30',
+        agrupacion: 'dia',
+        puntos: [{ clave: '2026-11-01', etiqueta: '01/11', total: 1500 }],
+        totalGeneral: 1500,
+      }),
+    );
+    datos.useGastos.mockReturnValue(
+      ok({ data: [GASTO], meta: { total: 1, page: 1, limit: 5, totalPages: 1 } }),
+    );
+    datos.usePresupuestos.mockReturnValue(ok({ data: [], total: 0 }));
+
+    render(
+      <MemoryRouter>
+        <DashboardView />
+      </MemoryRouter>,
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Quitar widget' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Redimensionar widget/ }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Editar' }));
+
+    expect(screen.getAllByRole('button', { name: 'Quitar widget' })).toHaveLength(6);
+    expect(
+      screen.getAllByRole('button', { name: /Redimensionar widget/ }),
+    ).toHaveLength(6);
+    expect(screen.getByRole('button', { name: 'Agregar widget' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Listo' }));
+
+    expect(
+      screen.queryByRole('button', { name: 'Quitar widget' }),
+    ).not.toBeInTheDocument();
+  });
+
   it('permite quitar un widget y volver a agregarlo', async () => {
     datos.useResumen.mockReturnValue(ok(RESUMEN));
     datos.useSerie.mockReturnValue(
@@ -110,6 +154,7 @@ describe('DashboardView', () => {
       </MemoryRouter>,
     );
 
+    fireEvent.click(screen.getByRole('button', { name: 'Editar' }));
     fireEvent.click(screen.getAllByRole('button', { name: 'Quitar widget' })[0]!);
     expect(screen.queryByText('Total del período')).not.toBeInTheDocument();
 

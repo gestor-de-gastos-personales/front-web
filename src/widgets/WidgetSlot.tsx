@@ -8,6 +8,7 @@ import { WidgetResize } from './WidgetResize.js';
 interface WidgetSlotProps {
   item: WidgetLayoutItem;
   indice: number;
+  editable?: boolean;
   onRedimensionar?: (span: SpanWidget) => void;
   children: ReactNode;
 }
@@ -15,22 +16,25 @@ interface WidgetSlotProps {
 const INTERACTIVOS = 'button, a, input, select, textarea';
 
 /**
- * Celda sortable: dnd-kit mueve la tarjeta y desplaza las demás en vivo.
- * El elemento activo no aplica su propio transform (lo dibuja el DragOverlay).
- * Los listeners ignoran controles interactivos para que un clic o un resize
- * no dispare un arrastre.
+ * Celda sortable. Fuera del modo edición no escucha arrastre ni muestra
+ * el handle de resize. El elemento activo no aplica su propio transform
+ * (lo dibuja el DragOverlay).
  */
 export function WidgetSlot({
   item,
   indice,
+  editable = false,
   onRedimensionar,
   children,
 }: WidgetSlotProps) {
   const { listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item.id,
+    disabled: !editable,
   });
 
   const listenersFiltrados = useMemo(() => {
+    if (!editable) return {};
+
     const resultado: Record<string, (evento: Event) => void> = {};
 
     for (const [clave, valor] of Object.entries(listeners ?? {})) {
@@ -43,12 +47,20 @@ export function WidgetSlot({
     }
 
     return resultado;
-  }, [listeners]);
+  }, [listeners, editable]);
+
+  const clases = [
+    'widget-slot',
+    editable ? 'widget-slot--editable' : '',
+    isDragging ? 'widget-slot--arrastrando' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div
       ref={setNodeRef}
-      className={`widget-slot${isDragging ? ' widget-slot--arrastrando' : ''}`}
+      className={clases}
       data-widget-id={item.id}
       style={{
         gridColumn: `span ${item.span}`,
@@ -64,7 +76,7 @@ export function WidgetSlot({
       >
         {children}
       </div>
-      {onRedimensionar ? (
+      {editable && onRedimensionar ? (
         <WidgetResize span={item.span} onCambiar={onRedimensionar} />
       ) : null}
     </div>

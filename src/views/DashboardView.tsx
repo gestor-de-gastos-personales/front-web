@@ -44,6 +44,7 @@ export function DashboardView() {
 
   const [pagina, setPagina] = useState(1);
   const [picker, setPicker] = useState(false);
+  const [editando, setEditando] = useState(false);
   const [activo, setActivo] = useState<{ id: string; ancho: number } | null>(null);
 
   const sensores = useSensors(
@@ -90,7 +91,7 @@ export function DashboardView() {
 
   const contenido = (item: WidgetLayoutItem, indice: number) => {
     const meta = WIDGETS[item.tipo];
-    const acciones = (
+    const acciones = editando ? (
       <WidgetAcciones
         indice={indice}
         total={layout.items.length}
@@ -98,7 +99,7 @@ export function DashboardView() {
         onDerecha={() => layout.moverDerecha(indice)}
         onQuitar={() => layout.quitar(item.id)}
       />
-    );
+    ) : undefined;
 
     const cargando = (
       <Widget titulo={meta.titulo} acciones={acciones}>
@@ -191,20 +192,42 @@ export function DashboardView() {
         <PeriodSelector />
 
         <div className="dashboard-tools span-12">
-          <button
-            type="button"
-            className="boton boton--chico"
-            onClick={() => setPicker(true)}
-          >
-            Agregar widget
-          </button>
-          <button
-            type="button"
-            className="boton boton--fantasma boton--chico"
-            onClick={layout.resetear}
-          >
-            Restablecer
-          </button>
+          {editando ? (
+            <>
+              <span className="dashboard-tools__hint">
+                Arrastrá para mover; usá la esquina para redimensionar.
+              </span>
+              <button
+                type="button"
+                className="boton boton--chico"
+                onClick={() => setPicker(true)}
+              >
+                Agregar widget
+              </button>
+              <button
+                type="button"
+                className="boton boton--fantasma boton--chico"
+                onClick={layout.resetear}
+              >
+                Restablecer
+              </button>
+              <button
+                type="button"
+                className="boton boton--primario boton--chico"
+                onClick={() => setEditando(false)}
+              >
+                Listo
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="boton boton--chico"
+              onClick={() => setEditando(true)}
+            >
+              Editar
+            </button>
+          )}
         </div>
 
         <SortableContext
@@ -216,7 +239,12 @@ export function DashboardView() {
               key={item.id}
               item={item}
               indice={indice}
-              onRedimensionar={(span) => layout.cambiarSpan(indice, span)}
+              editable={editando}
+              onRedimensionar={
+                editando
+                  ? (span) => layout.cambiarSpan(indice, span)
+                  : undefined
+              }
             >
               {contenido(item, indice)}
             </WidgetSlot>
@@ -232,7 +260,10 @@ export function DashboardView() {
                 <button
                   type="button"
                   className="boton boton--primario"
-                  onClick={() => setPicker(true)}
+                  onClick={() => {
+                    setEditando(true);
+                    setPicker(true);
+                  }}
                 >
                   Agregar widget
                 </button>
