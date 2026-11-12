@@ -513,6 +513,13 @@ p {
   align-items: flex-end;
 }
 
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
 /* ---------- Tablas ---------- */
 .tabla {
   width: 100%;

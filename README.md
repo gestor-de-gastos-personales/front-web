@@ -52,9 +52,10 @@ npm run test:cov          # tests + cobertura
   layout (posición, tamaño y período por widget) se guarda por usuario en el
   navegador y se migra desde el formato anterior. Widgets: total, gasto por
   categoría, evolución, presupuestos e historial.
-- **Gastos**: alta, edición, borrado y listado con filtros por período y
-  categoría, con paginación.
-- **Categorías**: alta, renombrado y baja.
+- **Gastos**: alta, edición, borrado y listado con filtros por período,
+  categoría y rango de monto (`montoMin` / `montoMax`), con paginación.
+- **Categorías**: alta de categorías propias; las del sistema son de solo
+  lectura y solo las propias se pueden renombrar o eliminar.
 - **Presupuestos**: tope mensual por categoría y comparación contra el gasto
   real.
 - **Perfil**: datos de la cuenta y cierre de sesión.
@@ -78,7 +79,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 ## Contratos que consume
 
 - `POST /auth/register`, `POST /auth/login`, `GET /auth/me`
-- `GET /gastos?page&limit&fechaInicio&fechaFin&categoriaId` (fechas `DD-MM-YYYY`)
+- `GET /gastos?page&limit&fechaInicio&fechaFin&categoriaId&montoMin&montoMax` (fechas `DD-MM-YYYY`)
 - `POST /gastos`, `PATCH /gastos/:id`, `DELETE /gastos/:id`
 - `GET /gastos/resumen?desde&hasta`
 - `GET /gastos/serie?desde&hasta&agrupacion=dia|semana|mes`
@@ -87,7 +88,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-119 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
+120 tests con Vitest + Testing Library. Cobertura de líneas ~96% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño

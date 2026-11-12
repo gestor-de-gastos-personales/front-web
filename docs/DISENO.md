@@ -47,6 +47,10 @@ mezcla de serif/mono.
 - Sin datos inventados ni telemetría decorativa.
 - Copy estándar para acciones estándar: "Entrar", "Crear cuenta", "Guardar
   cambios", "Eliminar", "Salir".
+- Las categorías del sistema son de solo lectura: no muestran acciones de
+  renombrar ni eliminar. Las creadas por el usuario sí.
+- El listado de gastos filtra por período (desde/hasta), categoría y rango de
+  monto (mínimo/máximo).
 - Los estados vacíos explican qué falta y ofrecen la acción siguiente.
 - Los íconos del sidebar son SVG reales; no se usan glifos Unicode como íconos.
 
