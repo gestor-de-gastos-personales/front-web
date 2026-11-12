@@ -4,6 +4,7 @@ import { SortableContext } from '@dnd-kit/sortable';
 import { describe, expect, it, vi } from 'vitest';
 import { WidgetSlot } from './WidgetSlot.js';
 import { WidgetAcciones } from './WidgetAcciones.js';
+import { WidgetResize } from './WidgetResize.js';
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
 import type { WidgetLayoutItem } from './tipos.js';
 
@@ -25,11 +26,11 @@ const CATALOGO = [
 ];
 
 describe('tablero de widgets', () => {
-  it('WidgetSlot aplica el ancho dentro del contexto sortable', () => {
+  it('WidgetSlot aplica el ancho e incluye el handle de resize', () => {
     render(
       <DndContext>
         <SortableContext items={[ITEM.id]}>
-          <WidgetSlot item={ITEM} indice={0}>
+          <WidgetSlot item={ITEM} indice={0} onRedimensionar={vi.fn()}>
             <p>contenido</p>
           </WidgetSlot>
         </SortableContext>
@@ -41,33 +42,43 @@ describe('tablero de widgets', () => {
 
     expect(slot).toHaveStyle({ gridColumn: 'span 4' });
     expect(inner).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Redimensionar widget/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('WidgetResize cambia el tamaño con el teclado', () => {
+    const onCambiar = vi.fn();
+    render(<WidgetResize span={4} onCambiar={onCambiar} />);
+
+    const handle = screen.getByRole('button', { name: /Redimensionar widget/ });
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
+    expect(onCambiar).toHaveBeenCalledWith(6);
+
+    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+    expect(onCambiar).toHaveBeenCalledTimes(1);
   });
 
   it('WidgetAcciones llama a los handlers y deshabilita los extremos', () => {
     const onIzquierda = vi.fn();
     const onDerecha = vi.fn();
-    const onRedimensionar = vi.fn();
     const onQuitar = vi.fn();
 
     render(
       <WidgetAcciones
         indice={0}
         total={2}
-        span={4}
         onIzquierda={onIzquierda}
         onDerecha={onDerecha}
-        onRedimensionar={onRedimensionar}
         onQuitar={onQuitar}
       />,
     );
 
     expect(screen.getByRole('button', { name: 'Mover a la izquierda' })).toBeDisabled();
     fireEvent.click(screen.getByRole('button', { name: 'Mover a la derecha' }));
-    fireEvent.click(screen.getByRole('button', { name: /Cambiar tamaño/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Quitar widget' }));
 
     expect(onDerecha).toHaveBeenCalled();
-    expect(onRedimensionar).toHaveBeenCalled();
     expect(onQuitar).toHaveBeenCalled();
     expect(onIzquierda).not.toHaveBeenCalled();
   });

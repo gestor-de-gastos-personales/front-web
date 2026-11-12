@@ -119,6 +119,15 @@ export function useDashboardLayout(usuarioId?: number | null) {
     );
   };
 
+  /** Cambia el ancho a un valor concreto (handle de la esquina). */
+  const cambiarSpan = (indice: number, span: SpanWidget) => {
+    setItems((previo) =>
+      previo.map((item, posicion) =>
+        posicion === indice ? { ...item, span } : item,
+      ),
+    );
+  };
+
   const quitar = (id: string) => {
     setItems((previo) => previo.filter((item) => item.id !== id));
   };
@@ -140,6 +149,7 @@ export function useDashboardLayout(usuarioId?: number | null) {
     moverIzquierda,
     moverDerecha,
     redimensionar,
+    cambiarSpan,
     quitar,
     agregar,
     resetear,

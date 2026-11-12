@@ -618,6 +618,7 @@ p {
 
 .widget-slot {
   min-width: 0;
+  position: relative;
 }
 
 .widget-slot__inner {
@@ -633,9 +634,58 @@ p {
   z-index: 3;
 }
 
-.widget-slot--arrastrando .widget {
+.widget-slot--arrastrando .widget-slot__inner {
+  opacity: 0.18;
+}
+
+.widget-slot--arrastrando .widget-resize {
+  opacity: 0;
+}
+
+.widget-overlay {
+  pointer-events: none;
+}
+
+.widget-overlay .widget {
   border-color: var(--accent);
   box-shadow: 0 16px 40px rgb(16 24 40 / 18%);
+}
+
+.widget-resize {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: nwse-resize;
+  opacity: 0;
+  transition:
+    opacity 150ms ease,
+    color 150ms ease,
+    background-color 150ms ease;
+}
+
+.widget-slot:hover .widget-resize,
+.widget-resize:focus-visible {
+  opacity: 1;
+}
+
+.widget-resize:hover {
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+}
+
+@media (hover: none) {
+  .widget-resize {
+    opacity: 0.75;
+  }
 }
 
 .widget-picker {

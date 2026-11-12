@@ -1,13 +1,10 @@
 import type { ReactNode } from 'react';
-import type { SpanWidget } from './tipos.js';
 
 interface WidgetAccionesProps {
   indice: number;
   total: number;
-  span: SpanWidget;
   onIzquierda: () => void;
   onDerecha: () => void;
-  onRedimensionar: () => void;
   onQuitar: () => void;
 }
 
@@ -30,14 +27,12 @@ function Icono({ children }: { children: ReactNode }) {
   );
 }
 
-/** Controles de un widget: mover, redimensionar y quitar. */
+/** Controles de un widget: arrastrar, mover y quitar. */
 export function WidgetAcciones({
   indice,
   total,
-  span,
   onIzquierda,
   onDerecha,
-  onRedimensionar,
   onQuitar,
 }: WidgetAccionesProps) {
   return (
@@ -76,20 +71,6 @@ export function WidgetAcciones({
       >
         <Icono>
           <path d="m9 18 6-6-6-6" />
-        </Icono>
-      </button>
-
-      <button
-        type="button"
-        className="widget__accion"
-        aria-label={`Cambiar tamaño (${span} de 12)`}
-        title={`Ancho ${span}/12`}
-        onClick={onRedimensionar}
-      >
-        <Icono>
-          <path d="M15 3h6v6" />
-          <path d="M9 21H3v-6" />
-          <path d="M21 3 3 21" />
         </Icono>
       </button>
 

@@ -61,6 +61,12 @@ describe('useDashboardLayout', () => {
     expect(result.current.items).toHaveLength(ids.length);
   });
 
+  it('cambia el ancho a un valor concreto', () => {
+    const { result } = renderHook(() => useDashboardLayout(1));
+    act(() => result.current.cambiarSpan(0, 12));
+    expect(result.current.items[0]!.span).toBe(12);
+  });
+
   it('persiste las instancias por usuario', () => {
     const primera = renderHook(() => useDashboardLayout(7));
     const id = primera.result.current.items[0]!.id;

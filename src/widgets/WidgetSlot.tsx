@@ -1,20 +1,27 @@
 import type { ReactNode } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { WidgetLayoutItem } from './tipos.js';
+import type { SpanWidget, WidgetLayoutItem } from './tipos.js';
+import { WidgetResize } from './WidgetResize.js';
 
 interface WidgetSlotProps {
   item: WidgetLayoutItem;
   indice: number;
+  onRedimensionar?: (span: SpanWidget) => void;
   children: ReactNode;
 }
 
 /**
  * Celda sortable: dnd-kit mueve la tarjeta y desplaza las demás en vivo.
- * Los listeners van en la tarjeta (mantener y arrastrar, estilo Android);
- * los botones de mover siguen disponibles para teclado y accesibilidad.
+ * El elemento activo no aplica su propio transform (lo dibuja el DragOverlay),
+ * así no se deforma con el reflujo de la grilla.
  */
-export function WidgetSlot({ item, indice, children }: WidgetSlotProps) {
+export function WidgetSlot({
+  item,
+  indice,
+  onRedimensionar,
+  children,
+}: WidgetSlotProps) {
   const { listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item.id,
   });
@@ -25,7 +32,7 @@ export function WidgetSlot({ item, indice, children }: WidgetSlotProps) {
       className={`widget-slot${isDragging ? ' widget-slot--arrastrando' : ''}`}
       style={{
         gridColumn: `span ${item.span}`,
-        transform: CSS.Transform.toString(transform),
+        transform: isDragging ? undefined : CSS.Transform.toString(transform),
         transition,
         zIndex: isDragging ? 3 : undefined,
       }}
@@ -37,6 +44,9 @@ export function WidgetSlot({ item, indice, children }: WidgetSlotProps) {
       >
         {children}
       </div>
+      {onRedimensionar ? (
+        <WidgetResize span={item.span} onCambiar={onRedimensionar} />
+      ) : null}
     </div>
   );
 }

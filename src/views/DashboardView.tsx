@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   DndContext,
+  DragOverlay,
   MouseSensor,
   TouchSensor,
   closestCenter,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import type { DragOverEvent } from '@dnd-kit/core';
+import type { DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useAuth } from '../state/auth.store.js';
 import { usePeriodo } from '../state/periodo.store.js';
@@ -42,6 +43,7 @@ export function DashboardView() {
 
   const [pagina, setPagina] = useState(1);
   const [picker, setPicker] = useState(false);
+  const [activo, setActivo] = useState<{ id: string; ancho: number } | null>(null);
 
   const sensores = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
@@ -69,16 +71,23 @@ export function DashboardView() {
     }
   };
 
+  const alEmpezarArrastre = (evento: DragStartEvent) => {
+    setActivo({
+      id: String(evento.active.id),
+      ancho: evento.active.rect.current.initial?.width ?? 0,
+    });
+  };
+
+  const alTerminarArrastre = () => setActivo(null);
+
   const contenido = (item: WidgetLayoutItem, indice: number) => {
     const meta = WIDGETS[item.tipo];
     const acciones = (
       <WidgetAcciones
         indice={indice}
         total={layout.items.length}
-        span={item.span}
         onIzquierda={() => layout.moverIzquierda(indice)}
         onDerecha={() => layout.moverDerecha(indice)}
-        onRedimensionar={() => layout.redimensionar(indice)}
         onQuitar={() => layout.quitar(item.id)}
       />
     );
@@ -164,7 +173,10 @@ export function DashboardView() {
     <DndContext
       sensors={sensores}
       collisionDetection={closestCenter}
+      onDragStart={alEmpezarArrastre}
       onDragOver={alArrastrar}
+      onDragEnd={alTerminarArrastre}
+      onDragCancel={alTerminarArrastre}
     >
       <div className="grid">
         <PeriodSelector />
@@ -191,7 +203,12 @@ export function DashboardView() {
           strategy={rectSortingStrategy}
         >
           {layout.items.map((item, indice) => (
-            <WidgetSlot key={item.id} item={item} indice={indice}>
+            <WidgetSlot
+              key={item.id}
+              item={item}
+              indice={indice}
+              onRedimensionar={(span) => layout.cambiarSpan(indice, span)}
+            >
               {contenido(item, indice)}
             </WidgetSlot>
           ))}
@@ -223,6 +240,19 @@ export function DashboardView() {
           />
         ) : null}
       </div>
+
+      <DragOverlay
+        dropAnimation={{ duration: 220, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' }}
+      >
+        {activo && layout.items.some((item) => item.id === activo.id) ? (
+          <div className="widget-overlay" style={{ width: activo.ancho }}>
+            {contenido(
+              layout.items.find((item) => item.id === activo.id)!,
+              layout.items.findIndex((item) => item.id === activo.id),
+            )}
+          </div>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   );
 }
