@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { GrupoResumen } from '../services/resumen.service.js';
 import { formatearMonto, formatearPorcentaje } from '../utils/format.js';
 import { EmptyState } from './EmptyState.js';
@@ -5,11 +6,12 @@ import { Widget } from './Widget.js';
 
 interface CategoryBarsProps {
   grupos: GrupoResumen[];
+  acciones?: ReactNode;
 }
 
-export function CategoryBars({ grupos }: CategoryBarsProps) {
+export function CategoryBars({ grupos, acciones }: CategoryBarsProps) {
   return (
-    <Widget titulo="Gasto por categoría" tag={`${grupos.length} categorías`} className="span-8">
+    <Widget titulo="Gasto por categoría" tag={`${grupos.length} categorías`} acciones={acciones}>
       {grupos.length === 0 ? (
         <EmptyState titulo="Todavía no hay gastos en este período" />
       ) : (

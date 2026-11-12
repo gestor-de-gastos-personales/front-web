@@ -1,12 +1,13 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Gasto } from '../services/gastos.service.js';
 import { formatearFecha, formatearMonto } from '../utils/format.js';
 import { EmptyState } from './EmptyState.js';
 import { Widget } from './Widget.js';
 
-export function RecentExpenses({ gastos }: { gastos: Gasto[] }) {
+export function RecentExpenses({ gastos, acciones }: { gastos: Gasto[]; acciones?: ReactNode }) {
   return (
-    <Widget titulo="Últimos gastos" tag={`${gastos.length}`} acento="coral" className="span-4">
+    <Widget titulo="Últimos gastos" tag={`${gastos.length}`} acento="coral" acciones={acciones}>
       {gastos.length === 0 ? (
         <EmptyState titulo="Sin gastos cargados" />
       ) : (

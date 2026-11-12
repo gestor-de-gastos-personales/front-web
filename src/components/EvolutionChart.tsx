@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { PuntoSerie } from '../services/serie.service.js';
 import type { Agrupacion } from '../utils/periodo.js';
 import { formatearMonto } from '../utils/format.js';
@@ -7,6 +8,7 @@ import { Widget } from './Widget.js';
 interface EvolutionChartProps {
   puntos: PuntoSerie[];
   agrupacion: Agrupacion;
+  acciones?: ReactNode;
 }
 
 const ETIQUETA_AGRUPACION: Record<Agrupacion, string> = {
@@ -16,12 +18,12 @@ const ETIQUETA_AGRUPACION: Record<Agrupacion, string> = {
 };
 
 /** Gráfico de barras en SVG puro: sin librerías, escala al máximo del período. */
-export function EvolutionChart({ puntos, agrupacion }: EvolutionChartProps) {
+export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartProps) {
   const total = puntos.reduce((acumulado, punto) => acumulado + punto.total, 0);
 
   if (puntos.length === 0 || total === 0) {
     return (
-      <Widget titulo="Evolución del gasto" tag={ETIQUETA_AGRUPACION[agrupacion]} className="span-8">
+      <Widget titulo="Evolución del gasto" tag={ETIQUETA_AGRUPACION[agrupacion]} acciones={acciones}>
         <EmptyState
           titulo="Sin gastos en el período"
           detalle="Cambiá el rango o registrá un gasto para ver la evolución."
@@ -39,7 +41,7 @@ export function EvolutionChart({ puntos, agrupacion }: EvolutionChartProps) {
   const cadaEtiqueta = Math.max(1, Math.ceil(puntos.length / 8));
 
   return (
-    <Widget titulo="Evolución del gasto" tag={ETIQUETA_AGRUPACION[agrupacion]} className="span-8">
+    <Widget titulo="Evolución del gasto" tag={ETIQUETA_AGRUPACION[agrupacion]} acciones={acciones}>
       <svg
         className="grafico"
         viewBox={`0 0 ${ancho} ${alto}`}

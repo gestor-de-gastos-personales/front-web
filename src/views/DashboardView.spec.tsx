@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -53,6 +53,7 @@ function ok<T>(data: T) {
 describe('DashboardView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
     usePeriodo.setState({ periodo: mesActual(new Date(2026, 10, 11)) });
   });
 
@@ -85,6 +86,38 @@ describe('DashboardView', () => {
     expect(screen.getByText('Últimos gastos')).toBeInTheDocument();
     expect(screen.getByText('Historial')).toBeInTheDocument();
     expect(screen.getByText('Presupuestos')).toBeInTheDocument();
+  });
+
+  it('permite quitar un widget y volver a agregarlo', async () => {
+    datos.useResumen.mockReturnValue(ok(RESUMEN));
+    datos.useSerie.mockReturnValue(
+      ok({
+        desde: '2026-11-01',
+        hasta: '2026-11-30',
+        agrupacion: 'dia',
+        puntos: [{ clave: '2026-11-01', etiqueta: '01/11', total: 1500 }],
+        totalGeneral: 1500,
+      }),
+    );
+    datos.useGastos.mockReturnValue(
+      ok({ data: [GASTO], meta: { total: 1, page: 1, limit: 5, totalPages: 1 } }),
+    );
+    datos.usePresupuestos.mockReturnValue(ok({ data: [], total: 0 }));
+
+    render(
+      <MemoryRouter>
+        <DashboardView />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Quitar widget' })[0]!);
+    expect(screen.queryByText('Total del período')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Agregar widget' }));
+    const dialogo = screen.getByRole('dialog');
+    fireEvent.click(within(dialogo).getByRole('button', { name: 'Agregar' }));
+
+    expect(await screen.findByText('Total del período')).toBeInTheDocument();
   });
 
   it('muestra estados de carga', () => {

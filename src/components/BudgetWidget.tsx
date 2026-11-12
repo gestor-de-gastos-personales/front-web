@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Presupuesto } from '../services/presupuestos.service.js';
 import type { Resumen } from '../services/resumen.service.js';
@@ -8,15 +9,16 @@ import { Widget } from './Widget.js';
 interface BudgetWidgetProps {
   presupuestos: Presupuesto[];
   resumen: Resumen | null;
+  acciones?: ReactNode;
 }
 
-export function BudgetWidget({ presupuestos, resumen }: BudgetWidgetProps) {
+export function BudgetWidget({ presupuestos, resumen, acciones }: BudgetWidgetProps) {
   const gastadoPorCategoria = new Map(
     (resumen?.porCategoria ?? []).map((grupo) => [grupo.categoriaId, grupo.total]),
   );
 
   return (
-    <Widget titulo="Presupuestos" tag={`${presupuestos.length}`} acento="leaf" className="span-4">
+    <Widget titulo="Presupuestos" tag={`${presupuestos.length}`} acento="leaf" acciones={acciones}>
       {presupuestos.length === 0 ? (
         <EmptyState
           titulo="Sin presupuestos para este mes"

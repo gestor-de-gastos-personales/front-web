@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Gasto, PaginaGastos } from '../services/gastos.service.js';
 import { formatearFecha, formatearMonto } from '../utils/format.js';
 import { EmptyState } from './EmptyState.js';
@@ -8,13 +9,14 @@ interface HistoryTableProps {
   onEditar: (gasto: Gasto) => void;
   onEliminar: (gasto: Gasto) => void;
   onPagina: (pagina: number) => void;
+  acciones?: ReactNode;
 }
 
-export function HistoryTable({ pagina, onEditar, onEliminar, onPagina }: HistoryTableProps) {
+export function HistoryTable({ pagina, onEditar, onEliminar, onPagina, acciones }: HistoryTableProps) {
   const { data, meta } = pagina;
 
   return (
-    <Widget titulo="Historial" tag={`${meta.total} gastos`} className="span-8">
+    <Widget titulo="Historial" tag={`${meta.total} gastos`} acciones={acciones}>
       {data.length === 0 ? (
         <EmptyState titulo="No hay gastos en este período" />
       ) : (

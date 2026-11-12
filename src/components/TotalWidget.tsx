@@ -1,14 +1,16 @@
+import type { ReactNode } from 'react';
 import type { Resumen } from '../services/resumen.service.js';
 import { formatearFecha, formatearMonto } from '../utils/format.js';
 import { Widget } from './Widget.js';
 
 interface TotalWidgetProps {
   resumen: Resumen;
+  acciones?: ReactNode;
 }
 
-export function TotalWidget({ resumen }: TotalWidgetProps) {
+export function TotalWidget({ resumen, acciones }: TotalWidgetProps) {
   return (
-    <Widget titulo="Total del período" tag={`${resumen.cantidad} gastos`} className="span-4">
+    <Widget titulo="Total del período" tag={`${resumen.cantidad} gastos`} acciones={acciones}>
       <p className="total">{formatearMonto(resumen.totalGeneral)}</p>
       <p className="total__meta">
         {resumen.porCategoria.length} categorías con movimiento

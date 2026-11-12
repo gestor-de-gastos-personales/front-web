@@ -5,24 +5,29 @@ interface WidgetProps {
   tag?: string;
   acento?: 'mango' | 'coral' | 'leaf' | 'blue';
   className?: string;
+  acciones?: ReactNode;
   children: ReactNode;
 }
 
-/** Recibo: tarjeta con borde duro, sombra offset y perforación superior. */
+/** Tarjeta de datos con título, etiqueta y acciones opcionales. */
 export function Widget({
   titulo,
   tag,
   acento = 'mango',
-  className = 'span-4',
+  className = '',
+  acciones,
   children,
 }: WidgetProps) {
   const claseTag = acento === 'mango' ? 'widget__tag' : `widget__tag widget__tag--${acento}`;
 
   return (
-    <section className={`widget ${className}`} aria-label={titulo}>
+    <section className={`widget ${className}`.trim()} aria-label={titulo}>
       <header className="widget__head">
         <h2 className="widget__title">{titulo}</h2>
-        {tag ? <span className={claseTag}>{tag}</span> : null}
+        <div className="widget__aside">
+          {tag ? <span className={claseTag}>{tag}</span> : null}
+          {acciones}
+        </div>
       </header>
       {children}
     </section>

@@ -34,8 +34,11 @@ npm run test:cov          # tests + cobertura
 
 - **Sesión**: registro y login con JWT; el token se restaura al recargar y se
   valida contra `GET /auth/me`.
-- **Dashboard**: selector global de período y widgets de total, gasto por
-  categoría, evolución temporal, últimos gastos, historial y presupuestos.
+- **Dashboard**: tablero ajustable con selector global de período. Los widgets
+  se pueden reordenar (arrastrar o botones), redimensionar (4/6/8/12 columnas),
+  quitar y volver a agregar; el layout se guarda por usuario en el navegador.
+  Widgets: total, gasto por categoría, evolución, últimos gastos, historial y
+  presupuestos.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y
   categoría, con paginación.
 - **Categorías**: alta, renombrado y baja.
