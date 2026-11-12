@@ -16,7 +16,7 @@ export function CategoryBars({ grupos, acciones }: CategoryBarsProps) {
         <EmptyState titulo="Todavía no hay gastos en este período" />
       ) : (
         <div className="barras">
-          {grupos.map((grupo) => (
+          {grupos.map((grupo, indice) => (
             <div className="barra__fila" key={grupo.categoriaId}>
               <span className="meta">{grupo.categoriaNombre}</span>
               <div
@@ -26,7 +26,10 @@ export function CategoryBars({ grupos, acciones }: CategoryBarsProps) {
               >
                 <div
                   className="barra__relleno"
-                  style={{ width: `${Math.min(100, grupo.porcentaje)}%` }}
+                  style={{
+                    width: `${Math.min(100, grupo.porcentaje)}%`,
+                    animationDelay: `${indice * 55}ms`,
+                  }}
                 />
               </div>
               <span className="meta" style={{ textAlign: 'right' }}>

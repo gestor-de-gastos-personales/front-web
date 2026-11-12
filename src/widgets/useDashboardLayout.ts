@@ -1,29 +1,39 @@
 import { useEffect, useState } from 'react';
 import {
   LAYOUT_POR_DEFECTO,
-  ORDEN_WIDGETS,
   TAMANOS,
   WIDGETS,
   esSpan,
   esTipoWidget,
+  nuevoId,
 } from './tipos.js';
 import type { SpanWidget, TipoWidget, WidgetLayoutItem } from './tipos.js';
 
 const CLAVE = (usuarioId?: number | null) =>
   `mangos.dashboard.${usuarioId ?? 'anon'}`;
 
+const copiaPorDefecto = () => LAYOUT_POR_DEFECTO.map((item) => ({ ...item }));
+
 function normalizar(valor: unknown): WidgetLayoutItem[] | null {
   if (!Array.isArray(valor)) return null;
 
-  const vistos = new Set<TipoWidget>();
+  const ids = new Set<string>();
   const items: WidgetLayoutItem[] = [];
 
   for (const crudo of valor) {
     if (!crudo || typeof crudo !== 'object') return null;
-    const { tipo, span } = crudo as { tipo?: unknown; span?: unknown };
-    if (!esTipoWidget(tipo) || !esSpan(span) || vistos.has(tipo)) return null;
-    vistos.add(tipo);
-    items.push({ tipo, span });
+    const { id, tipo, span } = crudo as {
+      id?: unknown;
+      tipo?: unknown;
+      span?: unknown;
+    };
+    if (!esTipoWidget(tipo) || !esSpan(span)) return null;
+
+    // Migración del formato anterior (sin id) y protección ante ids repetidos.
+    const idFinal =
+      typeof id === 'string' && id && !ids.has(id) ? id : nuevoId(tipo);
+    ids.add(idFinal);
+    items.push({ id: idFinal, tipo, span });
   }
 
   return items;
@@ -32,16 +42,16 @@ function normalizar(valor: unknown): WidgetLayoutItem[] | null {
 function cargar(usuarioId?: number | null): WidgetLayoutItem[] {
   try {
     const crudo = localStorage.getItem(CLAVE(usuarioId));
-    if (!crudo) return LAYOUT_POR_DEFECTO;
-    return normalizar(JSON.parse(crudo)) ?? LAYOUT_POR_DEFECTO;
+    if (!crudo) return copiaPorDefecto();
+    return normalizar(JSON.parse(crudo)) ?? copiaPorDefecto();
   } catch {
-    return LAYOUT_POR_DEFECTO;
+    return copiaPorDefecto();
   }
 }
 
 /**
- * Layout del tablero: orden, tamaño y widgets visibles.
- * Se persiste en localStorage por usuario.
+ * Layout del tablero: instancias, orden y tamaño de cada widget.
+ * Se persiste en localStorage por usuario. Un tipo puede repetirse.
  */
 export function useDashboardLayout(usuarioId?: number | null) {
   const [items, setItems] = useState<WidgetLayoutItem[]>(() => cargar(usuarioId));
@@ -92,26 +102,22 @@ export function useDashboardLayout(usuarioId?: number | null) {
     );
   };
 
-  const quitar = (tipo: TipoWidget) => {
-    setItems((previo) => previo.filter((item) => item.tipo !== tipo));
+  const quitar = (id: string) => {
+    setItems((previo) => previo.filter((item) => item.id !== id));
   };
 
+  /** Agrega una instancia nueva; se puede repetir el mismo tipo. */
   const agregar = (tipo: TipoWidget) => {
-    setItems((previo) =>
-      previo.some((item) => item.tipo === tipo)
-        ? previo
-        : [...previo, { tipo, span: WIDGETS[tipo].spanPorDefecto }],
-    );
+    setItems((previo) => [
+      ...previo,
+      { id: nuevoId(tipo), tipo, span: WIDGETS[tipo].spanPorDefecto },
+    ]);
   };
 
-  const resetear = () => setItems(LAYOUT_POR_DEFECTO.map((item) => ({ ...item })));
-
-  const tiposVisibles = new Set(items.map((item) => item.tipo));
-  const disponibles = ORDEN_WIDGETS.filter((tipo) => !tiposVisibles.has(tipo));
+  const resetear = () => setItems(copiaPorDefecto());
 
   return {
     items,
-    disponibles,
     mover,
     moverIzquierda,
     moverDerecha,

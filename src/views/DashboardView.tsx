@@ -4,8 +4,8 @@ import { useAuth } from '../state/auth.store.js';
 import { usePeriodo } from '../state/periodo.store.js';
 import { useGastos, usePresupuestos, useResumen, useSerie } from '../hooks/datos.js';
 import { aDDMMYYYY } from '../utils/periodo.js';
-import { WIDGETS } from '../widgets/tipos.js';
-import type { TipoWidget } from '../widgets/tipos.js';
+import { ORDEN_WIDGETS, WIDGETS } from '../widgets/tipos.js';
+import type { WidgetLayoutItem } from '../widgets/tipos.js';
 import { useDashboardLayout } from '../widgets/useDashboardLayout.js';
 import { WidgetAcciones } from '../widgets/WidgetAcciones.js';
 import { WidgetSlot } from '../widgets/WidgetSlot.js';
@@ -48,8 +48,8 @@ export function DashboardView() {
 
   const irAGastos = () => navigate('/gastos');
 
-  const contenido = (tipo: TipoWidget, indice: number) => {
-    const meta = WIDGETS[tipo];
+  const contenido = (item: WidgetLayoutItem, indice: number) => {
+    const meta = WIDGETS[item.tipo];
     const acciones = (
       <WidgetAcciones
         indice={indice}
@@ -58,7 +58,7 @@ export function DashboardView() {
         onIzquierda={() => layout.moverIzquierda(indice)}
         onDerecha={() => layout.moverDerecha(indice)}
         onRedimensionar={() => layout.redimensionar(indice)}
-        onQuitar={() => layout.quitar(tipo)}
+        onQuitar={() => layout.quitar(item.id)}
       />
     );
 
@@ -74,7 +74,7 @@ export function DashboardView() {
       </Widget>
     );
 
-    switch (tipo) {
+    switch (item.tipo) {
       case 'total':
         if (resumen.cargando) return cargando;
         if (resumen.error) return error(resumen.error, resumen.recargar);
@@ -173,7 +173,7 @@ export function DashboardView() {
 
       {layout.items.map((item, indice) => (
         <WidgetSlot
-          key={item.tipo}
+          key={item.id}
           item={item}
           indice={indice}
           arrastrando={arrastrando}
@@ -186,7 +186,7 @@ export function DashboardView() {
             setDestino(null);
           }}
         >
-          {contenido(item.tipo, indice)}
+          {contenido(item, indice)}
         </WidgetSlot>
       ))}
 
@@ -210,14 +210,8 @@ export function DashboardView() {
 
       {picker ? (
         <AddWidgetModal
-          disponibles={layout.disponibles.map((tipo) => ({
-            tipo,
-            ...WIDGETS[tipo],
-          }))}
-          onAgregar={(tipo) => {
-            layout.agregar(tipo);
-            setPicker(false);
-          }}
+          catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
+          onAgregar={layout.agregar}
           onCerrar={() => setPicker(false)}
         />
       ) : null}

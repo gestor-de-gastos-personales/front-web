@@ -31,7 +31,7 @@ export function BudgetWidget({ presupuestos, resumen, acciones }: BudgetWidgetPr
         />
       ) : (
         <div className="barras">
-          {presupuestos.map((presupuesto) => {
+          {presupuestos.map((presupuesto, indice) => {
             const tope = Number(presupuesto.monto);
             const gastado = gastadoPorCategoria.get(presupuesto.categoriaId) ?? 0;
             const porcentaje = tope > 0 ? Math.min(100, (gastado / tope) * 100) : 0;
@@ -51,6 +51,7 @@ export function BudgetWidget({ presupuestos, resumen, acciones }: BudgetWidgetPr
                     style={{
                       width: `${porcentaje}%`,
                       background: excedido ? 'var(--coral)' : 'var(--leaf)',
+                      animationDelay: `${indice * 55}ms`,
                     }}
                   />
                 </div>

@@ -57,3 +57,15 @@ mezcla de serif/mono.
 - Contraste alto: texto `#111318` sobre blanco y `#FFFFFF` sobre azul.
 - Sidebar que colapsa a barra superior por debajo de 980 px; grilla de widgets a
   una columna por debajo de 900 px.
+
+## Movimiento
+
+- Entrada de widgets con `aparecer` (300 ms, 8 px de desplazamiento) y retardo
+  escalonado de 40 ms por posición.
+- Barras de categoría y presupuestos crecen con `scaleX` (560 ms); las barras
+  del gráfico crecen con `scaleY` desde la base, escalonadas por punto.
+- Modales y tarjeta de login con `modal-entrada` (220–320 ms) y fondo con
+  `fundido` (160 ms).
+- Botones, tarjetas, navegación e inputs con transiciones de 120–180 ms.
+- Respeto de `prefers-reduced-motion`: todas las animaciones y transiciones se
+  reducen a ~0 cuando el sistema lo pide.

@@ -68,12 +68,14 @@ export function EvolutionChart({ puntos, agrupacion, acciones }: EvolutionChartP
           return (
             <g key={punto.clave}>
               <rect
+                className="grafico__barra"
                 x={x}
                 y={base - barraAlto}
                 width={anchoBarra}
                 height={Math.max(barraAlto, punto.total > 0 ? 2 : 0)}
                 fill="var(--accent)"
                 rx="2"
+                style={{ animationDelay: `${indice * 35}ms` }}
               >
                 <title>{`${punto.etiqueta}: ${formatearMonto(punto.total)}`}</title>
               </rect>

@@ -36,10 +36,13 @@ export function WidgetSlot({
   return (
     <div
       className={clases}
-      style={{ gridColumn: `span ${item.span}` }}
+      style={{
+        gridColumn: `span ${item.span}`,
+        animationDelay: `${Math.min(indice, 10) * 40}ms`,
+      }}
       draggable
       onDragStart={(evento) => {
-        evento.dataTransfer?.setData('text/plain', String(indice));
+        evento.dataTransfer?.setData('text/plain', item.id);
         if (evento.dataTransfer) evento.dataTransfer.effectAllowed = 'move';
         onDragStart(indice);
       }}

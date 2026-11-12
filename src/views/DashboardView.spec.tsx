@@ -115,7 +115,8 @@ describe('DashboardView', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Agregar widget' }));
     const dialogo = screen.getByRole('dialog');
-    fireEvent.click(within(dialogo).getByRole('button', { name: 'Agregar' }));
+    fireEvent.click(within(dialogo).getAllByRole('button', { name: 'Agregar' })[0]!);
+    fireEvent.click(within(dialogo).getByRole('button', { name: 'Cerrar' }));
 
     expect(await screen.findByText('Total del período')).toBeInTheDocument();
   });

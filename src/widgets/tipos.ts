@@ -10,6 +10,7 @@ export const TAMANOS = [4, 6, 8, 12] as const;
 export type SpanWidget = (typeof TAMANOS)[number];
 
 export interface WidgetLayoutItem {
+  id: string;
   tipo: TipoWidget;
   span: SpanWidget;
 }
@@ -64,12 +65,12 @@ export const ORDEN_WIDGETS: TipoWidget[] = [
 ];
 
 export const LAYOUT_POR_DEFECTO: WidgetLayoutItem[] = [
-  { tipo: 'total', span: 4 },
-  { tipo: 'categorias', span: 8 },
-  { tipo: 'evolucion', span: 8 },
-  { tipo: 'presupuestos', span: 4 },
-  { tipo: 'ultimos', span: 4 },
-  { tipo: 'historial', span: 8 },
+  { id: 'total-1', tipo: 'total', span: 4 },
+  { id: 'categorias-1', tipo: 'categorias', span: 8 },
+  { id: 'evolucion-1', tipo: 'evolucion', span: 8 },
+  { id: 'presupuestos-1', tipo: 'presupuestos', span: 4 },
+  { id: 'ultimos-1', tipo: 'ultimos', span: 4 },
+  { id: 'historial-1', tipo: 'historial', span: 8 },
 ];
 
 export function esTipoWidget(valor: unknown): valor is TipoWidget {
@@ -78,4 +79,13 @@ export function esTipoWidget(valor: unknown): valor is TipoWidget {
 
 export function esSpan(valor: unknown): valor is SpanWidget {
   return TAMANOS.includes(valor as SpanWidget);
+}
+
+/** Id único por instancia: permite tener dos widgets del mismo tipo. */
+export function nuevoId(tipo: TipoWidget): string {
+  const azar =
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return `${tipo}-${azar}`;
 }

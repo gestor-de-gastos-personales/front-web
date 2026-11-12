@@ -5,7 +5,22 @@ import { WidgetAcciones } from './WidgetAcciones.js';
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
 import type { WidgetLayoutItem } from './tipos.js';
 
-const ITEM: WidgetLayoutItem = { tipo: 'total', span: 4 };
+const ITEM: WidgetLayoutItem = { id: 'total-1', tipo: 'total', span: 4 };
+
+const CATALOGO = [
+  {
+    tipo: 'total' as const,
+    titulo: 'Total del período',
+    descripcion: 'Total del período.',
+    spanPorDefecto: 4 as const,
+  },
+  {
+    tipo: 'evolucion' as const,
+    titulo: 'Evolución del gasto',
+    descripcion: 'Serie temporal.',
+    spanPorDefecto: 8 as const,
+  },
+];
 
 describe('tablero de widgets', () => {
   it('WidgetSlot aplica el ancho y dispara los eventos de arrastre', () => {
@@ -74,37 +89,24 @@ describe('tablero de widgets', () => {
     expect(onIzquierda).not.toHaveBeenCalled();
   });
 
-  it('AddWidgetModal lista disponibles y agrega', () => {
+  it('AddWidgetModal permite agregar varias veces el mismo tipo', () => {
     const onAgregar = vi.fn();
     const onCerrar = vi.fn();
 
     render(
-      <AddWidgetModal
-        disponibles={[
-          {
-            tipo: 'total',
-            titulo: 'Total del período',
-            descripcion: 'Total del período.',
-            spanPorDefecto: 4,
-          },
-        ]}
-        onAgregar={onAgregar}
-        onCerrar={onCerrar}
-      />,
+      <AddWidgetModal catalogo={CATALOGO} onAgregar={onAgregar} onCerrar={onCerrar} />,
     );
 
     expect(screen.getByText('Total del período')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Agregar' }));
-    expect(onAgregar).toHaveBeenCalledWith('total');
+    const agregar = screen.getAllByRole('button', { name: 'Agregar' })[0]!;
+
+    fireEvent.click(agregar);
+    fireEvent.click(agregar);
+
+    expect(onAgregar).toHaveBeenCalledTimes(2);
+    expect(onAgregar).toHaveBeenNthCalledWith(1, 'total');
 
     fireEvent.click(screen.getByRole('button', { name: 'Cerrar' }));
     expect(onCerrar).toHaveBeenCalled();
-  });
-
-  it('AddWidgetModal avisa cuando no quedan widgets', () => {
-    render(
-      <AddWidgetModal disponibles={[]} onAgregar={vi.fn()} onCerrar={vi.fn()} />,
-    );
-    expect(screen.getByText(/todos los widgets/)).toBeInTheDocument();
   });
 });
