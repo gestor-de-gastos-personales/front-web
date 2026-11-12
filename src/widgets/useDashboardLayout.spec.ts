@@ -71,7 +71,7 @@ describe('useDashboardLayout', () => {
     act(() => result.current.agregar('total'));
 
     const nuevo = result.current.items.at(-1)!;
-    expect(nuevo).toMatchObject({ x: 0, y: 19, w: 4, h: 5 });
+    expect(nuevo).toMatchObject({ x: 0, y: 20, w: 4, h: 5 });
   });
 
   it('permite varias instancias del mismo tipo', () => {

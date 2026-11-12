@@ -96,9 +96,9 @@ export const WIDGETS: Record<TipoWidget, WidgetMeta> = {
     titulo: 'Historial',
     descripcion: 'Listado paginado del período con acciones.',
     wPorDefecto: 12,
-    hPorDefecto: 7,
-    minW: 6,
-    minH: 6,
+    hPorDefecto: 8,
+    minW: 8,
+    minH: 8,
   },
 };
 
@@ -115,7 +115,7 @@ export const LAYOUT_POR_DEFECTO: WidgetLayoutItem[] = [
   { id: 'categorias-1', tipo: 'categorias', x: 4, y: 0, w: 8, h: 5 },
   { id: 'evolucion-1', tipo: 'evolucion', x: 0, y: 5, w: 8, h: 7 },
   { id: 'presupuestos-1', tipo: 'presupuestos', x: 8, y: 5, w: 4, h: 5 },
-  { id: 'historial-1', tipo: 'historial', x: 0, y: 12, w: 12, h: 7 },
+  { id: 'historial-1', tipo: 'historial', x: 0, y: 12, w: 12, h: 8 },
 ];
 
 export function esTipoWidget(valor: unknown): valor is TipoWidget {

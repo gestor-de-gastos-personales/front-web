@@ -41,7 +41,7 @@ npm run test:cov          # tests + cobertura
   gráficos), reordenar arrastrando desde el encabezado de la tarjeta (las
   tarjetas se reacomodan y compactan con animación) o con los botones ←/→,
   redimensionar desde la esquina inferior derecha y quitar. Cada tipo de widget
-  tiene un tamaño mínimo legible (4–6 columnas y 4–6 filas) para que el
+  tiene un tamaño mínimo legible (4–8 columnas y 4–8 filas) para que el
   contenido no quede cortado. Al agregar, el picker confirma “Agregado
   correctamente”; “Restablecer” pide confirmación antes de volver al layout
   inicial. Total, gasto por categoría y evolución tienen **período propio**

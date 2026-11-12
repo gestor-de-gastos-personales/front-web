@@ -89,7 +89,8 @@ esquina inferior derecha; GridStack resuelve colisiones, compacta hacia arriba
 hueco libre. El layout completo (`x`, `y`, `w`, `h`) se persiste por usuario en
 `localStorage` y se migra automáticamente del formato anterior basado en `span`.
 Cada tipo define un mínimo de ancho/alto para que el contenido siga siendo
-legible al achicarlo. No hay selector global en la cabecera: total, categorías y
+legible al achicarlo; el historial usa 8×8 para que entren sus cinco filas y la
+paginación sin scroll. No hay selector global en la cabecera: total, categorías y
 evolución tienen un selector compacto de período en su encabezado (hoy, esta
 semana, este mes, mes anterior, últimos 15 días, últimos 3 meses o este año);
 presupuestos e historial usan el mes actual. Los gráficos de categorías y
