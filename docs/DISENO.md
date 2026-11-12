@@ -66,7 +66,7 @@ mezcla de serif/mono.
   dibuja en un `DragOverlay` (no se deforma con el reflujo) y su celda queda como
   placeholder atenuado. Los botones ←/→ quedan como alternativa accesible.
 - **Redimensionado por esquina**: handle en la esquina inferior derecha;
-  arrastrando se ajusta el ancho a 4/6/8/12 columnas, con flechas del teclado
+  arrastrando se ajusta el ancho entre 3 y 12 columnas, con flechas del teclado
   como alternativa. Reemplaza al botón de tamaño.
 - Entrada de widgets con `aparecer` (300 ms, 8 px de desplazamiento) y retardo
   escalonado de 40 ms por posición.

@@ -6,8 +6,9 @@ export type TipoWidget =
   | 'ultimos'
   | 'historial';
 
-export const TAMANOS = [4, 6, 8, 12] as const;
-export type SpanWidget = (typeof TAMANOS)[number];
+export const SPAN_MIN = 3;
+export const SPAN_MAX = 12;
+export type SpanWidget = number;
 
 export interface WidgetLayoutItem {
   id: string;
@@ -78,7 +79,12 @@ export function esTipoWidget(valor: unknown): valor is TipoWidget {
 }
 
 export function esSpan(valor: unknown): valor is SpanWidget {
-  return TAMANOS.includes(valor as SpanWidget);
+  return (
+    typeof valor === 'number' &&
+    Number.isInteger(valor) &&
+    valor >= SPAN_MIN &&
+    valor <= SPAN_MAX
+  );
 }
 
 /** Id único por instancia: permite tener dos widgets del mismo tipo. */

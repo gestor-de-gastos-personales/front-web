@@ -37,7 +37,7 @@ npm run test:cov          # tests + cobertura
 - **Dashboard**: tablero ajustable con selector global de período. Los widgets
   se pueden repetir (por ejemplo, dos gráficos), reordenar arrastrando (los demás
   se desplazan en vivo, estilo Android) o con botones, redimensionar arrastrando
-  la esquina inferior derecha (4/6/8/12 columnas), quitar y volver a agregar; el
+  la esquina inferior derecha (3–12 columnas), quitar y volver a agregar; el
   layout se guarda por usuario en el navegador. Widgets: total, gasto por
   categoría, evolución, últimos gastos, historial y presupuestos.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y

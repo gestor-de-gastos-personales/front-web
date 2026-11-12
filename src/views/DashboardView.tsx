@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   DndContext,
   DragOverlay,
+  MeasuringStrategy,
   MouseSensor,
   TouchSensor,
   closestCenter,
@@ -173,6 +174,7 @@ export function DashboardView() {
     <DndContext
       sensors={sensores}
       collisionDetection={closestCenter}
+      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
       onDragStart={alEmpezarArrastre}
       onDragOver={alArrastrar}
       onDragEnd={alTerminarArrastre}

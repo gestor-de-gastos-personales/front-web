@@ -36,7 +36,12 @@ export function WidgetAcciones({
   onQuitar,
 }: WidgetAccionesProps) {
   return (
-    <div className="widget__actions">
+    <div
+      className="widget__actions"
+      onPointerDown={(evento) => evento.stopPropagation()}
+      onMouseDown={(evento) => evento.stopPropagation()}
+      onTouchStart={(evento) => evento.stopPropagation()}
+    >
       <span className="widget__drag" aria-hidden="true" title="Arrastrá para mover">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <circle cx="9" cy="6" r="1.6" />

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -11,10 +12,13 @@ interface WidgetSlotProps {
   children: ReactNode;
 }
 
+const INTERACTIVOS = 'button, a, input, select, textarea';
+
 /**
  * Celda sortable: dnd-kit mueve la tarjeta y desplaza las demás en vivo.
- * El elemento activo no aplica su propio transform (lo dibuja el DragOverlay),
- * así no se deforma con el reflujo de la grilla.
+ * El elemento activo no aplica su propio transform (lo dibuja el DragOverlay).
+ * Los listeners ignoran controles interactivos para que un clic o un resize
+ * no dispare un arrastre.
  */
 export function WidgetSlot({
   item,
@@ -26,6 +30,21 @@ export function WidgetSlot({
     id: item.id,
   });
 
+  const listenersFiltrados = useMemo(() => {
+    const resultado: Record<string, (evento: Event) => void> = {};
+
+    for (const [clave, valor] of Object.entries(listeners ?? {})) {
+      if (typeof valor !== 'function') continue;
+      resultado[clave] = (evento: Event) => {
+        const objetivo = evento.target as HTMLElement | null;
+        if (objetivo?.closest(INTERACTIVOS)) return;
+        (valor as (evento: Event) => void)(evento);
+      };
+    }
+
+    return resultado;
+  }, [listeners]);
+
   return (
     <div
       ref={setNodeRef}
@@ -36,7 +55,7 @@ export function WidgetSlot({
         transition,
         zIndex: isDragging ? 3 : undefined,
       }}
-      {...listeners}
+      {...listenersFiltrados}
     >
       <div
         className="widget-slot__inner"

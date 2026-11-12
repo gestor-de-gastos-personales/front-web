@@ -35,7 +35,7 @@ describe('useDashboardLayout', () => {
     expect(new Set(graficos.map((item) => item.id)).size).toBe(3);
   });
 
-  it('mueve a izquierda/derecha y redimensiona', () => {
+  it('mueve a izquierda/derecha', () => {
     const { result } = renderHook(() => useDashboardLayout(1));
     const primero = result.current.items[0]!.id;
 
@@ -44,10 +44,6 @@ describe('useDashboardLayout', () => {
 
     act(() => result.current.moverIzquierda(1));
     expect(result.current.items[0]!.id).toBe(primero);
-
-    const spanInicial = result.current.items[0]!.span;
-    act(() => result.current.redimensionar(0));
-    expect(result.current.items[0]!.span).not.toBe(spanInicial);
   });
 
   it('reordena por id (drag & drop sortable)', () => {
@@ -107,7 +103,7 @@ describe('useDashboardLayout', () => {
 
     localStorage.setItem(
       'mangos.dashboard.2',
-      JSON.stringify([{ tipo: 'total', span: 5 }]),
+      JSON.stringify([{ tipo: 'total', span: 13 }]),
     );
     const spanInvalido = renderHook(() => useDashboardLayout(2));
     expect(spanInvalido.result.current.items).toEqual(LAYOUT_POR_DEFECTO);

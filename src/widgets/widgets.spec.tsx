@@ -49,14 +49,19 @@ describe('tablero de widgets', () => {
 
   it('WidgetResize cambia el tamaño con el teclado', () => {
     const onCambiar = vi.fn();
-    render(<WidgetResize span={4} onCambiar={onCambiar} />);
+    const { rerender } = render(<WidgetResize span={4} onCambiar={onCambiar} />);
 
-    const handle = screen.getByRole('button', { name: /Redimensionar widget/ });
-    fireEvent.keyDown(handle, { key: 'ArrowRight' });
-    expect(onCambiar).toHaveBeenCalledWith(6);
+    fireEvent.keyDown(screen.getByRole('button', { name: /Redimensionar widget/ }), {
+      key: 'ArrowRight',
+    });
+    expect(onCambiar).toHaveBeenLastCalledWith(5);
 
-    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
-    expect(onCambiar).toHaveBeenCalledTimes(1);
+    rerender(<WidgetResize span={5} onCambiar={onCambiar} />);
+    fireEvent.keyDown(screen.getByRole('button', { name: /Redimensionar widget/ }), {
+      key: 'ArrowLeft',
+    });
+    expect(onCambiar).toHaveBeenLastCalledWith(4);
+    expect(onCambiar).toHaveBeenCalledTimes(2);
   });
 
   it('WidgetAcciones llama a los handlers y deshabilita los extremos', () => {

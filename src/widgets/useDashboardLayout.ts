@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   LAYOUT_POR_DEFECTO,
-  TAMANOS,
   WIDGETS,
   esSpan,
   esTipoWidget,
@@ -108,17 +107,6 @@ export function useDashboardLayout(usuarioId?: number | null) {
   const moverIzquierda = (indice: number) => mover(indice, indice - 1);
   const moverDerecha = (indice: number) => mover(indice, indice + 1);
 
-  const redimensionar = (indice: number) => {
-    setItems((previo) =>
-      previo.map((item, posicion) => {
-        if (posicion !== indice) return item;
-        const actual = TAMANOS.indexOf(item.span);
-        const siguiente = TAMANOS[(actual + 1) % TAMANOS.length] as SpanWidget;
-        return { ...item, span: siguiente };
-      }),
-    );
-  };
-
   /** Cambia el ancho a un valor concreto (handle de la esquina). */
   const cambiarSpan = (indice: number, span: SpanWidget) => {
     setItems((previo) =>
@@ -148,7 +136,6 @@ export function useDashboardLayout(usuarioId?: number | null) {
     moverPorId,
     moverIzquierda,
     moverDerecha,
-    redimensionar,
     cambiarSpan,
     quitar,
     agregar,
