@@ -78,5 +78,5 @@ publicado en `coverage/coverage-summary.json`.
 La dirección visual, la paleta y las reglas de contenido están documentadas en
 [`docs/DISENO.md`](docs/DISENO.md).
 
-El logo parte de la silueta de [Twemoji](https://github.com/jdecked/twemoji)
-(© Twitter, Inc. y colaboradores, CC-BY 4.0), recoloreada con la paleta Mangos.
+El logo parte de la silueta de [OpenMoji](https://openmoji.org/) (CC-BY-SA 4.0),
+recoloreada con la paleta Mangos y con fondo azul propio.

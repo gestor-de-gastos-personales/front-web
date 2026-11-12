@@ -4,9 +4,18 @@ interface LogoProps {
   size?: number;
 }
 
+const CUERPO =
+  'M45.4263,13.1171a8.0385,8.0385,0,0,1,2.0928.8837c4.3283,2.4312,8.0059,6.3592,8.8956,11.3845A17.9766,17.9766,0,0,1,54.8753,35.56a27.03,27.03,0,0,1-8.7037,10.9286c-3.0374,2.2395-6.6036,3.8921-8.9708,6.8311-2.2373,2.7778-3.4393,6.7023-6.704,8.1389a8.0769,8.0769,0,0,1-5.0875.2532C9.7017,57.9836,11.8612,34.58,19.1466,24.6047l.0236-.0323a27.44,27.44,0,0,1,12.9367-9.3981C35.8208,13.8322,41.4419,12.2085,45.4263,13.1171Z';
+
+const HOJA =
+  'M40,11.4526s-3.8987,6.1329-9.4684,7.9047S18,18.6758,18,18.6758s3.8987-6.1329,9.4684-7.9047S40,11.4526,40,11.4526Z';
+
+const HOJA_SOMBRA =
+  'M40 11.45C34 13.6 28 16 18 18.7c8 1.4 16-1 22-7.2Z';
+
 /**
- * Marca Mangos: silueta de mango (base Twemoji, CC-BY 4.0) recoloreada con la
- * paleta de la marca. Sin fondo: hereda el del contenedor.
+ * Marca Mangos: mango anaranjado con base coral, hoja verde y tallo marrón
+ * sobre el azul de la marca. Silueta base OpenMoji (CC-BY-SA 4.0).
  */
 export function Logo({ size = 40 }: LogoProps) {
   const clipId = `mangos-cuerpo-${useId().replace(/:/g, '')}`;
@@ -15,43 +24,51 @@ export function Logo({ size = 40 }: LogoProps) {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 36 36"
+      viewBox="0 0 72 72"
       aria-hidden="true"
       focusable="false"
     >
       <defs>
         <clipPath id={clipId}>
-          <path d="M12.3 3.139c4.545-2.66 11.267-2.611 13.685-.58 1.617 1.358 2.942 2.401 4.474 3.011 2.022.804 3.692 3.154 4.415 5.384.981 3.023 1.68 12.579-8.029 18.516-6.233 3.812-17.656 5.363-18.961 4.723-.984-.483-4.621-2.09-6.675-6.453S-1.324 11.111 12.3 3.139z" />
+          <path d={CUERPO} />
         </clipPath>
       </defs>
 
-      {/* Cuerpo */}
-      <path
-        fill="var(--mango)"
-        d="M12.3 3.139c4.545-2.66 11.267-2.611 13.685-.58 1.617 1.358 2.942 2.401 4.474 3.011 2.022.804 3.692 3.154 4.415 5.384.981 3.023 1.68 12.579-8.029 18.516-6.233 3.812-17.656 5.363-18.961 4.723-.984-.483-4.621-2.09-6.675-6.453S-1.324 11.111 12.3 3.139z"
-      />
+      <rect width="72" height="72" rx="14" fill="var(--mangos-blue)" />
 
-      {/* Blush coral en la base */}
-      <g clipPath={`url(#${clipId})`}>
-        <path fill="var(--coral)" d="M-2 21c7 12 27 13 38 -2v19h-40z" />
+      <g transform="translate(-2.6 0) scale(1.08 1)">
+        <path fill="var(--mango)" d={CUERPO} />
+        <g clipPath={`url(#${clipId})`}>
+          <path fill="var(--coral)" d="M-5 40C15 52 45 55 80 38V80H-5Z" />
+        </g>
+        <path
+          d="M27 25C21 31 19 38 21 45"
+          fill="none"
+          stroke="var(--mango-light)"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
       </g>
 
-      {/* Luz */}
-      <path
-        fill="var(--mango-light)"
-        d="M17.329 2.607C22.578 1.125 26.5 4.743 24.078 5c-4.359.463-9.015 4.969-12.625 8.375-6.625 6.25-8.125 13.75-9 12.5-1.424-2.034-1.468-9.148 3.561-15.386 5.029-6.238 9.104-7.257 11.315-7.882z"
-      />
+      <g transform="translate(41 15) scale(1.28) rotate(-14) translate(-41 -15)">
+        <path
+          fill="var(--leaf)"
+          transform="translate(82 0) scale(-1 1)"
+          d={HOJA}
+        />
+        <path
+          fill="var(--leaf-dark)"
+          transform="translate(82 0) scale(-1 1)"
+          d={HOJA_SOMBRA}
+        />
+      </g>
 
-      {/* Hoja */}
       <path
-        fill="var(--leaf)"
-        d="M28.271 4.278c2.174.697 4.987 4.564 4.944 7.811-.114 8.655-4.132 11.992-4.132 11.992s-2.551-9.325-2.171-12.719c.278-2.478 1.646-3.166 1.891-4.569.229-1.305-.532-2.515-.532-2.515z"
-      />
-
-      {/* Tallo */}
-      <path
-        fill="var(--stem)"
-        d="M26.38 3.539c.483-.039 1.259-.655 1.664-.595.405.06 1.573 1.078 1.67 1.283.097.205-.637 1.178-.746 1.48-.109.302-.64.239-1.51-.543-.869-.782-1.078-1.625-1.078-1.625z"
+        d="M41 15 L46 9"
+        fill="none"
+        stroke="var(--stem)"
+        strokeWidth="3.2"
+        strokeLinecap="round"
       />
     </svg>
   );
