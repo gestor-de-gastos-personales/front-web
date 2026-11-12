@@ -13,6 +13,37 @@ const CLAVE = (usuarioId?: number | null) =>
 
 const copiaPorDefecto = () => LAYOUT_POR_DEFECTO.map((item) => ({ ...item }));
 
+/**
+ * Empaqueta las filas: recorre los widgets en orden y, cuando uno no entra
+ * completo en lo que queda de la fila, lo ajusta exactamente al hueco
+ * (si el hueco alcanza el mínimo). Si entra, conserva su tamaño.
+ *
+ * Ejemplo: [4, 4, 8] -> [4, 4, 4]; [4, 8] -> [4, 8].
+ */
+export function compactarFilas(
+  items: WidgetLayoutItem[],
+  minimo = 3,
+): WidgetLayoutItem[] {
+  let usado = 0;
+
+  return items.map((item) => {
+    if (usado + item.span <= 12) {
+      usado = (usado + item.span) % 12;
+      return item;
+    }
+
+    const hueco = 12 - usado;
+
+    if (hueco >= minimo) {
+      usado = 0;
+      return { ...item, span: hueco };
+    }
+
+    usado = item.span % 12;
+    return item;
+  });
+}
+
 function reordenar(
   items: WidgetLayoutItem[],
   desde: number,
@@ -90,16 +121,18 @@ export function useDashboardLayout(usuarioId?: number | null) {
   }, [items, usuarioId]);
 
   const mover = (desde: number, hasta: number) => {
-    setItems((previo) => reordenar(previo, desde, hasta));
+    setItems((previo) => compactarFilas(reordenar(previo, desde, hasta)));
   };
 
   /** Reordena por id (lo usa el sortable durante el arrastre). */
   const moverPorId = (activo: string, destino: string) => {
     setItems((previo) =>
-      reordenar(
-        previo,
-        previo.findIndex((item) => item.id === activo),
-        previo.findIndex((item) => item.id === destino),
+      compactarFilas(
+        reordenar(
+          previo,
+          previo.findIndex((item) => item.id === activo),
+          previo.findIndex((item) => item.id === destino),
+        ),
       ),
     );
   };
@@ -117,15 +150,19 @@ export function useDashboardLayout(usuarioId?: number | null) {
   };
 
   const quitar = (id: string) => {
-    setItems((previo) => previo.filter((item) => item.id !== id));
+    setItems((previo) =>
+      compactarFilas(previo.filter((item) => item.id !== id)),
+    );
   };
 
   /** Agrega una instancia nueva; se puede repetir el mismo tipo. */
   const agregar = (tipo: TipoWidget) => {
-    setItems((previo) => [
-      ...previo,
-      { id: nuevoId(tipo), tipo, span: WIDGETS[tipo].spanPorDefecto },
-    ]);
+    setItems((previo) =>
+      compactarFilas([
+        ...previo,
+        { id: nuevoId(tipo), tipo, span: WIDGETS[tipo].spanPorDefecto },
+      ]),
+    );
   };
 
   const resetear = () => setItems(copiaPorDefecto());

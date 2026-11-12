@@ -1,11 +1,42 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { useDashboardLayout } from './useDashboardLayout.js';
+import { compactarFilas, useDashboardLayout } from './useDashboardLayout.js';
 import { LAYOUT_POR_DEFECTO } from './tipos.js';
+import type { WidgetLayoutItem } from './tipos.js';
+
+function item(id: string, span: number): WidgetLayoutItem {
+  return { id, tipo: 'total', span };
+}
 
 describe('useDashboardLayout', () => {
   beforeEach(() => {
     localStorage.clear();
+  });
+
+  it('ajusta el widget al hueco exacto de la fila', () => {
+    expect(
+      compactarFilas([item('a', 4), item('b', 4), item('c', 8)]).map(
+        (widget) => widget.span,
+      ),
+    ).toEqual([4, 4, 4]);
+
+    expect(
+      compactarFilas([item('a', 7), item('b', 8)]).map((widget) => widget.span),
+    ).toEqual([7, 5]);
+  });
+
+  it('conserva el tamaño cuando el widget entra completo', () => {
+    expect(
+      compactarFilas([item('a', 4), item('b', 8)]).map((widget) => widget.span),
+    ).toEqual([4, 8]);
+  });
+
+  it('no fuerza el ajuste si el hueco es menor al mínimo', () => {
+    expect(
+      compactarFilas([item('a', 4), item('b', 6), item('c', 6)]).map(
+        (widget) => widget.span,
+      ),
+    ).toEqual([4, 6, 6]);
   });
 
   it('arranca con el layout por defecto', () => {

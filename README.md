@@ -38,8 +38,10 @@ npm run test:cov          # tests + cobertura
   se pueden repetir (por ejemplo, dos gráficos), reordenar arrastrando (los demás
   se desplazan en vivo, estilo Android) o con botones, redimensionar arrastrando
   la esquina inferior derecha (3–12 columnas), quitar y volver a agregar; el
-  layout se guarda por usuario en el navegador. Widgets: total, gasto por
-  categoría, evolución, últimos gastos, historial y presupuestos.
+  layout se guarda por usuario en el navegador. Al reordenar, el tablero empaqueta
+  las filas: si un widget no entra completo, se ajusta exactamente al hueco libre;
+  si entra, conserva su tamaño. Widgets: total, gasto por categoría, evolución,
+  últimos gastos, historial y presupuestos.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y
   categoría, con paginación.
 - **Categorías**: alta, renombrado y baja.

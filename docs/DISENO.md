@@ -77,3 +77,10 @@ mezcla de serif/mono.
 - Botones, tarjetas, navegación e inputs con transiciones de 120–180 ms.
 - Respeto de `prefers-reduced-motion`: todas las animaciones y transiciones se
   reducen a ~0 cuando el sistema lo pide.
+
+## Tablero
+
+La grilla de 12 columnas se empaqueta por filas al reordenar, agregar o quitar
+widgets: el que no entra completo se ajusta exactamente al hueco libre (mínimo 3
+columnas) y el que entra conserva su tamaño. Así no quedan espacios muertos al
+lado de un widget.
