@@ -742,7 +742,7 @@ p {
 }
 
 .widget-grid--editable .widget {
-  outline: 1px dashed var(--line);
+  outline: 1px solid var(--line);
   outline-offset: 3px;
 }
 
@@ -804,10 +804,8 @@ p {
 }
 
 .widget-grid .grid-stack-placeholder > .placeholder-content {
-  background: var(--accent-soft);
-  border: 1px dashed var(--accent);
+  /* Default de GridStack: solo un fondo tenue, sin borde punteado. */
   border-radius: var(--radius);
-  opacity: 0.55;
 }
 
 .widget-picker__ok {
