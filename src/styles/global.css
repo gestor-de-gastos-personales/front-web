@@ -623,97 +623,88 @@ p {
   color: var(--muted);
 }
 
-.widget-slot {
-  min-width: 0;
-  position: relative;
+/* ---------- Tablero GridStack ---------- */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.widget-slot--editable {
-  cursor: grab;
+.widget-grid {
+  min-height: 80px;
 }
 
-.widget-slot--editable > .widget-slot__inner > .widget {
+.widget-grid .widget {
+  height: 100%;
+  margin: 0;
+}
+
+.widget-grid--editable .widget {
   outline: 1px dashed var(--line);
   outline-offset: 3px;
 }
 
-.widget-slot--editable:hover > .widget-slot__inner > .widget {
+.widget-grid--editable .widget:hover {
   outline-color: var(--accent);
 }
 
-.widget-slot--editable .widget-resize {
-  opacity: 0.55;
+/* El agarre de la tarjeta es el único handle de arrastre. */
+.widget__drag {
+  cursor: grab;
 }
 
-.widget-slot--editable:hover .widget-resize {
-  opacity: 1;
-}
-
-.widget-slot__inner {
-  height: 100%;
-  animation: aparecer 300ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.widget-slot__inner > .widget {
-  height: 100%;
-}
-
-.widget-slot--arrastrando {
-  z-index: 3;
-}
-
-.widget-slot--arrastrando .widget-slot__inner {
-  opacity: 0.18;
-}
-
-.widget-slot--arrastrando .widget-resize {
-  opacity: 0;
-}
-
-.widget-overlay {
-  pointer-events: none;
-}
-
-.widget-overlay .widget {
+.widget-grid .grid-stack-item.ui-draggable-dragging .widget {
   border-color: var(--accent);
   box-shadow: 0 16px 40px rgb(16 24 40 / 18%);
+  transform: none;
 }
 
-.widget-resize {
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  cursor: nwse-resize;
+.widget-grid .grid-stack-item.ui-draggable-dragging > .grid-stack-item-content {
+  opacity: 0.92;
+}
+
+/* Handle nativo de resize (esquina inferior derecha). */
+.widget-grid .grid-stack-item > .ui-resizable-se {
+  width: 22px;
+  height: 22px;
+  right: 4px;
+  bottom: 4px;
+  border-radius: 5px;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%236b7280' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M11 1 1 11M11 5 5 11M11 9 9 11'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: none;
   opacity: 0;
   transition:
     opacity 150ms ease,
-    color 150ms ease,
     background-color 150ms ease;
 }
 
-.widget-slot:hover .widget-resize,
-.widget-resize:focus-visible {
+.widget-grid--editable .grid-stack-item > .ui-resizable-se {
+  opacity: 0.55;
+}
+
+.widget-grid--editable .grid-stack-item:hover > .ui-resizable-se,
+.widget-grid .grid-stack-item > .ui-resizable-se:focus-visible {
   opacity: 1;
 }
 
-.widget-resize:hover {
-  color: var(--accent-dark);
-  background: var(--accent-soft);
+.widget-grid--editable .grid-stack-item > .ui-resizable-se:hover {
+  background-color: var(--accent-soft);
 }
 
 @media (hover: none) {
-  .widget-resize {
-    opacity: 0.75;
+  .widget-grid--editable .grid-stack-item > .ui-resizable-se {
+    opacity: 0.8;
   }
+}
+
+.widget-grid .grid-stack-placeholder > .placeholder-content {
+  background: var(--accent-soft);
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius);
+  opacity: 0.55;
 }
 
 .widget-picker {
@@ -799,10 +790,6 @@ p {
     grid-column: span 12;
   }
 
-  .widget-slot {
-    grid-column: span 12 !important;
-  }
-
   .barra__fila {
     grid-template-columns: 96px 1fr 82px;
   }
@@ -865,7 +852,7 @@ p {
     border-color 180ms ease;
 }
 
-.widget-slot:hover > .widget-slot__inner > .widget {
+.widget-grid .widget:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgb(16 24 40 / 8%);
 }

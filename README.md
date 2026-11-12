@@ -34,16 +34,16 @@ npm run test:cov          # tests + cobertura
 
 - **Sesión**: registro y login con JWT; el token se restaura al recargar y se
   valida contra `GET /auth/me`.
-- **Dashboard**: tablero ajustable con selector global de período y **modo
-  edición**: el botón “Editar” habilita arrastre, resize y las acciones de
-  agregar/restablecer; “Listo” vuelve a la vista de solo lectura. Los widgets se
-  pueden repetir (por ejemplo, dos gráficos), reordenar arrastrando (los demás se
-  desplazan en vivo, estilo Android) o con botones, redimensionar arrastrando la
-  esquina inferior derecha (3–12 columnas), quitar y volver a agregar; el layout
-  se guarda por usuario en el navegador. Al reordenar, el tablero empaqueta las
-  filas: si un widget no entra completo, se ajusta exactamente al hueco libre; si
-  entra, conserva su tamaño. Widgets: total, gasto por categoría, evolución,
-  últimos gastos, historial y presupuestos.
+- **Dashboard**: tablero **GridStack** (12 columnas en escritorio, 1 en mobile)
+  con selector global de período y **modo edición**: “Editar” habilita el
+  arrastre, el resize nativo, agregar/restablecer y quitar; “Listo” vuelve a la
+  vista de solo lectura. Los widgets se pueden repetir (por ejemplo, dos
+  gráficos), reordenar arrastrando desde su agarre (las tarjetas se reacomodan y
+  compactan con animación) o con los botones ←/→, redimensionar desde la esquina
+  inferior derecha (3–12 columnas) y quitar. El layout (posición y tamaño) se
+  guarda por usuario en el navegador y se migra desde el formato anterior.
+  Widgets: total, gasto por categoría, evolución, últimos gastos, historial y
+  presupuestos.
 - **Gastos**: alta, edición, borrado y listado con filtros por período y
   categoría, con paginación.
 - **Categorías**: alta, renombrado y baja.
@@ -60,6 +60,7 @@ src/
   services/     acceso HTTP a api-gastos (sin fetch en componentes)
   state/        stores de sesión y período (zustand)
   hooks/        carga de datos y estado async
+  widgets/      grilla GridStack, catálogo y layout persistente
   utils/        formato y cálculo de períodos
 ```
 
@@ -78,7 +79,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-97 tests con Vitest + Testing Library. Cobertura de líneas ~89% (se genera
+106 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño

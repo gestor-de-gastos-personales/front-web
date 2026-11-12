@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 
 interface WidgetAccionesProps {
-  indice: number;
-  total: number;
+  puedeIzquierda: boolean;
+  puedeDerecha: boolean;
   onIzquierda: () => void;
   onDerecha: () => void;
   onQuitar: () => void;
@@ -27,22 +27,24 @@ function Icono({ children }: { children: ReactNode }) {
   );
 }
 
-/** Controles de un widget: arrastrar, mover y quitar. */
+/**
+ * Controles de un widget en modo edición.
+ * El agarre (`.widget__drag`) es el handle que usa GridStack para arrastrar.
+ */
 export function WidgetAcciones({
-  indice,
-  total,
+  puedeIzquierda,
+  puedeDerecha,
   onIzquierda,
   onDerecha,
   onQuitar,
 }: WidgetAccionesProps) {
   return (
-    <div
-      className="widget__actions"
-      onPointerDown={(evento) => evento.stopPropagation()}
-      onMouseDown={(evento) => evento.stopPropagation()}
-      onTouchStart={(evento) => evento.stopPropagation()}
-    >
-      <span className="widget__drag" aria-hidden="true" title="Arrastrá para mover">
+    <div className="widget__actions">
+      <span
+        className="widget__drag"
+        title="Arrastrá para mover"
+        aria-label="Arrastrar widget"
+      >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <circle cx="9" cy="6" r="1.6" />
           <circle cx="15" cy="6" r="1.6" />
@@ -58,7 +60,7 @@ export function WidgetAcciones({
         className="widget__accion"
         aria-label="Mover a la izquierda"
         title="Mover a la izquierda"
-        disabled={indice === 0}
+        disabled={!puedeIzquierda}
         onClick={onIzquierda}
       >
         <Icono>
@@ -71,7 +73,7 @@ export function WidgetAcciones({
         className="widget__accion"
         aria-label="Mover a la derecha"
         title="Mover a la derecha"
-        disabled={indice === total - 1}
+        disabled={!puedeDerecha}
         onClick={onDerecha}
       >
         <Icono>

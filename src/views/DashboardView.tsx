@@ -1,26 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  DndContext,
-  DragOverlay,
-  MeasuringStrategy,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import type { DragOverEvent, DragStartEvent } from '@dnd-kit/core';
-import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useAuth } from '../state/auth.store.js';
 import { usePeriodo } from '../state/periodo.store.js';
 import { useGastos, usePresupuestos, useResumen, useSerie } from '../hooks/datos.js';
 import { aDDMMYYYY } from '../utils/periodo.js';
-import { ORDEN_WIDGETS, WIDGETS } from '../widgets/tipos.js';
+import { COLUMNAS, ORDEN_WIDGETS, WIDGETS } from '../widgets/tipos.js';
 import type { WidgetLayoutItem } from '../widgets/tipos.js';
 import { useDashboardLayout } from '../widgets/useDashboardLayout.js';
 import { WidgetAcciones } from '../widgets/WidgetAcciones.js';
-import { WidgetSlot } from '../widgets/WidgetSlot.js';
+import { WidgetGrid } from '../widgets/WidgetGrid.js';
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
 import { PeriodSelector } from '../components/PeriodSelector.js';
 import { TotalWidget } from '../components/TotalWidget.js';
@@ -45,12 +33,6 @@ export function DashboardView() {
   const [pagina, setPagina] = useState(1);
   const [picker, setPicker] = useState(false);
   const [editando, setEditando] = useState(false);
-  const [activo, setActivo] = useState<{ id: string; ancho: number } | null>(null);
-
-  const sensores = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 10 } }),
-  );
 
   const resumen = useResumen(periodo);
   const serie = useSerie(periodo);
@@ -65,36 +47,14 @@ export function DashboardView() {
 
   const irAGastos = () => navigate('/gastos');
 
-  /** Al pasar sobre otro widget, se reordena en vivo (el resto se desplaza). */
-  const alArrastrar = (evento: DragOverEvent) => {
-    const { active, over } = evento;
-    if (over && active.id !== over.id) {
-      layout.moverPorId(String(active.id), String(over.id));
-    }
-  };
-
-  const alEmpezarArrastre = (evento: DragStartEvent) => {
-    const id = String(evento.active.id);
-    const nodo = document.querySelector<HTMLElement>(
-      `[data-widget-id="${id}"]`,
-    );
-    setActivo({
-      id,
-      ancho:
-        nodo?.getBoundingClientRect().width ||
-        evento.active.rect.current.initial?.width ||
-        0,
-    });
-  };
-
-  const alTerminarArrastre = () => setActivo(null);
-
-  const contenido = (item: WidgetLayoutItem, indice: number) => {
+  const contenido = (item: WidgetLayoutItem) => {
     const meta = WIDGETS[item.tipo];
+    const indice = layout.items.findIndex((otro) => otro.id === item.id);
+
     const acciones = editando ? (
       <WidgetAcciones
-        indice={indice}
-        total={layout.items.length}
+        puedeIzquierda={item.x > 0}
+        puedeDerecha={item.x + item.w < COLUMNAS}
         onIzquierda={() => layout.moverIzquierda(indice)}
         onDerecha={() => layout.moverDerecha(indice)}
         onQuitar={() => layout.quitar(item.id)}
@@ -179,15 +139,7 @@ export function DashboardView() {
   };
 
   return (
-    <DndContext
-      sensors={sensores}
-      collisionDetection={closestCenter}
-      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-      onDragStart={alEmpezarArrastre}
-      onDragOver={alArrastrar}
-      onDragEnd={alTerminarArrastre}
-      onDragCancel={alTerminarArrastre}
-    >
+    <div className="dashboard">
       <div className="grid">
         <PeriodSelector />
 
@@ -195,7 +147,7 @@ export function DashboardView() {
           {editando ? (
             <>
               <span className="dashboard-tools__hint">
-                Arrastrá para mover; usá la esquina para redimensionar.
+                Arrastrá desde el agarre para mover; redimensioná desde la esquina.
               </span>
               <button
                 type="button"
@@ -229,29 +181,17 @@ export function DashboardView() {
             </button>
           )}
         </div>
+      </div>
 
-        <SortableContext
-          items={layout.items.map((item) => item.id)}
-          strategy={rectSortingStrategy}
-        >
-          {layout.items.map((item, indice) => (
-            <WidgetSlot
-              key={item.id}
-              item={item}
-              indice={indice}
-              editable={editando}
-              onRedimensionar={
-                editando
-                  ? (span) => layout.cambiarSpan(indice, span)
-                  : undefined
-              }
-            >
-              {contenido(item, indice)}
-            </WidgetSlot>
-          ))}
-        </SortableContext>
+      <WidgetGrid
+        items={layout.items}
+        editable={editando}
+        onCambio={layout.actualizarDesdeGrilla}
+        renderWidget={contenido}
+      />
 
-        {layout.items.length === 0 ? (
+      {layout.items.length === 0 ? (
+        <div className="grid">
           <div className="span-12">
             <EmptyState
               titulo="Tu tablero está vacío"
@@ -270,29 +210,16 @@ export function DashboardView() {
               }
             />
           </div>
-        ) : null}
+        </div>
+      ) : null}
 
-        {picker ? (
-          <AddWidgetModal
-            catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
-            onAgregar={layout.agregar}
-            onCerrar={() => setPicker(false)}
-          />
-        ) : null}
-      </div>
-
-      <DragOverlay
-        dropAnimation={{ duration: 220, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' }}
-      >
-        {activo && layout.items.some((item) => item.id === activo.id) ? (
-          <div className="widget-overlay" style={{ width: activo.ancho }}>
-            {contenido(
-              layout.items.find((item) => item.id === activo.id)!,
-              layout.items.findIndex((item) => item.id === activo.id),
-            )}
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+      {picker ? (
+        <AddWidgetModal
+          catalogo={ORDEN_WIDGETS.map((tipo) => ({ tipo, ...WIDGETS[tipo] }))}
+          onAgregar={layout.agregar}
+          onCerrar={() => setPicker(false)}
+        />
+      ) : null}
+    </div>
   );
 }

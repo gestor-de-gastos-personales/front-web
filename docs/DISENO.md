@@ -55,21 +55,22 @@ mezcla de serif/mono.
 - Labels asociados en formularios; `role="alert"` en errores y `role="status"`
   en cargas.
 - Contraste alto: texto `#111318` sobre blanco y `#FFFFFF` sobre azul.
-- Sidebar que colapsa a barra superior por debajo de 980 px; grilla de widgets a
-  una columna por debajo de 900 px.
+- Sidebar que colapsa a barra superior por debajo de 980 px; la grilla de
+  widgets pasa a una columna en el mismo punto (980 px) y restaura el layout de
+  escritorio al volver.
 
 ## Movimiento
 
-- **Reordenamiento sortable**: `dnd-kit` con `rectSortingStrategy`. Al sostener
-  y arrastrar un widget, el resto se desplaza en vivo con transiciones; mouse
-  con umbral de 6 px y touch con long-press de 180 ms. El elemento activo se
-  dibuja en un `DragOverlay` (no se deforma con el reflujo) y su celda queda como
-  placeholder atenuado. Los botones ←/→ quedan como alternativa accesible.
-- **Redimensionado por esquina**: handle en la esquina inferior derecha;
-  arrastrando se ajusta el ancho entre 3 y 12 columnas, con flechas del teclado
-  como alternativa. Reemplaza al botón de tamaño.
-- Entrada de widgets con `aparecer` (300 ms, 8 px de desplazamiento) y retardo
-  escalonado de 40 ms por posición.
+- **Tablero GridStack**: `gridstack` v14 maneja drag & drop, resize, colisiones y
+  compactación con `animate: true`; al mover o soltar, las tarjetas se reacomodan
+  con una transición de ~300 ms.
+- **Arrastre**: solo el agarre de la tarjeta (`.widget__drag`) inicia el drag;
+  botones, inputs y enlaces no lo disparan. En touch GridStack usa su long-press
+  nativo y muestra el handle de resize.
+- **Resize**: handle nativo de la esquina inferior derecha; el ancho se ajusta
+  entre 3 y 12 columnas y la altura en filas de 54 px.
+- **Mobile**: por debajo de 980 px la grilla pasa a una columna; al volver a
+  escritorio se restaura el layout guardado.
 - Barras de categoría y presupuestos crecen con `scaleX` (560 ms); las barras
   del gráfico crecen con `scaleY` desde la base, escalonadas por punto.
 - Modales y tarjeta de login con `modal-entrada` (220–320 ms) y fondo con
@@ -80,10 +81,12 @@ mezcla de serif/mono.
 
 ## Tablero
 
-La grilla de 12 columnas se empaqueta por filas al reordenar, agregar o quitar
-widgets: el que no entra completo se ajusta exactamente al hueco libre (mínimo 3
-columnas) y el que entra conserva su tamaño. Así no quedan espacios muertos al
-lado de un widget.
+El tablero usa **GridStack** con 12 columnas en escritorio y 1 en mobile. Cada
+widget es una tarjeta arrastrable por su agarre y redimensionable desde la
+esquina inferior derecha; GridStack resuelve colisiones, compacta hacia arriba
+(`mode: 'top'`) y anima el reacomodo. Al agregar una instancia se busca el primer
+hueco libre. El layout completo (`x`, `y`, `w`, `h`) se persiste por usuario en
+`localStorage` y se migra automáticamente del formato anterior basado en `span`.
 
 **Modo edición:** fuera de él, los widgets son de solo lectura (no se arrastran
 ni redimensionan y no muestran controles). El botón “Editar” habilita el arrastre,

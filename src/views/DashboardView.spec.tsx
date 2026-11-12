@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -10,6 +11,26 @@ const datos = vi.hoisted(() => ({
   useCategorias: vi.fn(),
 }));
 vi.mock('../hooks/datos.js', () => datos);
+
+vi.mock('../widgets/WidgetGrid.js', () => ({
+  WidgetGrid: ({
+    items,
+    editable,
+    renderWidget,
+  }: {
+    items: Array<{ id: string }>;
+    editable: boolean;
+    renderWidget: (item: { id: string }) => ReactNode;
+  }) => (
+    <div data-testid="widget-grid" data-editable={String(editable)}>
+      {items.map((item) => (
+        <div key={item.id} data-widget-id={item.id}>
+          {renderWidget(item)}
+        </div>
+      ))}
+    </div>
+  ),
+}));
 
 import { DashboardView } from './DashboardView.js';
 import { usePeriodo } from '../state/periodo.store.js';
@@ -114,16 +135,22 @@ describe('DashboardView', () => {
       screen.queryByRole('button', { name: 'Quitar widget' }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: /Redimensionar widget/ }),
+      screen.queryByLabelText('Arrastrar widget'),
     ).not.toBeInTheDocument();
+    expect(screen.getByTestId('widget-grid')).toHaveAttribute(
+      'data-editable',
+      'false',
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Editar' }));
 
     expect(screen.getAllByRole('button', { name: 'Quitar widget' })).toHaveLength(6);
-    expect(
-      screen.getAllByRole('button', { name: /Redimensionar widget/ }),
-    ).toHaveLength(6);
+    expect(screen.getAllByLabelText('Arrastrar widget')).toHaveLength(6);
     expect(screen.getByRole('button', { name: 'Agregar widget' })).toBeInTheDocument();
+    expect(screen.getByTestId('widget-grid')).toHaveAttribute(
+      'data-editable',
+      'true',
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Listo' }));
 
