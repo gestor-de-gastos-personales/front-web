@@ -222,6 +222,9 @@ describe('DashboardView', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Restablecer' }));
     const dialogo = screen.getByRole('dialog', { name: 'Restablecer tablero' });
     expect(within(dialogo).getByText(/¿Seguro que querés volver/)).toBeInTheDocument();
+    expect(
+      within(dialogo).queryByRole('button', { name: 'Cerrar' }),
+    ).not.toBeInTheDocument();
 
     fireEvent.click(within(dialogo).getByRole('button', { name: 'Cancelar' }));
     expect(

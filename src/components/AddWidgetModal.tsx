@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal } from './Modal.js';
 import type { TipoWidget, WidgetMeta } from '../widgets/tipos.js';
 
@@ -12,12 +12,33 @@ interface AddWidgetModalProps {
   onCerrar: () => void;
 }
 
+const DURACION_MENSAJE = 5000;
+
 export function AddWidgetModal({ catalogo, onAgregar, onCerrar }: AddWidgetModalProps) {
   const [agregado, setAgregado] = useState<WidgetDisponible | null>(null);
+  const temporizador = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (temporizador.current !== null) {
+        window.clearTimeout(temporizador.current);
+      }
+    },
+    [],
+  );
 
   const agregar = (widget: WidgetDisponible) => {
     onAgregar(widget.tipo);
     setAgregado(widget);
+
+    if (temporizador.current !== null) {
+      window.clearTimeout(temporizador.current);
+    }
+
+    temporizador.current = window.setTimeout(() => {
+      setAgregado(null);
+      temporizador.current = null;
+    }, DURACION_MENSAJE);
   };
 
   return (

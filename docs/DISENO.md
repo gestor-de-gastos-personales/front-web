@@ -90,9 +90,10 @@ hueco libre. El layout completo (`x`, `y`, `w`, `h`) se persiste por usuario en
 `localStorage` y se migra automáticamente del formato anterior basado en `span`.
 Cada tipo define un mínimo de ancho/alto para que el contenido siga siendo
 legible al achicarlo. El picker de widgets muestra una confirmación visual
-(“Agregado correctamente” y el botón en verde) al sumar una instancia, y
-“Restablecer” abre un diálogo de confirmación antes de descartar el layout
-personalizado.
+(“Agregado correctamente” y el botón en verde) durante 5 segundos al sumar una
+instancia. “Restablecer” abre un diálogo con “Cancelar” y “Restablecer” (sin un
+segundo botón de cierre) antes de descartar el layout personalizado. Los modales
+quedan por encima de los handles de resize de GridStack.
 
 **Modo edición:** fuera de él, los widgets son de solo lectura (no se arrastran
 ni redimensionan y no muestran controles). El botón “Editar” habilita el arrastre,

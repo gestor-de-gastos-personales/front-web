@@ -607,7 +607,8 @@ p {
   display: grid;
   place-items: center;
   padding: 20px;
-  z-index: 50;
+  /* Por encima de los handles de resize de GridStack (z-index 101). */
+  z-index: 1000;
 }
 
 .modal {

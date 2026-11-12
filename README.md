@@ -83,7 +83,7 @@ estado y hooks. Los componentes no llaman a `fetch`/`axios` directamente.
 
 ## Tests y cobertura
 
-107 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
+109 tests con Vitest + Testing Library. Cobertura de líneas ~95% (se genera
 localmente con `npm run test:cov`; el artefacto no se versiona).
 
 ## Diseño

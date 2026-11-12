@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { WidgetAcciones } from './WidgetAcciones.js';
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
@@ -77,5 +77,28 @@ describe('tablero de widgets', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Cerrar' }));
     expect(onCerrar).toHaveBeenCalled();
+  });
+
+  it('vuelve al estado normal después de 5 segundos', () => {
+    vi.useFakeTimers();
+    try {
+      render(
+        <AddWidgetModal catalogo={CATALOGO} onAgregar={vi.fn()} onCerrar={vi.fn()} />,
+      );
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'Agregar' })[0]!);
+      expect(screen.getByRole('status')).toHaveTextContent(
+        'Total del período agregado correctamente.',
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+      expect(screen.getAllByRole('button', { name: 'Agregar' })).toHaveLength(2);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

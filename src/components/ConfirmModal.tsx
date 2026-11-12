@@ -19,7 +19,7 @@ export function ConfirmModal({
   onCancelar,
 }: ConfirmModalProps) {
   return (
-    <Modal titulo={titulo} onCerrar={onCancelar}>
+    <Modal titulo={titulo} onCerrar={onCancelar} mostrarCerrar={false}>
       <p className="modal__mensaje">{mensaje}</p>
       <div className="modal__acciones">
         <button type="button" className="boton boton--chico" onClick={onCancelar}>

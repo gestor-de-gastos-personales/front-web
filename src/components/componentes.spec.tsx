@@ -80,6 +80,19 @@ describe('componentes base', () => {
     expect(cerrar).toHaveBeenCalledTimes(2);
   });
 
+  it('Modal puede ocultar el botón Cerrar', () => {
+    render(
+      <Modal titulo="Confirmar" onCerrar={vi.fn()} mostrarCerrar={false}>
+        <p>mensaje</p>
+      </Modal>,
+    );
+
+    expect(screen.getByRole('dialog', { name: 'Confirmar' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Cerrar' }),
+    ).not.toBeInTheDocument();
+  });
+
   it('TotalWidget muestra total, cantidad y mayor gasto', () => {
     render(<TotalWidget resumen={RESUMEN} />);
     expect(screen.getByText(/2\.500/)).toBeInTheDocument();
