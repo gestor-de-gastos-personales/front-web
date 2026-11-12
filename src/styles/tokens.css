@@ -1,0 +1,35 @@
+:root {
+  /* Marca Mangos */
+  --mangos-blue: #00a3e8;
+  --mangos-blue-dark: #0079ad;
+  --mango: #ffa726;
+  --mango-light: #ffd18a;
+  --coral: #ff4d4d;
+  --leaf: #2fbf71;
+  --leaf-dark: #00a651;
+  --stem: #8b4513;
+
+  /* Swiss: superficie neutra, tinta, hairlines, un acento */
+  --bg: #f7f7f8;
+  --surface: #ffffff;
+  --ink: #111318;
+  --ink-2: #374151;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --line-soft: #f0f1f3;
+  --accent: #00a3e8;
+  --accent-dark: #0079ad;
+  --accent-soft: #e8f7fe;
+  --danger: #d92d20;
+  --danger-soft: #fef3f2;
+  --success: #067647;
+  --success-soft: #ecfdf3;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 4%);
+  --shadow-pop: 0 12px 32px rgb(16 24 40 / 12%);
+
+  /* Una sola familia: sans de sistema */
+  --font-ui: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+}

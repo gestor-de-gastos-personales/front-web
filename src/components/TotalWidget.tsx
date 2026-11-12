@@ -1,0 +1,32 @@
+import type { ReactNode } from 'react';
+import type { Resumen } from '../services/resumen.service.js';
+import { formatearFecha, formatearMonto } from '../utils/format.js';
+import { Widget } from './Widget.js';
+
+interface TotalWidgetProps {
+  resumen: Resumen;
+  acciones?: ReactNode;
+}
+
+export function TotalWidget({ resumen, acciones }: TotalWidgetProps) {
+  return (
+    <Widget titulo="Total del período" tag={`${resumen.cantidad} gastos`} acciones={acciones}>
+      <p className="total">{formatearMonto(resumen.totalGeneral)}</p>
+      <p className="total__meta">
+        {resumen.porCategoria.length} categorías con movimiento
+      </p>
+
+      {resumen.mayorGasto ? (
+        <p className="meta" style={{ marginTop: 16 }}>
+          Mayor: {resumen.mayorGasto.descripcion} ·{' '}
+          {formatearMonto(resumen.mayorGasto.monto)} ·{' '}
+          {formatearFecha(resumen.mayorGasto.fecha)}
+        </p>
+      ) : (
+        <p className="meta" style={{ marginTop: 16 }}>
+          Sin gastos en el período.
+        </p>
+      )}
+    </Widget>
+  );
+}
