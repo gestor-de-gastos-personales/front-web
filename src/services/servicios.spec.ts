@@ -5,6 +5,7 @@ import { categoriasService } from './categorias.service.js';
 import { resumenService } from './resumen.service.js';
 import { serieService } from './serie.service.js';
 import { presupuestosService } from './presupuestos.service.js';
+import { pedir } from './http.js';
 
 function respuesta(cuerpo: unknown, status = 200) {
   return { ok: true, status, json: async () => cuerpo } as Response;
@@ -34,6 +35,19 @@ describe('servicios', () => {
     expect(urls[1]).toContain('/gastos');
     expect(urls[2]).toContain('/gastos/3');
     expect(urls[3]).toContain('/gastos/3');
+  });
+
+  it('pedir envía FormData sin forzar Content-Type JSON', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(respuesta({ ok: true }));
+    vi.stubGlobal('fetch', fetchMock);
+    const datos = new FormData();
+    datos.append('file', 'x');
+
+    await pedir('/chat/analizar-imagen', { method: 'POST', body: datos });
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect((init.headers as Record<string, string>)['Content-Type']).toBeUndefined();
+    expect(init.body).toBe(datos);
   });
 
   it('auth: login, registro y perfil', async () => {

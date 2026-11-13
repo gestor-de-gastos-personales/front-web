@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../state/auth.store.js';
 import { Logo } from './Logo.js';
+import { ChatWidget } from '../chat/ChatWidget.js';
 
 const ICONOS: Record<string, ReactNode> = {
   panel: (
@@ -39,6 +40,9 @@ const ICONOS: Record<string, ReactNode> = {
       <circle cx="12" cy="8" r="4" />
     </>
   ),
+  chat: (
+    <path d="M21 11.5a8.4 8.4 0 0 1-8.4 8.4 9 9 0 0 1-3.2-.6L4 21l1.7-4.3A8.4 8.4 0 1 1 21 11.5Z" />
+  ),
 };
 
 const ENLACES = [
@@ -46,6 +50,7 @@ const ENLACES = [
   { a: '/gastos', texto: 'Gastos', icono: 'lista' },
   { a: '/categorias', texto: 'Categorías', icono: 'etiqueta' },
   { a: '/presupuestos', texto: 'Presupuestos', icono: 'objetivo' },
+  { a: '/asistente', texto: 'Asistente', icono: 'chat' },
   { a: '/perfil', texto: 'Perfil', icono: 'usuario' },
 ];
 
@@ -124,6 +129,8 @@ export function Layout() {
           <Outlet />
         </main>
       </div>
+
+      <ChatWidget />
     </div>
   );
 }

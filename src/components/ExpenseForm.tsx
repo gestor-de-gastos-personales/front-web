@@ -6,6 +6,7 @@ interface ExpenseFormProps {
   inicial?: Gasto | null;
   guardando?: boolean;
   error?: string | null;
+  textoGuardar?: string;
   onGuardar: (datos: GastoEntrada) => void;
   onCancelar: () => void;
 }
@@ -22,6 +23,7 @@ export function ExpenseForm({
   inicial,
   guardando = false,
   error,
+  textoGuardar,
   onGuardar,
   onCancelar,
 }: ExpenseFormProps) {
@@ -111,7 +113,9 @@ export function ExpenseForm({
 
       <div className="fila">
         <button type="submit" className="boton boton--primario" disabled={guardando}>
-          {guardando ? 'Guardando…' : inicial ? 'Guardar cambios' : 'Registrar gasto'}
+          {guardando
+            ? 'Guardando…'
+            : textoGuardar ?? (inicial ? 'Guardar cambios' : 'Registrar gasto')}
         </button>
         <button type="button" className="boton" onClick={onCancelar}>
           Cancelar

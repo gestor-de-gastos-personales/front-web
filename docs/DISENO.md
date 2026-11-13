@@ -85,6 +85,16 @@ mezcla de serif/mono.
 - Respeto de `prefers-reduced-motion`: todas las animaciones y transiciones se
   reducen a ~0 cuando el sistema lo pide.
 
+## Asistente
+
+El asistente vive en un **drawer flotante** abajo a la derecha y también en la
+ruta `/asistente`. Usa el mismo lenguaje visual que el resto de la app: burbujas
+simples para el texto y tarjetas para los datos. El usuario puede escribir,
+adjuntar una foto, elegir un período, pedir un resumen/gráfico/historial y
+confirmar o corregir un gasto antes de guardarlo. Las tarjetas de historial
+permiten editar y eliminar sin salir del chat. En mobile el drawer ocupa toda la
+pantalla.
+
 ## Cabeceras
 
 Todas las pantallas de la app (Dashboard, Gastos, Categorías, Presupuestos,
