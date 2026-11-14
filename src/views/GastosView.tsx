@@ -4,13 +4,10 @@ import { gastosService } from '../services/gastos.service.js';
 import type { Gasto, GastoEntrada } from '../services/gastos.service.js';
 import { aDDMMYYYY } from '../utils/periodo.js';
 import { mensajeDeError } from '../utils/format.js';
-import { HistoryTable } from '../components/HistoryTable.js';
-import { Modal } from '../components/Modal.js';
-import { ExpenseForm } from '../components/ExpenseForm.js';
-import { Loading } from '../components/Loading.js';
-import { ErrorState } from '../components/ErrorState.js';
-import { Widget } from '../components/Widget.js';
 import { PageHeader } from '../components/PageHeader.js';
+import { GastosFiltros } from './GastosFiltros.js';
+import { GastosFormulario } from './GastosFormulario.js';
+import { GastosTabla } from './GastosTabla.js';
 
 const LIMITE = 8;
 
@@ -39,6 +36,27 @@ export function GastosView() {
   });
 
   const recargar = () => gastos.recargar();
+
+  const cambiarCategoria = (valor?: number) => {
+    setPagina(1);
+    setCategoriaId(valor);
+  };
+  const cambiarDesde = (valor: string) => {
+    setPagina(1);
+    setDesde(valor);
+  };
+  const cambiarHasta = (valor: string) => {
+    setPagina(1);
+    setHasta(valor);
+  };
+  const cambiarMontoMin = (valor: string) => {
+    setPagina(1);
+    setMontoMin(valor);
+  };
+  const cambiarMontoMax = (valor: string) => {
+    setPagina(1);
+    setMontoMax(valor);
+  };
 
   const guardar = async (datos: GastoEntrada) => {
     setGuardando(true);
@@ -88,127 +106,44 @@ export function GastosView() {
           }
         />
 
-        <Widget titulo="Filtros" className="span-12">
-          <div className="filtros">
-            <label className="campo">
-              <span className="campo__label">Categoría</span>
-              <select
-                value={categoriaId ?? ''}
-                onChange={(evento) => {
-                  setPagina(1);
-                  setCategoriaId(
-                    evento.target.value ? Number(evento.target.value) : undefined,
-                  );
-                }}
-              >
-                <option value="">Todas</option>
-                {(categorias.data ?? []).map((categoria) => (
-                  <option key={categoria.id} value={categoria.id}>
-                    {categoria.nombre}
-                  </option>
-                ))}
-              </select>
-            </label>
+        <GastosFiltros
+          categorias={categorias.data ?? []}
+          categoriaId={categoriaId}
+          desde={desde}
+          hasta={hasta}
+          montoMin={montoMin}
+          montoMax={montoMax}
+          error={errorAccion}
+          onCategoria={cambiarCategoria}
+          onDesde={cambiarDesde}
+          onHasta={cambiarHasta}
+          onMontoMin={cambiarMontoMin}
+          onMontoMax={cambiarMontoMax}
+        />
 
-            <label className="campo">
-              <span className="campo__label">Desde</span>
-              <input
-                type="date"
-                value={desde}
-                onChange={(evento) => {
-                  setPagina(1);
-                  setDesde(evento.target.value);
-                }}
-              />
-            </label>
-
-            <label className="campo">
-              <span className="campo__label">Hasta</span>
-              <input
-                type="date"
-                value={hasta}
-                onChange={(evento) => {
-                  setPagina(1);
-                  setHasta(evento.target.value);
-                }}
-              />
-            </label>
-
-            <label className="campo">
-              <span className="campo__label">Monto mínimo</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={montoMin}
-                placeholder="0"
-                onChange={(evento) => {
-                  setPagina(1);
-                  setMontoMin(evento.target.value);
-                }}
-              />
-            </label>
-
-            <label className="campo">
-              <span className="campo__label">Monto máximo</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={montoMax}
-                placeholder="Sin límite"
-                onChange={(evento) => {
-                  setPagina(1);
-                  setMontoMax(evento.target.value);
-                }}
-              />
-            </label>
-          </div>
-
-          {errorAccion ? (
-            <p className="alerta" role="alert">
-              {errorAccion}
-            </p>
-          ) : null}
-        </Widget>
-
-        {gastos.cargando ? (
-          <Widget titulo="Historial" className="span-12">
-            <Loading />
-          </Widget>
-        ) : gastos.error ? (
-          <div className="span-12">
-            <ErrorState mensaje={gastos.error} onReintentar={gastos.recargar} />
-          </div>
-        ) : gastos.data ? (
-          <div className="span-12">
-            <HistoryTable
-              pagina={gastos.data}
-              onEditar={(gasto) => {
-                setErrorAccion(null);
-                setFormulario(gasto);
-              }}
-              onEliminar={eliminar}
-              onPagina={setPagina}
-            />
-          </div>
-        ) : null}
+        <GastosTabla
+          cargando={gastos.cargando}
+          error={gastos.error}
+          pagina={gastos.data}
+          onReintentar={gastos.recargar}
+          onEditar={(gasto) => {
+            setErrorAccion(null);
+            setFormulario(gasto);
+          }}
+          onEliminar={eliminar}
+          onPagina={setPagina}
+        />
       </div>
 
       {formulario ? (
-        <Modal
-          titulo={formulario === 'nuevo' ? 'Nuevo gasto' : 'Editar gasto'}
+        <GastosFormulario
+          formulario={formulario}
+          categorias={categorias.data ?? []}
+          guardando={guardando}
+          error={errorAccion}
+          onGuardar={guardar}
           onCerrar={() => setFormulario(null)}
-        >
-          <ExpenseForm
-            categorias={categorias.data ?? []}
-            inicial={formulario === 'nuevo' ? null : formulario}
-            guardando={guardando}
-            error={errorAccion}
-            onGuardar={guardar}
-            onCancelar={() => setFormulario(null)}
-          />
-        </Modal>
+        />
       ) : null}
     </>
   );

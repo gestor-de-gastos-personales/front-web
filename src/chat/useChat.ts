@@ -81,6 +81,8 @@ function analisisVacio(intent: string): AnalisisIA {
   };
 }
 
+export type Chat = ReturnType<typeof useChat>;
+
 export function useChat(usuarioId?: number | null) {
   const [mensajes, setMensajes] = useState<MensajeChat[]>(() =>
     cargarMensajes(usuarioId),
