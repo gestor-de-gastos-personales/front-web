@@ -16,6 +16,7 @@ import {
 import { AddWidgetModal } from '../components/AddWidgetModal.js';
 import { ConfirmModal } from '../components/ConfirmModal.js';
 import { EmptyState } from '../components/EmptyState.js';
+import { DashboardHeader } from './DashboardHeader.js';
 
 export function DashboardView() {
   const periodo = usePeriodo((estado) => estado.periodo);
@@ -86,52 +87,13 @@ export function DashboardView() {
 
   return (
     <div className="dashboard">
-      <header className="page-head">
-        <div className="dashboard-head__left">
-          <h1 className="page-title">Dashboard</h1>
-          {editando ? (
-            <button
-              type="button"
-              className="boton boton--fantasma boton--chico"
-              onClick={() => setConfirmarReset(true)}
-            >
-              Restablecer
-            </button>
-          ) : null}
-        </div>
-
-        <div className="dashboard-tools">
-          {editando ? (
-            <>
-              <span className="dashboard-tools__hint">
-                Arrastrá desde el encabezado para mover; redimensioná desde la esquina.
-              </span>
-              <button
-                type="button"
-                className="boton boton--chico"
-                onClick={() => setPicker(true)}
-              >
-                Agregar widget
-              </button>
-              <button
-                type="button"
-                className="boton boton--primario boton--chico"
-                onClick={() => setEditando(false)}
-              >
-                Listo
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="boton boton--chico"
-              onClick={() => setEditando(true)}
-            >
-              Editar
-            </button>
-          )}
-        </div>
-      </header>
+      <DashboardHeader
+        editando={editando}
+        onEditar={() => setEditando(true)}
+        onListo={() => setEditando(false)}
+        onRestablecer={() => setConfirmarReset(true)}
+        onAgregar={() => setPicker(true)}
+      />
 
       <WidgetGrid
         items={layout.items}
