@@ -3,18 +3,18 @@
 
 > Documento **generado automáticamente** por la cátedra de Programación III (RepoSense + análisis de calidad + constancia). **No editar a mano**: se regenera en cada evaluación.
 > Rama evaluada: `main`. Análisis **heurístico** (regex + métricas): es una criba para orientar la revisión, **no una nota**.
-> Generado: 2026-11-14.
+> Generado: 2026-11-16.
 
 ## 1. Veredicto
 
 | Aspecto | Resultado |
 |---|---|
 | Tipo de proyecto | frontend |
-| Índice de calidad de servicios | **62/100** (mínimo 50) |
-| Criterios cumplidos | **13/14** |
+| Índice de calidad de servicios | **100/100** (mínimo 50) |
+| Criterios cumplidos | **14/14** |
 | Aprobado (semáforo) | **SI** |
-| Código (LOC) | 5,017 |
-| Archivos de código | 59 |
+| Código (LOC) | 5,297 |
+| Archivos de código | 76 |
 | Tests (archivos) | 29 |
 | Cobertura de líneas | no aplica (frontend sin herramienta de cobertura E2E) |
 | Capas detectadas | vistas, servicios, estado |
@@ -26,7 +26,7 @@
 
 | Autor | Commits | Código (LOC) | Tests (LOC) | Docs (LOC) | Días activos | % del código |
 |---|---:|---:|---:|---:|---:|---:|
-| blevatino | 32 | 7,093 | 3,563 | 232 | 4 | 100% |
+| blevatino | 33 | 7,390 | 3,563 | 232 | 5 | 100% |
 
 > _El LOC de autoría lo calcula RepoSense sobre el historial y puede diferir del LOC de código del análisis de calidad (que mira solo el estado de `main`)._
 
@@ -36,7 +36,7 @@
 
 | Alumno | Sesiones | Cumplimiento | Pausa | Recencia | IC | Nivel | Para subir de nivel |
 |---|--:|--:|--:|--:|--:|--|--|
-| blevatino | 18 | 68% | 19 d | 93% | **58** | Aprueba | Cumplimiento 68% (mín. 100%); Pausa 19 d (máx. 5 d) |
+| blevatino | 19 | 70% | 19 d | 86% | **58** | Aprueba | Cumplimiento 70% (mín. 100%); Pausa 19 d (máx. 5 d) |
 
 > Para aprobar el IC: **2 sesiones por semana** sostenidas, sin pausas mayores a **10 días** y con actividad en las **últimas 2 semanas**. Se excluyen merges, bots y al docente. Zona horaria UTC-3.
 
@@ -48,13 +48,13 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Un resumen numérico (0-100) que combina todas las señales y métricas del análisis, con topes duros por duplicación.
 - **Por qué importa:** Ordena y prioriza la revisión: un índice bajo indica varias señales que conviene mirar juntas.
-- **Tu resultado:** índice **62/100** _(mínimo 50)_
+- **Tu resultado:** índice **100/100** _(mínimo 50)_
 
 ### 2. Duplicación (DRY) (duplicacion) — OK
 
 - **Qué mide:** Porcentaje de bloques de código repetidos (similitud) en el repositorio.
 - **Por qué importa:** Cada copia se mantiene por separado: un arreglo hay que repetirlo y los defectos se multiplican.
-- **Tu resultado:** **6.6%** de duplicación _(máximo 15%)_
+- **Tu resultado:** **6.3%** de duplicación _(máximo 15%)_
 
 ### 3. Secretos hardcodeados (SEC) — OK
 
@@ -92,15 +92,11 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 - **Por qué importa:** Se pierde la ayuda del compilador justo donde los datos vienen de afuera (API, formularios).
 - **Tu resultado:** **0** uso(s) de `any` _(máximo 2)_
 
-### 9. Componente demasiado grande (BigC) — A REVISAR
+### 9. Componente demasiado grande (BigC) — OK
 
 - **Qué mide:** Componentes de UI muy extensos, que suelen mezclar render, estado y lógica.
 - **Por qué importa:** Son difíciles de leer, probar y reutilizar, y sus cambios tienen efectos inesperados.
-- **Tu resultado:** **5** componente(s) demasiado grande(s) _(máximo 1)_
-- **Para investigar la causa:**
-    - ¿El componente creció a medida que se agregaban requisitos, sin volver a dividirlo?
-    - ¿Mezcla responsabilidades distintas (mostrar, calcular, pedir datos)?
-    - ¿Se dividió por pantalla o por unidad de responsabilidad?
+- **Tu resultado:** **0** componente(s) demasiado grande(s) _(máximo 1)_
 
 ### 10. Baja cohesión (Coh) — OK
 
@@ -112,7 +108,7 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Complejidad ciclomática: cantidad de caminos posibles dentro de una función (condicionales, bucles, casos).
 - **Por qué importa:** Muchos caminos = difícil de seguir y de probar; suelen esconderse casos sin cubrir.
-- **Tu resultado:** **15** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 5017 LOC))_
+- **Tu resultado:** **16** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 5297 LOC))_
 
 ### 12. Funciones/métodos largos o con muchos parámetros (Tam) — OK
 
@@ -130,15 +126,11 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Cantidad de vistas/componentes de pantalla del frontend.
 - **Por qué importa:** El frontend se mide por pantallas: pocas vistas sugiere poca cobertura de la interfaz pedida.
-- **Tu resultado:** **36** vista(s)/componente(s) _(mínimo 6)_
+- **Tu resultado:** **52** vista(s)/componente(s) _(mínimo 6)_
 
 ## 5. Observaciones y qué falta
 
-**Aprobado con observaciones.** Estos criterios quedan en rojo (se permiten hasta **3** sin que sean compuertas críticas), así que no bloquean la aprobación pero conviene corregirlos:
-
-| Criterio | Resultado actual | Meta | Brecha | Cómo alcanzarlo |
-|---|---|---|---|---|
-| Componente demasiado grande (BigC) | **5** componente(s) demasiado grande(s) | máximo 1 | 4 componente(s) de más | Dividí el componente por responsabilidad en subcomponentes (render, estado, acceso a datos) y dejá el original sólo como orquestador. Meta: ≤1 componente grande. |
+_Cumple **todos** los criterios del semáforo: no hay nada que arreglar para aprobar. El siguiente objetivo es sostenerlo y mejorar duplicación y diseño._
 
 ## 6. Actividad en clase y fuera de clase
 
@@ -178,7 +170,7 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 | 2026-11-11 | **Sí** | api-gastos, bot-telegram, front-web, servicio-ia | 23 / 7 |
 | 2026-11-13 | **Sí** | api-gastos, bot-telegram, front-web, servicio-ia | 0 / 9 |
 
-**Fuera de clase:** 6 fecha(s) con actividad · 74 commits · 10 merges
+**Fuera de clase:** 7 fecha(s) con actividad · 80 commits · 12 merges
 
 | Fecha | Repositorios | Commits / merges |
 |---|---|--:|
@@ -188,17 +180,11 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 | 2026-10-29 | api-gastos, bot-telegram, servicio-ia | 5 / 0 |
 | 2026-11-07 | api-gastos, bot-telegram, servicio-ia | 3 / 0 |
 | 2026-11-12 | api-gastos, front-web, servicio-ia | 16 / 3 |
+| 2026-11-14 | api-gastos, bot-telegram, front-web | 6 / 2 |
 
 ## 7. Anexo: dónde mirar
 
-Archivos donde el análisis encontró cada señal en rojo (sin número de línea, a propósito):
-
-**Componente demasiado grande (BigC)** — 5 archivo(s):
-- `src/chat/ChatPanel.tsx`
-- `src/chat/ChatTarjetas.tsx`
-- `src/views/DashboardView.tsx`
-- `src/views/GastosView.tsx`
-- `src/widgets/WidgetsDashboard.tsx`
+_No hay criterios en rojo con archivos asociados._
 
 ---
 _Informe generado por la cátedra. Los umbrales corresponden al perfil `exigente`. Ante dudas, revisá el archivo señalado y el criterio en `CRITERIOS-CALIDAD.md`._
